@@ -7,7 +7,5 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install modules
       run: npm install
-      working-directory: ./app
     - name: Run ESLint
-      run: npm lint
-      working-directory: ./app
+      run: eslint src/ --ext .js,.jsx,.ts,.tsx
