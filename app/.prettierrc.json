@@ -9,7 +9,7 @@
   "requirePragma": false,
   "insertPragma": false,
   "proseWrap": "never",
-  "endOfLine": "lf",
+  "endOfLine": "crlf",
   "arrowParens": "always",
   "htmlWhitespaceSensitivity": "ignore"
 }
