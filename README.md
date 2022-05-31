@@ -1,4 +1,3 @@
-
 # Frontend
 Front end code repository for SENG499 Summer 2022 project.
 
@@ -14,7 +13,7 @@ Front end code repository for SENG499 Summer 2022 project.
 - Create a branch for your issue based on the issue number. For instance, Feature #18's branch will be `feature-18`
 - Ensure the auto-assigner has assigned 2 "assignee"s to your PR
 - No merges into `main` after 11:59pm on the Saturday before demo Mondays
-- Ensure all 
+- Ensure all comments have been resolved before merging
 
 ### How to make a new PR
 1. Make sure your local code is up to do date with `git fetch` and `git pull` on the `main` branch
