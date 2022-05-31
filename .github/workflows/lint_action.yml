@@ -16,8 +16,8 @@ jobs:
 
       # ESLint and Prettier must be in `package.json`
       - name: Install Node.js dependencies
-      - run: cd app
-      - run: npm ci
+        run: npm ci
+        working-directory: ./app
 
       - name: Run linters
         uses: wearerequired/lint-action@v2
