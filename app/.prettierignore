@@ -1,0 +1,16 @@
+node_modules
+
+package-lock.json
+
+dist
+build
+coverage
+
+sonar-runner
+
+.vscode
+
+**/vendor
+
+*.html
+
