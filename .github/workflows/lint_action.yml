@@ -9,5 +9,5 @@ jobs:
       run: npm install
       working-directory: ./app
     - name: Run ESLint
-      run: eslint src/ --ext .js,.jsx,.ts,.tsx
+      run: npm lint
       working-directory: ./app
