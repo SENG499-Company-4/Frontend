@@ -1,7 +1,7 @@
 name: 'Add Reviewers'
 on:
   pull_request:
-    types: [opened, ready_for_review, edited, unassigned]
+    types: [opened, ready_for_review]
 
 jobs:
   add-reviews:
