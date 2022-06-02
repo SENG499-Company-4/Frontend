@@ -8,7 +8,7 @@ jobs:
     - name: Prettify code
       uses: creyD/prettier_action@v4.2
       with:
-        prettier_options: --write ./src/**/*.{js,jsx,ts,tsx,json,css,scss}
+        prettier_options: --write **/*.{js,jsx,ts,tsx,json,css,scss}
     - name: Install modules
       run: npm install
       working-directory: ./app
