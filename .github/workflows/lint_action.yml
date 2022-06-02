@@ -5,6 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        # Make sure the actual branch is checked out when running on pull requests
+        ref: ${{ github.head_ref }}
+    - name: Prettify code
+      uses: creyD/prettier_action@v4.2
+      with:
+        prettier_options: --write **/*.{js,jsx,ts,tsx,json,css,scss}
     - name: Install modules
       run: npm install
       working-directory: ./app
