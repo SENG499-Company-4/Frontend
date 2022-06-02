@@ -12,7 +12,7 @@
 /build
 
 # IDE/OS stuff
-/.vscode
+/app/.vscode
 
 # misc
 .DS_Store
