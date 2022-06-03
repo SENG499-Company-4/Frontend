@@ -1,4 +1,4 @@
-name: 'Lint'
+name: 'Format'
 on: [pull_request]
 jobs:
   build:
@@ -8,9 +8,8 @@ jobs:
       with:
         # Make sure the actual branch is checked out when running on pull requests
         ref: ${{ github.head_ref }}
-    - name: Install modules
-      run: npm install
-      working-directory: ./app
-    - name: Run ESLint
-      run: npm run lint
-      working-directory: ./app
+        token: ${{ secrets.CUSTOM_PAT }}
+    - name: Prettify code
+      uses: creyD/prettier_action@v4.2
+      with:
+        prettier_options: --write **/*.{js,jsx,ts,tsx,json,css,scss}
