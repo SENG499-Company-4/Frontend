@@ -1,5 +1,5 @@
 import React from 'react';
-import ErrorImage from '../../images/404.png';
+import ErrorImage from 'images/404.png';
 import Button from '@mui/material/Button';
 
 function ErrorPage() {
