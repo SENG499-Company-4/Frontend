@@ -1,24 +1,36 @@
 import React from 'react';
 import Button from '@mui/material/Button';
+import uviclogo from 'images/uviclogo.png';
 
 function Home() {
-  const Homestyle = {
-    margin: 'auto', 
+  const style = {
+    margin: 'auto',
     color: 'black',
-    textAlign: "center" as "center",
-    padding:'5%'
-  }
-  
+    textAlign: 'center' as 'center',
+    padding: '15%'
+  };
+
   return (
-    <div className="primaryTitle">
-      <h1 style={{textAlign: 'center' }}>University Scheduler System</h1>
+    <div className="primaryContainer">
+      <div className="Title">
+        <img src={uviclogo} alt="uviclogo" width={150} style={{ float: 'left' }}></img>
+        <h1 style={{ paddingLeft: '37%' }}> University Scheduler System</h1>
+      </div>
+
       <hr />
-      <div style={Homestyle}>Hello World!!</div>
-      <br />
-      <div style={Homestyle}>This is the Home page of our University Scheduler System.</div>
-      <div style={Homestyle}><Button variant='contained' href='/login'>Log in</Button></div>
+
+      <div className="Text" style={style}>
+        <p>Hello World!!</p>
+        <br />
+        <p>This is the Home page of our University Scheduler System.</p>
+      </div>
+
+      <div className="Button" style={{ textAlign: 'center' }}>
+        <Button variant="contained" href="/login">
+          Log in
+        </Button>
+      </div>
     </div>
-    
   );
 }
 

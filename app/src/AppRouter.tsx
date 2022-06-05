@@ -1,15 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Header from './components/organisms/Header';
-import Home from './components/pages/Home';
-import Login from './components/pages/Login';
-import Dashboard from './components/pages/Dashboard';
-import Survey from './components/pages/Survey';
-import Schedule from './components/pages/Schedule';
-import ScheduleManage from './components/pages/ScheduleManage';
-import ScheduleGenerate from './components/pages/ScheduleGenerate';
-import ScheduleTimetable from './components/pages/ScheduleTimetable';
-import ProfessorProfile from './components/pages/ProfessorProfile';
+import Header from 'components/organisms/Header';
+import Home from 'components/pages/Home';
+import Login from 'components/pages/Login';
+import Dashboard from 'components/pages/Dashboard';
+import Survey from 'components/pages/Survey';
+import Schedule from 'components/pages/Schedule';
+import ScheduleManage from 'components/pages/ScheduleManage';
+import ScheduleGenerate from 'components/pages/ScheduleGenerate';
+import ScheduleTimetable from 'components/pages/ScheduleTimetable';
+import ProfessorProfile from 'components/pages/ProfessorProfile';
 import ErrorPage from 'components/pages/ErrorPage';
 
 function AppRouter() {

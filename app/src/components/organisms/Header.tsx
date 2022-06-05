@@ -1,20 +1,52 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 function Header() {
+  function navTo(pageName: string) {
+    return () => {
+      window.location.href = `${pageName}`;
+    };
+  }
+
   return (
-    <div className="header">
-      <Link to="/">Home/</Link>
-      <Link to="/login">Login/</Link>
-      <Link to="/dashboard">Dashboard/</Link>
-      <Link to="/survey">Survey/</Link>
-      <Link to="/schedule">Schedule/</Link>
-      <Link to="/schedule/manage">Schedule Manage/</Link>
-      <Link to="/schedule/timetable">Schedule Timetable/</Link>
-      <Link to="/schedule/generate">Schedule Generate/</Link>
-      <Link to="/professorprofile">Professor Profile/</Link>
-      <Link to="/Errorpage" >Error Page</Link>
-    </div>
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static">
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
+          <Button onClick={navTo('/')} color="inherit">
+            Home
+          </Button>
+          <Button onClick={navTo('/login')} color="inherit">
+            Login
+          </Button>
+          <Button onClick={navTo('/dashboard')} color="inherit">
+            Dashboard
+          </Button>
+          <Button onClick={navTo('/survey')} color="inherit">
+            Survey
+          </Button>
+          <Button onClick={navTo('/schedule')} color="inherit">
+            Schedule
+          </Button>
+          <Button onClick={navTo('/schedule/manage')} color="inherit">
+            Schedule Manage
+          </Button>
+          <Button onClick={navTo('/schedule/timetable')} color="inherit">
+            Schedule Timetable
+          </Button>
+          <Button onClick={navTo('/schedule/generate')} color="inherit">
+            Schedule Generate
+          </Button>
+          <Button onClick={navTo('/professorprofile')} color="inherit">
+            Professor Profile
+          </Button>
+          <Button onClick={navTo('/ErrorPage')} color="inherit">
+            ErrorPage
+          </Button>
+        </Box>
+      </AppBar>
+    </Box>
   );
 }
 
