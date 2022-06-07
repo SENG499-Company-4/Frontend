@@ -5,7 +5,6 @@ import { Box } from '@mui/material';
 import { Typography } from '@mui/material';
 import { Container } from '@mui/system';
 
-
 function ErrorPage() {
   return (
     <Container>
