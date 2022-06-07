@@ -24,7 +24,7 @@ function AppRouter() {
         <Route path="/schedule/manage" element={[<ScheduleManage />]} />
         <Route path="/schedule/timetable" element={[<ScheduleTimetable />]} />
         <Route path="/schedule/generate" element={[<ScheduleGenerate />]} />
-        <Route path="/professorprofile" element={[<ProfessorProfile />]} />
+        <Route path="/professor-profile" element={[<ProfessorProfile />]} />
       </Routes>
     </Router>
   );
