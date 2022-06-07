@@ -41,9 +41,6 @@ function Header() {
           <Button onClick={navTo('/professorprofile')} color="inherit">
             Professor Profile
           </Button>
-          <Button onClick={navTo('/ErrorPage')} color="inherit">
-            ErrorPage
-          </Button>
         </Box>
       </AppBar>
     </Box>
