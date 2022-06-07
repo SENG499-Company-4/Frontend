@@ -13,10 +13,10 @@ function Header() {
           <HeaderButton label="Dashboard" url="/dashboard" />
           <HeaderButton label="Survey" url="/survey" />
           <HeaderButton label="Schedule" url="/schedule" />
-          <HeaderButton label="Manage Schedule" url="/schedule/manage"/>
-          <HeaderButton label="Schedule Timetable" url="/schedule/timetable"/>
-          <HeaderButton label="Generate Schedule" url="/schedule/generate"/>
-          <HeaderButton label="Professor Profile" url="/professor-profile"/>
+          <HeaderButton label="Manage Schedule" url="/schedule/manage" />
+          <HeaderButton label="Schedule Timetable" url="/schedule/timetable" />
+          <HeaderButton label="Generate Schedule" url="/schedule/generate" />
+          <HeaderButton label="Professor Profile" url="/professor-profile" />
         </Box>
       </AppBar>
     </Box>

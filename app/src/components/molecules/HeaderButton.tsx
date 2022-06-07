@@ -22,4 +22,3 @@ function HeaderButton(props: HeaderButtonProps) {
 }
 
 export default HeaderButton;
-
