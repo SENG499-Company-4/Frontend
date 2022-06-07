@@ -1,36 +1,43 @@
 import React from 'react';
-import Button from '@mui/material/Button';
 import uviclogo from 'images/uviclogo.png';
+import { Typography } from '@mui/material';
+import { Divider, Grid } from '@mui/material';
+import { Container } from '@mui/system';
+import { Box } from '@mui/system';
+import { Button } from '@mui/material';
 
 function Home() {
-  const style = {
-    margin: 'auto',
-    color: 'black',
-    textAlign: 'center' as 'center',
-    padding: '15%'
-  };
 
   return (
-    <div className="primaryContainer">
-      <div className="Title">
-        <img src={uviclogo} alt="uviclogo" width={150} style={{ float: 'left' }}></img>
-        <h1 style={{ paddingLeft: '37%' }}> University Scheduler System</h1>
-      </div>
+    <Container>  
+      <Grid container paddingTop={4} spacing={2} direction={"row"}>
+      <Grid item>
+        <img src={uviclogo} alt="uviclogo" width={150} ></img>
+      </Grid>
 
-      <hr />
+      <Grid item marginTop={1} marginLeft={23}>
+        <Typography variant="h4" >
+          University Scheduler System
+        </Typography>
+      </Grid>
 
-      <div className="Text" style={style}>
-        <p>Hello World!!</p>
-        <br />
-        <p>This is the Home page of our University Scheduler System.</p>
-      </div>
+    </Grid>
 
-      <div className="Button" style={{ textAlign: 'center' }}>
-        <Button variant="contained" href="/login">
-          Log in
-        </Button>
-      </div>
-    </div>
+    <Divider></Divider>
+
+    <Box display="flex" justifyContent="center" marginTop={20}> 
+      Hello World !!
+    </Box>
+    <Box display="flex" justifyContent="center" marginTop={5}> 
+      This is the Home page of our University Scheduler System.
+    </Box>
+
+    <Box display="flex" justifyContent="center" marginTop={10}>
+      <Button variant="contained" href="/login">
+        Log in
+      </Button>
+    </Box>
+  </Container>
   );
 }
 
