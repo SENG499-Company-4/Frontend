@@ -12,7 +12,9 @@ export interface ILoadingState {
 
 export const LoadingContext = React.createContext<ILoadingState>({
   isLoading: false,
-  setLoading: () => {}
+  setLoading: (loading: boolean) => {
+    console.log('setLoading', loading);
+  }
 });
 
 export const LoadingContextProvider: React.FC<Props> = (props: Props) => {
