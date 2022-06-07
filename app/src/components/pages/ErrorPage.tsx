@@ -5,19 +5,23 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { Container } from '@mui/system';
 
-
 function ErrorPage() {
   return (
     <Container>
       <Box display="flex" justifyContent="center" alignItems="center">
         <img src={ErrorImage} alt="404" />
       </Box>
-      <Typography variant="h4" align='center'> This Page is Lost in the Wind </Typography>
+      <Typography variant="h4" align="center">
+        {' '}
+        This Page is Lost in the Wind{' '}
+      </Typography>
       <Box display="flex" justifyContent="center">
-        <Button variant="text" href="/"> Back to Home Page</Button>
+        <Button variant="text" href="/">
+          {' '}
+          Back to Home Page
+        </Button>
       </Box>
     </Container>
-
   );
 }
 
