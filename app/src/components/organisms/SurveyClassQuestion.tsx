@@ -6,13 +6,13 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Stack from '@mui/material/Stack';
 
-function SurveyClassQuestion(props: { name: string }) {
+function SurveyClassQuestion(props: { name: string, nameChanged: (fieldId: string, value: string) => void }) {
   const [disabled, setDisabled] = useState(true);
   const [checked, setChecked] = useState({ willing: false, notWilling: false, veryWilling: false });
 
   const handleEnable = (event: React.SyntheticEvent<Element, Event>) => {
     setDisabled(!(event.target as HTMLInputElement).checked);
-    console.log(checked);
+    props.nameChanged(props.name, (event.target as HTMLInputElement).value);
   };
 
   const handleDisable = (event: React.SyntheticEvent<Element, Event>) => {
@@ -25,6 +25,7 @@ function SurveyClassQuestion(props: { name: string }) {
         veryWilling: false
       };
     });
+    props.nameChanged(props.name, (event.target as HTMLInputElement).value);
   };
 
   const changeRadio = (e: React.SyntheticEvent<Element, Event>) => {
@@ -39,7 +40,7 @@ function SurveyClassQuestion(props: { name: string }) {
   };
 
   return (
-    <Stack direction="row" spacing={5}>
+    <Stack key={props.name} direction="row" spacing={5}>
       <FormControl>
         <FormLabel required id="CanTeach">
           {props.name}
