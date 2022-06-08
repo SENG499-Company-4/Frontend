@@ -7,10 +7,6 @@ const themeOptions: ThemeOptions = {
     },
     secondary: {
       main: '#f50057'
-    },
-    text: {
-      primary: '#fff',
-      secondary: '#000'
     }
   }
 };
