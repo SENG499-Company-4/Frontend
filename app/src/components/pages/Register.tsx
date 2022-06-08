@@ -26,7 +26,7 @@ function Register() {
   };
 
   useEffect(() => {
-    formData.password === formData.confirmPassword && formData.password.length > 0
+    (formData.password === formData.confirmPassword && formData.password.length > 0) || formData.email.length === 0
       ? setHasErrors(false)
       : setHasErrors(true);
   }, [formData.password, formData.confirmPassword]);
@@ -43,7 +43,7 @@ function Register() {
     >
       <Grid container spacing={2} marginTop={2}>
         <Grid item>
-          <Typography variant="h3">Create an Account</Typography>
+          <Typography variant="h4">Create an Account</Typography>
         </Grid>
         {hasErrors && (
           <Grid item>
