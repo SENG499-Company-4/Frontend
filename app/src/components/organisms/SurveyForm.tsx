@@ -13,9 +13,7 @@ interface classData {
 }
 
 interface formVals {
-  course: {
-    [key: string]: vals
-  };
+  [key: string]: vals
 }
 
 interface vals {
@@ -25,9 +23,8 @@ interface vals {
 
 
 function SurveyForm(props: { formData: classData[] }) {
-  console.log(props.formData);
 
-  const [page, setPage] = useState(0);
+  ///const [page, setPage] = useState(0);
   const [currentPageData, setCurrentPageData] = useState(props.formData);
   const [values, setValues] = useState({} as formVals);
 
@@ -35,13 +32,12 @@ function SurveyForm(props: { formData: classData[] }) {
     const upcomingPageData = props.formData;
     setCurrentPageData(upcomingPageData);
     setValues(currentValues => {
-      const newValues = upcomingPageData.reduce((obj: formVals, field) => {
-        console.log("blah");
-        // obj[(field.subject + field.code)] = {
-        //   "ability": '',
-        //   "willing": ''
-        // };
-        // return obj;
+      const newValues = upcomingPageData.reduce((obj: any, field) => {
+        obj[(field.subject + " " + field.code)] = {
+          ability: '',
+          willing: ''
+        };
+        return obj;
       }, {});
 
       return Object.assign({}, newValues, currentValues);
@@ -49,22 +45,24 @@ function SurveyForm(props: { formData: classData[] }) {
   }, [props.formData]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    console.log(values);
     e.preventDefault();
-    console.log(e);
     // todo - send data somewhere
   };
 
   const fieldChanged = (courseName: string, type: string, value: string) => {
-    setValues(currentValues: any => {
-      console.log(currentValues);
-      // currentValues.course[courseName] = 1;
-      // currentValues.course[courseName][type] = value;
-      // return currentValues;
+    console.log("values is")
+    console.log(values)
+    console.log("and we are attempting to read")
+    console.log(courseName)
+    setValues(currentValues => {
+      currentValues[courseName][type as keyof vals] = value;
+      return currentValues;
     });
 
-    setCurrentPageData(currentPageData => {
-      return Object.assign({}, currentPageData);
-    });
+    // setCurrentPageData(currentPageData => {
+    //   return Object.assign({}, currentPageData);
+    // });
   };
 
   return (

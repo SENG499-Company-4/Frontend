@@ -6,13 +6,15 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Stack from '@mui/material/Stack';
 
-function SurveyClassQuestion(props: { name: string, nameChanged: (fieldId: string, value: string) => void }) {
+function SurveyClassQuestion(props: { name: string, nameChanged: (fieldId: string, type: string, value: string) => void }) {
   const [disabled, setDisabled] = useState(true);
   const [checked, setChecked] = useState({ willing: false, notWilling: false, veryWilling: false });
 
   const handleEnable = (event: React.SyntheticEvent<Element, Event>) => {
     setDisabled(!(event.target as HTMLInputElement).checked);
-    props.nameChanged(props.name, (event.target as HTMLInputElement).value);
+    console.log("props name enable is ");
+    console.log(props.name);
+    props.nameChanged(props.name, "ability", (event.target as HTMLInputElement).value);
   };
 
   const handleDisable = (event: React.SyntheticEvent<Element, Event>) => {
@@ -25,7 +27,10 @@ function SurveyClassQuestion(props: { name: string, nameChanged: (fieldId: strin
         veryWilling: false
       };
     });
-    props.nameChanged(props.name, (event.target as HTMLInputElement).value);
+
+    console.log("props name disable is ");
+    console.log(props.name);
+    props.nameChanged(props.name, "ability", (event.target as HTMLInputElement).value);
   };
 
   const changeRadio = (e: React.SyntheticEvent<Element, Event>) => {
@@ -37,6 +42,8 @@ function SurveyClassQuestion(props: { name: string, nameChanged: (fieldId: strin
         [(e.target as HTMLInputElement).value]: true
       };
     });
+
+    props.nameChanged(props.name, "willing", (e.target as HTMLInputElement).value);
   };
 
   return (
