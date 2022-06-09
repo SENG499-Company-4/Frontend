@@ -25,12 +25,8 @@ function AppRouter() {
         <Route path="/schedule/manage" element={[<ScheduleManage />]} />
         <Route path="/schedule/timetable" element={[<ScheduleTimetable />]} />
         <Route path="/schedule/generate" element={[<ScheduleGenerate />]} />
-<<<<<<< HEAD
-        <Route path="/professorprofile" element={[<ProfessorProfile />]} />
-        <Route path="/error" element={[<ErrorPage />]} />
-=======
         <Route path="/professor-profile" element={[<ProfessorProfile />]} />
->>>>>>> main
+        <Route path="/error" element={[<ErrorPage />]} />
       </Routes>
     </Router>
   );
