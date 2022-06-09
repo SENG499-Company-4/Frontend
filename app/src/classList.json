@@ -1,0 +1,975 @@
+[
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "105",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "106",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "110",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "111",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "115",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "130",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "225",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "226",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "230",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "305",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "320",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "330",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "349A",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "360",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "361",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "370",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "421",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "423",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "460",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "466",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "475",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "482C",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "485A",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "485B",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "485D",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "485E",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "502",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "503",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "523",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "560",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "575",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "578A",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "578C",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "579",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "581D",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "586A",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "586C",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "588A",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "595",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "300",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "310",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "320",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "330",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "340",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "360",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "402",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "405",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "420",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "426",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "427",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "434",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "453",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "458",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "459",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "460",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "471",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "482",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "485",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "488",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "496A",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "496B",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "511",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "519B",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "519C",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "522",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "526",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "527",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "534",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "535",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "536",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "545",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "567",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "573",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "574",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "591",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "592A",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "265",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "275",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "321",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "371",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "401",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "460",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "468",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "474",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "480A",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "480B",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "480C",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "480D",
+      "term": "SPRING"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "110",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "115",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "130",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "225",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "226",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "230",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "320",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "360",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "370",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "445",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "482A",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "485C",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "503",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "545",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "582A",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "CSC",
+      "code": "586C",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "216",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "220",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "242",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "250",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "260",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "299",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "310",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "403",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "410",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "441",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "450",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "456",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "470",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "481",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "496A",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "499",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "512",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "519C",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "537",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "543",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "569A",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "570",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "572",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "592B",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "596A",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "596B",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "ECE",
+      "code": "596C",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "265",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "275",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "310",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "426",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "440",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "474",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "475",
+      "term": "SUMMER"
+    }
+  },
+  {
+    "CourseID": {
+      "subject": "SENG",
+      "code": "499",
+      "term": "SUMMER"
+    }
+  }
+]

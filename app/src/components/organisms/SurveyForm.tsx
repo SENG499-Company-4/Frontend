@@ -13,6 +13,10 @@ interface classData {
   term: string;
 }
 
+interface outerClass {
+  CourseID: classData;
+}
+
 interface formVals {
   relief: boolean;
   explanation: string;
@@ -26,7 +30,7 @@ interface vals {
   willing: string;
 }
 
-function SurveyForm(props: { formData: classData[] }) {
+function SurveyForm(props: { formData: outerClass[] }) {
   const [disable, setDisabled] = useState(true);
   const [values, setValues] = useState(() => {
     const currentValues: formVals = {
@@ -36,7 +40,7 @@ function SurveyForm(props: { formData: classData[] }) {
     };
 
     currentValues.courses = props.formData.reduce((obj: any, field) => {
-      obj[field.subject + ' ' + field.code] = {
+      obj[field.CourseID.subject + ' ' + field.CourseID.code] = {
         ability: '',
         willing: ''
       };
@@ -78,8 +82,8 @@ function SurveyForm(props: { formData: classData[] }) {
           {props.formData.map((field) => {
             return (
               <SurveyClassQuestion
-                key={field.subject + field.code}
-                name={field.subject + ' ' + field.code}
+                key={field.CourseID.subject + field.CourseID.code}
+                name={field.CourseID.subject + ' ' + field.CourseID.code}
                 nameChanged={fieldChanged}
               />
             );
