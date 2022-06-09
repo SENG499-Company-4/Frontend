@@ -1,19 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Stack from '@mui/material/Stack';
 import SurveyClassQuestion from 'components/organisms/SurveyClassQuestion';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
+import Divider from '@mui/material/Divider';
 
 interface classData {
-  subject: string,
-  code: string,
-  term: string
+  subject: string;
+  code: string;
+  term: string;
 }
 
 interface formVals {
-  [key: string]: vals
+  relief: boolean;
+  explanation: string;
+  courses: {
+    [key: string]: vals;
+  };
 }
 
 interface vals {
@@ -21,80 +26,90 @@ interface vals {
   willing: string;
 }
 
-
 function SurveyForm(props: { formData: classData[] }) {
+  const [disable, setDisabled] = useState(true);
+  const [values, setValues] = useState(() => {
+    const currentValues: formVals = {
+      relief: false,
+      explanation: '',
+      courses: {}
+    };
 
-  ///const [page, setPage] = useState(0);
-  const [currentPageData, setCurrentPageData] = useState(props.formData);
-  const [values, setValues] = useState({} as formVals);
+    currentValues.courses = props.formData.reduce((obj: any, field) => {
+      obj[field.subject + ' ' + field.code] = {
+        ability: '',
+        willing: ''
+      };
+      return obj;
+    }, {});
 
-  useEffect(() => {
-    const upcomingPageData = props.formData;
-    setCurrentPageData(upcomingPageData);
-    setValues(currentValues => {
-      const newValues = upcomingPageData.reduce((obj: any, field) => {
-        obj[(field.subject + " " + field.code)] = {
-          ability: '',
-          willing: ''
-        };
-        return obj;
-      }, {});
-
-      return Object.assign({}, newValues, currentValues);
-    });
-  }, [props.formData]);
+    return currentValues;
+  });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     console.log(values);
     e.preventDefault();
-    // todo - send data somewhere
+    //TODO: submit values somewhere
   };
 
   const fieldChanged = (courseName: string, type: string, value: string) => {
-    console.log("values is")
-    console.log(values)
-    console.log("and we are attempting to read")
-    console.log(courseName)
-    setValues(currentValues => {
-      currentValues[courseName][type as keyof vals] = value;
+    setValues((currentValues) => {
+      currentValues.courses[courseName][type as keyof vals] = value;
       return currentValues;
     });
+  };
 
-    // setCurrentPageData(currentPageData => {
-    //   return Object.assign({}, currentPageData);
-    // });
+  const handleCheckbox = (event: React.ChangeEvent<HTMLInputElement>, checkbox: boolean) => {
+    setValues((currentValues) => {
+      if (checkbox) {
+        currentValues.relief = event.target.checked;
+        setDisabled(!disable);
+      } else {
+        currentValues.explanation = event.target.value;
+      }
+      return currentValues;
+    });
   };
 
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <Stack spacing={4}>
-          {currentPageData.map(field => {
+        <Stack style={{ height: '500px', overflowY: 'scroll' }} spacing={4}>
+          {props.formData.map((field) => {
             return (
-              <SurveyClassQuestion name={field.subject + " " + field.code} nameChanged={fieldChanged} />
+              <SurveyClassQuestion
+                key={field.subject + field.code}
+                name={field.subject + ' ' + field.code}
+                nameChanged={fieldChanged}
+              />
             );
           })}
-          <FormControlLabel control={<Checkbox defaultChecked />} label="Have Relief?" />
+        </Stack>
+        <Divider />
+        <Stack spacing={4}>
+          <FormControlLabel
+            control={<Checkbox />}
+            label="Have Relief?"
+            onChange={(event) => handleCheckbox(event as React.ChangeEvent<HTMLInputElement>, true)}
+          />
           <TextField
-            id="outlined-textarea"
+            id="Explanation-textarea"
             label="Explanation"
             multiline
+            rows={4}
+            disabled={disable}
             style={{ width: 500 }}
             inputProps={{ style: { color: 'black' } }}
+            onChange={(event) => handleCheckbox(event as React.ChangeEvent<HTMLInputElement>, false)}
           />
 
           <Button variant="contained" color="primary" type="submit">
             Submit
           </Button>
         </Stack>
-
-
       </form>
     </div>
   );
 }
-
-
-
 
 export default SurveyForm;
