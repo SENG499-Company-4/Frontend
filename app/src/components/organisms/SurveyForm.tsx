@@ -6,31 +6,10 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 import Divider from '@mui/material/Divider';
+import { classData, formVals, vals } from '../shared/interfaces/surveyForm.interfaces';
+import { overallDefaults } from '../shared/constants/surveyForm.constants';
 
-interface classData {
-  subject: string;
-  code: string;
-  term: string;
-}
-
-interface outerClass {
-  CourseID: classData;
-}
-
-interface formVals {
-  relief: boolean;
-  explanation: string;
-  courses: {
-    [key: string]: vals;
-  };
-}
-
-interface vals {
-  ability: string;
-  willing: string;
-}
-
-function SurveyForm(props: { formData: outerClass[] }) {
+function SurveyForm(props: { formData: classData[] }) {
   const [disable, setDisabled] = useState(true);
   const [values, setValues] = useState(() => {
     const currentValues: formVals = {
@@ -40,9 +19,8 @@ function SurveyForm(props: { formData: outerClass[] }) {
     };
 
     currentValues.courses = props.formData.reduce((obj: any, field) => {
-      obj[field.CourseID.subject + ' ' + field.CourseID.code] = {
-        ability: '',
-        willing: ''
+      obj[field.CourseID.subject + ' ' + field.CourseID.code + ' ' + field.CourseID.term] = {
+        overallDefaults
       };
       return obj;
     }, {});
@@ -82,9 +60,10 @@ function SurveyForm(props: { formData: outerClass[] }) {
           {props.formData.map((field) => {
             return (
               <SurveyClassQuestion
-                key={field.CourseID.subject + field.CourseID.code}
+                key={field.CourseID.subject + field.CourseID.code + field.CourseID.term}
                 name={field.CourseID.subject + ' ' + field.CourseID.code}
-                nameChanged={fieldChanged}
+                term={field.CourseID.term}
+                fieldChanged={fieldChanged}
               />
             );
           })}
