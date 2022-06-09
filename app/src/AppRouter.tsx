@@ -10,7 +10,6 @@ import ScheduleManage from 'components/pages/ScheduleManage';
 import ScheduleGenerate from 'components/pages/ScheduleGenerate';
 import ScheduleTimetable from 'components/pages/ScheduleTimetable';
 import ProfessorProfile from 'components/pages/ProfessorProfile';
-import ErrorPage from 'components/pages/ErrorPage';
 
 function AppRouter() {
   return (
@@ -25,8 +24,7 @@ function AppRouter() {
         <Route path="/schedule/manage" element={[<ScheduleManage />]} />
         <Route path="/schedule/timetable" element={[<ScheduleTimetable />]} />
         <Route path="/schedule/generate" element={[<ScheduleGenerate />]} />
-        <Route path="/professorprofile" element={[<ProfessorProfile />]} />
-        <Route path="/ErrorPage" element={[<ErrorPage />]} />
+        <Route path="/professor-profile" element={[<ProfessorProfile />]} />
       </Routes>
     </Router>
   );
