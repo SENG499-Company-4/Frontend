@@ -1,9 +1,9 @@
 import React from 'react';
 import ErrorImage from 'images/404.png';
-import { Button } from '@mui/material';
-import { Box } from '@mui/material';
-import { Typography } from '@mui/material';
-import { Container } from '@mui/system';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Container from '@mui/system/Container';
 
 function ErrorPage() {
   return (

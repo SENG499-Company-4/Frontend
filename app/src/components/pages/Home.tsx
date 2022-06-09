@@ -1,20 +1,21 @@
 import React from 'react';
 import uviclogo from 'images/uviclogo.png';
-import { Typography } from '@mui/material';
-import { Divider, Grid } from '@mui/material';
-import { Container } from '@mui/system';
-import { Box } from '@mui/system';
-import { Button } from '@mui/material';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
+import Container from '@mui/system/Container';
+import Box from '@mui/system/Box';
+import Button from '@mui/material/Button';
 
 function Home() {
   return (
     <Container>
-      <Grid container paddingTop={4} spacing={2} direction={'row'}>
+      <Grid container paddingTop={4} spacing={25} direction={'row'}>
         <Grid item>
           <img src={uviclogo} alt="uviclogo" width={150}></img>
         </Grid>
 
-        <Grid item marginTop={1} marginLeft={23}>
+        <Grid item marginTop={1}>
           <Typography variant="h4">University Scheduler System</Typography>
         </Grid>
       </Grid>
