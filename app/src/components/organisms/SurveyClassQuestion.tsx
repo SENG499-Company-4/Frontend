@@ -9,7 +9,6 @@ import { willingRadio, ability, willing } from '../shared/constants/surveyForm.c
 
 function SurveyClassQuestion(props: {
   name: string;
-  term: string;
   fieldChanged: (fieldId: string, type: string, value: string) => void;
 }) {
   const [disabled, setDisabled] = useState(true);
@@ -31,7 +30,7 @@ function SurveyClassQuestion(props: {
         };
       });
     }
-    props.fieldChanged(props.name + ' ' + props.term, 'ability', event.target.value);
+    props.fieldChanged(props.name, 'ability', event.target.value);
   };
 
   const changeRadio = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,13 +41,13 @@ function SurveyClassQuestion(props: {
       };
     });
 
-    props.fieldChanged(props.name + ' ' + props.term, 'willing', (event.target as HTMLInputElement).value);
+    props.fieldChanged(props.name, 'willing', (event.target as HTMLInputElement).value);
   };
 
   return (
     <Stack key={props.name} direction="row" spacing={5}>
       <FormControl>
-        <FormLabel id="CanTeach">{props.name + ' in ' + props.term}</FormLabel>
+        <FormLabel id="CanTeach">{props.name}</FormLabel>
         <RadioGroup row aria-labelledby="CanTeach" name="row-radio-buttons-group" defaultValue="cannot">
           <FormControlLabel
             onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}

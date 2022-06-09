@@ -19,8 +19,8 @@ function SurveyForm(props: { formData: classData[] }) {
     };
 
     currentValues.courses = props.formData.reduce((obj: any, field) => {
-      obj[field.CourseID.subject + ' ' + field.CourseID.code + ' ' + field.CourseID.term] = {
-        overallDefaults
+      obj[field.CourseID.subject + ' ' + field.CourseID.code] = {
+        ...overallDefaults
       };
       return obj;
     }, {});
@@ -60,9 +60,8 @@ function SurveyForm(props: { formData: classData[] }) {
           {props.formData.map((field) => {
             return (
               <SurveyClassQuestion
-                key={field.CourseID.subject + field.CourseID.code + field.CourseID.term}
+                key={field.CourseID.subject + field.CourseID.code}
                 name={field.CourseID.subject + ' ' + field.CourseID.code}
-                term={field.CourseID.term}
                 fieldChanged={fieldChanged}
               />
             );
