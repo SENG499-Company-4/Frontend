@@ -22,7 +22,7 @@ function Register() {
 
   const createAccount = (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    console.log('Creating account: ', formData);
+    // Create POST request here
   };
 
   useEffect(() => {

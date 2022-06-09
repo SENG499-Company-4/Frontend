@@ -12,10 +12,6 @@ function Login() {
 
   let navigate: NavigateFunction = useNavigate();
 
-  const register: () => void = () => {
-    navigate('/register');
-  };
-
   const signIn = (e: { preventDefault: () => void }) => {
     e.preventDefault();
   };
@@ -57,7 +53,7 @@ function Login() {
           <Button variant="contained" style={{ width: 300, marginTop: 15 }} onClick={signIn}>
             Sign In
           </Button>
-          <Button variant="outlined" style={{ width: 300, marginTop: 15 }} onClick={register}>
+          <Button variant="outlined" style={{ width: 300, marginTop: 15 }} onClick={() => navigate(`/register`)}>
             Register
           </Button>
         </Grid>
