@@ -2,12 +2,15 @@ import { ThemeProvider } from '@emotion/react';
 import appTheme from 'themes/appTheme';
 import React from 'react';
 import AppRouter from 'AppRouter';
+import { LoadingContextProvider } from 'contexts/LoadingContext';
 
 function App() {
   return (
-    <ThemeProvider theme={appTheme}>
-      <AppRouter />
-    </ThemeProvider>
+    <LoadingContextProvider>
+      <ThemeProvider theme={appTheme}>
+        <AppRouter />
+      </ThemeProvider>
+    </LoadingContextProvider>
   );
 }
 
