@@ -57,14 +57,8 @@ function SurveyForm(props: { formData: classData[] }) {
     <div>
       <form onSubmit={onSubmit}>
         <Stack style={{ height: '500px', overflowY: 'scroll' }} spacing={4}>
-          {props.formData.map((field) => {
-            return (
-              <SurveyClassQuestion
-                key={field.CourseID.subject + field.CourseID.code}
-                name={field.CourseID.subject + ' ' + field.CourseID.code}
-                fieldChanged={fieldChanged}
-              />
-            );
+          {Object.keys(values.courses).map((field) => {
+            return <SurveyClassQuestion key={field} name={field} fieldChanged={fieldChanged} />;
           })}
         </Stack>
         <Divider />
