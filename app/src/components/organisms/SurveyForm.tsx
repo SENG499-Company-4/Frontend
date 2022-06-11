@@ -65,8 +65,9 @@ function SurveyForm(props: { formData: ClassData[] }) {
   const handleRelief = (event: React.ChangeEvent<HTMLInputElement>, amount: boolean) => {
     setValues((currentValues) => {
       if (amount) {
-        const reliefAmount = Number(event.target.value);
+        const reliefAmount = Math.min(Math.max(Number(event.target.value), 0), 6);
         currentValues.relief = reliefAmount;
+        event.currentTarget.value = String(reliefAmount);
         if (reliefAmount > 0) {
           setDisabled(false);
         } else {
@@ -135,7 +136,7 @@ function SurveyForm(props: { formData: ClassData[] }) {
         </Typography>
         <Stack direction="row">
           <Typography variant="overline" gutterBottom sx={{ width: '30%' }}>
-            Course Number
+            Course
           </Typography>
           <Typography variant="overline" gutterBottom sx={{ width: '50%' }}>
             Ability
@@ -144,7 +145,7 @@ function SurveyForm(props: { formData: ClassData[] }) {
             Willingness
           </Typography>
         </Stack>
-        <Stack sx={{ height: `calc(50vh)`, overflowY: 'scroll' }} spacing={2}>
+        <Stack sx={{ height: `calc(50vh)`, overflowY: 'scroll', border:'1px solid rgba(0, 0, 0, 0.12)', borderBottom: '0' }} spacing={2}>
           {Object.keys(values.courses).map((field) => {
             return (
               <SurveyClassQuestion
@@ -156,7 +157,7 @@ function SurveyForm(props: { formData: ClassData[] }) {
             );
           })}
         </Stack>
-        <Divider sx={{ marginBottom: '1%' }} />
+        <Divider sx={{ marginBottom: '20px' }} />
         <Stack spacing={2}>
           <Stack direction="row" spacing={2}>
             <FormControl>
@@ -182,6 +183,7 @@ function SurveyForm(props: { formData: ClassData[] }) {
               id="Relief Amount"
               label="Relief Amount"
               type="number"
+              defaultValue={0}
               inputProps={{ style: { color: 'black' } }}
               onChange={(event) => handleRelief(event as React.ChangeEvent<HTMLInputElement>, true)}
             />
