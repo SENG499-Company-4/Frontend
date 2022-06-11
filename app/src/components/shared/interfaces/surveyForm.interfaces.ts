@@ -1,14 +1,14 @@
-export interface course {
+export interface Course {
   subject: string;
   code: string;
   term: string;
 }
 
-export interface classData {
-  CourseID: course;
+export interface ClassData {
+  CourseID: Course;
 }
 
-export interface formVals {
+export interface FormValues {
   role: string;
   relief: number;
   explanation: string;
@@ -18,11 +18,17 @@ export interface formVals {
   summer: string;
   classes: number;
   courses: {
-    [key: string]: vals;
+    [key: string]: CourseAbility;
   };
 }
 
-export interface vals {
+export interface CourseAbility {
   ability: string;
   willing: string;
+}
+
+export interface TermPrefs {
+  fall: string;
+  spring: string;
+  summer: string;
 }

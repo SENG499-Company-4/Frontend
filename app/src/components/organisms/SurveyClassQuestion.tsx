@@ -5,7 +5,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Stack from '@mui/material/Stack';
-import { willingRadio, ability, willing } from '../shared/constants/surveyForm.constants';
+import { willingRadio, ability, willing } from 'components/shared/constants/surveyForm.constants';
+import { Divider } from '@mui/material';
 
 function SurveyClassQuestion(props: {
   name: string;
@@ -42,62 +43,65 @@ function SurveyClassQuestion(props: {
   };
 
   return (
-    <Stack key={props.name} direction="row" spacing={5}>
-      <FormLabel required={props.additionalQualifications} id="CanTeach">
-        {props.name}
-      </FormLabel>
-      <FormControl>
-        <RadioGroup row aria-labelledby="CanTeach" name="row-radio-buttons-group" defaultValue="cannot">
-          <FormControlLabel
-            onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
-            value={ability.cannot}
-            control={<Radio />}
-            label="Can't Teach"
-          />
-          <FormControlLabel
-            onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
-            value={ability.can}
-            control={<Radio />}
-            label="Able To Teach"
-          />
-          <FormControlLabel
-            onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
-            value={ability.effort}
-            control={<Radio />}
-            label="Able to Teach with Effort"
-          />
-        </RadioGroup>
-      </FormControl>
+    <>
+      <Stack key={props.name} direction="row" spacing={5}>
+        <FormLabel required={props.additionalQualifications} id="CanTeach" sx={{ marginTop: '10px' }}>
+          {props.name}
+        </FormLabel>
+        <FormControl>
+          <RadioGroup row aria-labelledby="CanTeach" name="row-radio-buttons-group" defaultValue="cannot">
+            <FormControlLabel
+              onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
+              value={ability.cannot}
+              control={<Radio />}
+              label="Can't Teach"
+            />
+            <FormControlLabel
+              onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
+              value={ability.can}
+              control={<Radio />}
+              label="Able To Teach"
+            />
+            <FormControlLabel
+              onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
+              value={ability.effort}
+              control={<Radio />}
+              label="Able to Teach with Effort"
+            />
+          </RadioGroup>
+        </FormControl>
 
-      <FormControl>
-        <RadioGroup row aria-labelledby="WantToTeach" name="row-radio-buttons-group">
-          <FormControlLabel
-            onChange={(e) => changeRadio(e as React.ChangeEvent<HTMLInputElement>)}
-            checked={checked.notWilling}
-            disabled={disabled}
-            value={willing.notWilling}
-            control={<Radio />}
-            label="Not Willing"
-          />
-          <FormControlLabel
-            onChange={(e) => changeRadio(e as React.ChangeEvent<HTMLInputElement>)}
-            checked={checked.willing}
-            disabled={disabled}
-            value={willing.willing}
-            control={<Radio />}
-            label="Willing"
-          />
-          <FormControlLabel
-            onChange={(e) => changeRadio(e as React.ChangeEvent<HTMLInputElement>)}
-            checked={checked.veryWilling}
-            disabled={disabled}
-            value={willing.veryWilling}
-            control={<Radio />}
-            label="Very Willing"
-          />
-        </RadioGroup>
-      </FormControl>
-    </Stack>
+        <FormControl>
+          <RadioGroup row aria-labelledby="WantToTeach" name="row-radio-buttons-group">
+            <FormControlLabel
+              onChange={(e) => changeRadio(e as React.ChangeEvent<HTMLInputElement>)}
+              checked={checked.notWilling}
+              disabled={disabled}
+              value={willing.notWilling}
+              control={<Radio />}
+              label="Not Willing"
+            />
+            <FormControlLabel
+              onChange={(e) => changeRadio(e as React.ChangeEvent<HTMLInputElement>)}
+              checked={checked.willing}
+              disabled={disabled}
+              value={willing.willing}
+              control={<Radio />}
+              label="Willing"
+            />
+            <FormControlLabel
+              onChange={(e) => changeRadio(e as React.ChangeEvent<HTMLInputElement>)}
+              checked={checked.veryWilling}
+              disabled={disabled}
+              value={willing.veryWilling}
+              control={<Radio />}
+              label="Very Willing"
+            />
+          </RadioGroup>
+        </FormControl>
+      </Stack>
+      <Divider />
+    </>
   );
 }
 

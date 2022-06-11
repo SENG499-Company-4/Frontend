@@ -11,23 +11,24 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { classData, formVals, vals } from 'components/shared/interfaces/surveyForm.interfaces';
+import { ClassData, FormValues, TermPrefs, CourseAbility } from 'components/shared/interfaces/surveyForm.interfaces';
 import { overallDefaults } from 'components/shared/constants/surveyForm.constants';
+import TermOptions from 'components/molecules/TermOptions';
 
-function SurveyForm(props: { formData: classData[] }) {
+function SurveyForm(props: { formData: ClassData[] }) {
   const additionalQualifications: boolean = false; //TODO: temporary measure until backend implements qualifications to class info
   const [disable, setDisabled] = useState(true);
   const [formats, setFormats] = useState<string[]>(() => []);
   const [role, setRole] = useState('Teaching');
 
-  const [termPrefs, setTermPrefs] = useState({
+  const [termPrefs, setTermPrefs] = useState<TermPrefs>({
     fall: 'Teaching',
     spring: 'Teaching',
     summer: 'Teaching'
   });
 
   const [values, setValues] = useState(() => {
-    const currentValues: formVals = {
+    const currentValues: FormValues = {
       role: 'Teaching',
       relief: 0,
       explanation: '',
@@ -56,7 +57,7 @@ function SurveyForm(props: { formData: classData[] }) {
 
   const fieldChanged = (courseName: string, type: string, value: string) => {
     setValues((currentValues) => {
-      currentValues.courses[courseName][type as keyof vals] = value;
+      currentValues.courses[courseName][type as keyof CourseAbility] = value;
       return currentValues;
     });
   };
@@ -96,6 +97,8 @@ function SurveyForm(props: { formData: classData[] }) {
   };
 
   const handleTerm = (event: React.ChangeEvent<HTMLInputElement>, term: string) => {
+    console.log('GOT EVENT: ', event);
+    console.log('TERM: ', term);
     setValues((currentValues) => {
       const newVal = event.target.value;
       switch (term) {
@@ -134,16 +137,13 @@ function SurveyForm(props: { formData: classData[] }) {
         </Typography>
         <Stack direction="row">
           <Typography variant="overline" gutterBottom sx={{ width: '30%' }}>
-            {' '}
-            Course Number{' '}
+            Course Number
           </Typography>
           <Typography variant="overline" gutterBottom sx={{ width: '50%' }}>
-            {' '}
-            Ability{' '}
+            Ability
           </Typography>
           <Typography variant="overline" gutterBottom sx={{ width: '30%' }}>
-            {' '}
-            Willingness{' '}
+            Willingness
           </Typography>
         </Stack>
         <Stack sx={{ height: `calc(50vh)`, overflowY: 'scroll' }} spacing={2}>
@@ -234,77 +234,9 @@ function SurveyForm(props: { formData: classData[] }) {
             <InputLabel sx={{ marginTop: '10px', marginRight: '5px' }} id="Preferred-days-label">
               Preferred term type
             </InputLabel>
-            <FormControl>
-              <InputLabel id="select-role-label">Fall</InputLabel>
-              <Select
-                labelId="select-role-label"
-                id="select-role"
-                value={termPrefs.fall}
-                onChange={(event) => handleTerm(event as React.ChangeEvent<HTMLInputElement>, 'fall')}
-                sx={{ color: 'black' }}
-              >
-                <MenuItem sx={{ color: 'black' }} value={'Teaching'}>
-                  Teaching
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'Research'}>
-                  Research
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'HalfLeave'}>
-                  Half Leave
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'FullLeave'}>
-                  Full Leave
-                </MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl>
-              <InputLabel id="select-role-label">Spring</InputLabel>
-              <Select
-                labelId="select-role-label"
-                id="select-role"
-                value={termPrefs.spring}
-                onChange={(event) => handleTerm(event as React.ChangeEvent<HTMLInputElement>, 'spring')}
-                sx={{ color: 'black' }}
-              >
-                <MenuItem sx={{ color: 'black' }} value={'Teaching'}>
-                  Teaching
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'NonTeaching'}>
-                  Non-teaching
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'HalfLeave'}>
-                  Half Leave
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'FullLeave'}>
-                  Full Leave
-                </MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl>
-              <InputLabel id="select-role-label">Summer</InputLabel>
-              <Select
-                labelId="select-role-label"
-                id="select-role"
-                value={termPrefs.summer}
-                onChange={(event) => handleTerm(event as React.ChangeEvent<HTMLInputElement>, 'summer')}
-                sx={{ color: 'black' }}
-              >
-                <MenuItem sx={{ color: 'black' }} value={'Teaching'}>
-                  Teaching
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'NonTeaching'}>
-                  Non-teaching
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'HalfLeave'}>
-                  Half Leave
-                </MenuItem>
-                <MenuItem sx={{ color: 'black' }} value={'FullLeave'}>
-                  Full Leave
-                </MenuItem>
-              </Select>
-            </FormControl>
+            <TermOptions handleChange={handleTerm} term={'fall'} label="Fall" prefs={termPrefs.fall} />
+            <TermOptions handleChange={handleTerm} term={'spring'} label="Spring" prefs={termPrefs.spring} />
+            <TermOptions handleChange={handleTerm} term={'summer'} label="Summer" prefs={termPrefs.summer} />
           </Stack>
 
           <Button variant="contained" color="primary" type="submit">
