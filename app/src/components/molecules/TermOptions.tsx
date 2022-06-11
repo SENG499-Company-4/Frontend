@@ -15,6 +15,7 @@ export default function TermOptions(props: TermOptionProps) {
         <InputLabel id="select-role-label">{props.label}</InputLabel>
         <Select
           labelId="select-role-label"
+          label={props.label}
           id="select-role"
           value={props.prefs}
           onChange={(event) => props.handleChange(event as React.ChangeEvent<HTMLInputElement>, props.term)}

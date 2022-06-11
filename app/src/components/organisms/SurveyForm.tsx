@@ -97,8 +97,6 @@ function SurveyForm(props: { formData: ClassData[] }) {
   };
 
   const handleTerm = (event: React.ChangeEvent<HTMLInputElement>, term: string) => {
-    console.log('GOT EVENT: ', event);
-    console.log('TERM: ', term);
     setValues((currentValues) => {
       const newVal = event.target.value;
       switch (term) {
@@ -165,6 +163,7 @@ function SurveyForm(props: { formData: ClassData[] }) {
               <InputLabel id="select-role-label">Type of Faculty </InputLabel>
               <Select
                 labelId="select-role-label"
+                label="Type of Faculty"
                 id="select-role"
                 value={role}
                 onChange={(event) => handleRole(event as React.ChangeEvent<HTMLInputElement>)}
@@ -201,7 +200,7 @@ function SurveyForm(props: { formData: ClassData[] }) {
 
           <Stack direction="row" spacing={2}>
             <ToggleButtonGroup value={formats} onChange={handleFormat} aria-label="text formatting" color="info">
-              <InputLabel sx={{ marginTop: '10px', marginRight: '5px' }} id="Preferred-days-label">
+              <InputLabel sx={{ marginTop: '10px', marginRight: '15px' }} id="Preferred-days-label">
                 Preferred days to teach
               </InputLabel>
               <ToggleButton value="Monday" aria-label="Monday">
