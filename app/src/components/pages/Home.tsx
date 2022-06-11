@@ -1,36 +1,29 @@
 import React from 'react';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import uviclogo from 'images/uviclogo.png';
+import Box from '@mui/material/Box';
 
 function Home() {
-  const style = {
-    margin: 'auto',
-    color: 'black',
-    textAlign: 'center' as 'center',
-    padding: '15%'
-  };
+  let navigate: NavigateFunction = useNavigate();
 
   return (
-    <div className="primaryContainer">
-      <div className="Title">
-        <img src={uviclogo} alt="uviclogo" width={150} style={{ float: 'left' }}></img>
-        <h1 style={{ paddingLeft: '37%' }}> University Scheduler System</h1>
-      </div>
-
-      <hr />
-
-      <div className="Text" style={style}>
-        <p>Hello World!!</p>
-        <br />
-        <p>This is the Home page of our University Scheduler System.</p>
-      </div>
-
-      <div className="Button" style={{ textAlign: 'center' }}>
-        <Button variant="contained" href="/login">
-          Log in
-        </Button>
-      </div>
-    </div>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+        p: 1,
+        m: 1,
+        bgcolor: 'background.paper',
+        height: 1,
+        width: 1,
+        borderRadius: 1
+      }}
+    >
+      <Button variant="outlined" style={{ width: '30%', height: 50 }} onClick={() => navigate(`/login`)}>
+        Login Now
+      </Button>
+    </Box>
   );
 }
 
