@@ -9,10 +9,6 @@ const themeOptions: ThemeOptions = {
     secondary: {
       main: '#f50057'
     }
-    // text: {
-    //   primary: '#000',
-    //   secondary: '#444'
-    // }
   }
 };
 
