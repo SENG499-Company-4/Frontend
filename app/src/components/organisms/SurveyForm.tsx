@@ -145,7 +145,10 @@ function SurveyForm(props: { formData: ClassData[] }) {
             Willingness
           </Typography>
         </Stack>
-        <Stack sx={{ height: `calc(50vh)`, overflowY: 'scroll', border:'1px solid rgba(0, 0, 0, 0.12)', borderBottom: '0' }} spacing={2}>
+        <Stack
+          sx={{ height: `calc(50vh)`, overflowY: 'scroll', border: '1px solid rgba(0, 0, 0, 0.12)', borderBottom: '0' }}
+          spacing={2}
+        >
           {Object.keys(values.courses).map((field) => {
             return (
               <SurveyClassQuestion
