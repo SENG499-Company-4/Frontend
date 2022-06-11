@@ -9,6 +9,7 @@ import { willingRadio, ability, willing } from '../shared/constants/surveyForm.c
 
 function SurveyClassQuestion(props: {
   name: string;
+  additionalQualifications: boolean;
   fieldChanged: (fieldId: string, type: string, value: string) => void;
 }) {
   const [disabled, setDisabled] = useState(true);
@@ -17,10 +18,7 @@ function SurveyClassQuestion(props: {
   const handleDisabling = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value === ability.cannot) {
       setDisabled(event.target.checked);
-
-      setChecked(() => {
-        return willingRadio;
-      });
+      setChecked(willingRadio);
     } else {
       setDisabled(!event.target.checked);
       setChecked(() => {
@@ -40,14 +38,15 @@ function SurveyClassQuestion(props: {
         [event.target.value]: true
       };
     });
-
     props.fieldChanged(props.name, 'willing', (event.target as HTMLInputElement).value);
   };
 
   return (
     <Stack key={props.name} direction="row" spacing={5}>
+      <FormLabel required={props.additionalQualifications} id="CanTeach">
+        {props.name}
+      </FormLabel>
       <FormControl>
-        <FormLabel id="CanTeach">{props.name}</FormLabel>
         <RadioGroup row aria-labelledby="CanTeach" name="row-radio-buttons-group" defaultValue="cannot">
           <FormControlLabel
             onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
@@ -71,7 +70,6 @@ function SurveyClassQuestion(props: {
       </FormControl>
 
       <FormControl>
-        <FormLabel id="WantToTeach">Willingness to teach</FormLabel>
         <RadioGroup row aria-labelledby="WantToTeach" name="row-radio-buttons-group">
           <FormControlLabel
             onChange={(e) => changeRadio(e as React.ChangeEvent<HTMLInputElement>)}

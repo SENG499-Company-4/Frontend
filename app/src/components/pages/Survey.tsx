@@ -1,7 +1,7 @@
 import React from 'react';
 import SurveyForm from 'components/organisms/SurveyForm';
 import Typography from '@mui/material/Typography';
-import myData from '../../classList.json';
+import myData from 'classList.json';
 
 function Survey() {
   return (

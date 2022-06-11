@@ -9,8 +9,14 @@ export interface classData {
 }
 
 export interface formVals {
-  relief: boolean;
+  role: string;
+  relief: number;
   explanation: string;
+  preferredDays: string[];
+  fall: string;
+  spring: string;
+  summer: string;
+  classes: number;
   courses: {
     [key: string]: vals;
   };

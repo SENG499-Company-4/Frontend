@@ -9,14 +9,14 @@ export const overallDefaults = {
   willing: 'notWilling'
 } as const;
 
-export const ability = {
-  can: 'can',
-  effort: 'effort',
-  cannot: 'cannot'
-} as const;
+export enum ability {
+  can = 'can',
+  effort = 'effort',
+  cannot = 'cannot'
+}
 
-export const willing = {
-  willing: 'willing',
-  notWilling: 'notWilling',
-  veryWilling: 'veryWilling'
-} as const;
+export enum willing {
+  willing = 'willing',
+  notWilling = 'notWilling',
+  veryWilling = 'veryWilling'
+}
