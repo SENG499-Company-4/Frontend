@@ -3,7 +3,7 @@ import Scheduler, { Resource } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from './appointment.js';
 import { transferdata } from './appointment.js';
-import { classData } from './data.js';
+import { classData } from '../../data/data.js';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 const currentDate = new Date(2021, 12, 10);

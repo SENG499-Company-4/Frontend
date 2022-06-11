@@ -1,7 +1,7 @@
 import React from 'react';
 import Query from 'devextreme/data/query';
 import { formatDate } from 'devextreme/localization';
-import { classData } from './data.js';
+import { classData } from '../../data/data.js';
 
 //Reference: https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/CustomTemplates/React/Light/
 
