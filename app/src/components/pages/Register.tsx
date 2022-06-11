@@ -5,8 +5,8 @@ import Box from '@mui/material/Box';
 import { Grid, Typography } from '@mui/material';
 
 interface RegisterForm {
-  email: string;
   username: string;
+  vnum: string;
   password: string;
   confirmPassword: string;
 }
@@ -14,8 +14,8 @@ interface RegisterForm {
 function Register() {
   const [hasErrors, setHasErrors] = useState<boolean>(false);
   const [formData, setFormData] = useState<RegisterForm>({
-    email: '',
     username: '',
+    vnum: '',
     password: '',
     confirmPassword: ''
   });
@@ -26,7 +26,7 @@ function Register() {
   };
 
   useEffect(() => {
-    (formData.password === formData.confirmPassword && formData.password.length > 0) || formData.email.length === 0
+    (formData.password === formData.confirmPassword && formData.password.length > 0) || formData.vnum.length === 0
       ? setHasErrors(false)
       : setHasErrors(true);
   }, [formData.password, formData.confirmPassword]);
@@ -55,11 +55,11 @@ function Register() {
         <Grid item>
           <TextField
             id="outlined-required"
-            label="UVic Email"
-            placeholder="someone@uvic.ca"
+            label="UVic Username"
+            placeholder="JJohnson"
             style={{ width: 300 }}
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
           />
         </Grid>
         <Grid item>
@@ -68,8 +68,8 @@ function Register() {
             label="UVic ID"
             placeholder="V00123456"
             style={{ width: 300 }}
-            value={formData.username}
-            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            value={formData.vnum}
+            onChange={(e) => setFormData({ ...formData, vnum: e.target.value })}
           />
         </Grid>
         <Grid item>
