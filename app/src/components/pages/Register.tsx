@@ -29,7 +29,7 @@ function Register() {
     (formData.password === formData.confirmPassword && formData.password.length > 0) || formData.vnum.length === 0
       ? setHasErrors(false)
       : setHasErrors(true);
-  }, [formData.password, formData.confirmPassword]);
+  }, [formData.password, formData.confirmPassword, formData.vnum.length]);
 
   return (
     <Box
