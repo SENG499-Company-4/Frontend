@@ -5,9 +5,11 @@ interface HeaderButtonProps {
   children?: React.ReactNode;
   label: string;
   url: string;
+  icon?: any;
 }
 
 function HeaderButton(props: HeaderButtonProps) {
+  console.log('Type of icon: ', typeof props.icon);
   function navTo(pageName: string) {
     return () => {
       window.location.href = `${pageName}`;
@@ -15,9 +17,11 @@ function HeaderButton(props: HeaderButtonProps) {
   }
 
   return (
-    <Button onClick={navTo(props.url)} color="inherit">
-      {props.label}
-    </Button>
+    <>
+      <Button onClick={navTo(props.url)} color="inherit" startIcon={props.icon}>
+        {props.label}
+      </Button>
+    </>
   );
 }
 
