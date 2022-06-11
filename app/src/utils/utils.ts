@@ -11,36 +11,39 @@ export function parseCalendarJSON(data: Course[]): CalendarItem[] {
         course.meetingTimes.forEach((element) => {   //each meeting map to calendar item ex: csc105 has three calendar item: Tus, Wed, Fri. 
             var courseStartDate = new Date(course.startDate);
             var courseEndDate = new Date(course.startDate);
-            switch (element.Day) {
-                case 'MONDAY': //Caculate next Monday's date
-                    courseStartDate.setDate(courseStartDate.getDate() + (1 + (7 - courseStartDate.getDay())) % 7);
-                    courseEndDate.setDate(courseEndDate.getDate() + (1 + (7 - courseStartDate.getDay())) % 7);
-                    break;
-                case 'TUESDAY':
-                    courseStartDate.setDate(courseStartDate.getDate() + (2 + (7 - courseStartDate.getDay())) % 7);
-                    courseEndDate.setDate(courseEndDate.getDate() + (2 + (7 - courseStartDate.getDay())) % 7);
-                    break;
-                case 'WEDNESDAY':
-                    courseStartDate.setDate(courseStartDate.getDate() + (3 + (7 - courseStartDate.getDay())) % 7);
-                    courseEndDate.setDate(courseEndDate.getDate() + (3 + (7 - courseStartDate.getDay())) % 7);
-                    break;
-                case 'THURSDAY':
-                    courseStartDate.setDate(courseStartDate.getDate() + (4 + (7 - courseStartDate.getDay())) % 7);
-                    courseEndDate.setDate(courseEndDate.getDate() + (4 + (7 - courseStartDate.getDay())) % 7);
-                    break;
-                case 'FRIDAY':
-                    courseStartDate.setDate(courseStartDate.getDate() + (5 + (7 - courseStartDate.getDay())) % 7);
-                    courseEndDate.setDate(courseEndDate.getDate() + (5 + (7 - courseStartDate.getDay())) % 7);
-                    break;
-                case 'SATURDAY':
-                    courseStartDate.setDate(courseStartDate.getDate() + (6 + (7 - courseStartDate.getDay())) % 7);
-                    courseEndDate.setDate(courseEndDate.getDate() + (6 + (7 - courseStartDate.getDay())) % 7);
-                    break;
-                case 'SUNDAY':
-                    courseStartDate.setDate(courseStartDate.getDate() + (0 + (7 - courseStartDate.getDay())) % 7);
-                    courseEndDate.setDate(courseEndDate.getDate() + (0 + (7 - courseStartDate.getDay())) % 7);
-                    break;
-            }
+            // switch (element.Day) {
+            //     case 'MONDAY': //Caculate next Monday's date
+            //         courseStartDate.setDate(courseStartDate.getDate() + (1 + (7 - courseStartDate.getDay())) % 7);
+            //         courseEndDate.setDate(courseEndDate.getDate() + (1 + (7 - courseStartDate.getDay())) % 7);
+            //         break;
+            //     case 'TUESDAY':
+            //         courseStartDate.setDate(courseStartDate.getDate() + (2 + (7 - courseStartDate.getDay())) % 7);
+            //         courseEndDate.setDate(courseEndDate.getDate() + (2 + (7 - courseStartDate.getDay())) % 7);
+            //         break;
+            //     case 'WEDNESDAY':
+            //         courseStartDate.setDate(courseStartDate.getDate() + (3 + (7 - courseStartDate.getDay())) % 7);
+            //         courseEndDate.setDate(courseEndDate.getDate() + (3 + (7 - courseStartDate.getDay())) % 7);
+            //         break;
+            //     case 'THURSDAY':
+            //         courseStartDate.setDate(courseStartDate.getDate() + (4 + (7 - courseStartDate.getDay())) % 7);
+            //         courseEndDate.setDate(courseEndDate.getDate() + (4 + (7 - courseStartDate.getDay())) % 7);
+            //         break;
+            //     case 'FRIDAY':
+            //         courseStartDate.setDate(courseStartDate.getDate() + (5 + (7 - courseStartDate.getDay())) % 7);
+            //         courseEndDate.setDate(courseEndDate.getDate() + (5 + (7 - courseStartDate.getDay())) % 7);
+            //         break;
+            //     case 'SATURDAY':
+            //         courseStartDate.setDate(courseStartDate.getDate() + (6 + (7 - courseStartDate.getDay())) % 7);
+            //         courseEndDate.setDate(courseEndDate.getDate() + (6 + (7 - courseStartDate.getDay())) % 7);
+            //         break;
+            //     case 'SUNDAY':
+            //         courseStartDate.setDate(courseStartDate.getDate() + (0 + (7 - courseStartDate.getDay())) % 7);
+            //         courseEndDate.setDate(courseEndDate.getDate() + (0 + (7 - courseStartDate.getDay())) % 7);
+            //         break;
+            // }
+
+
+            //Ignore above caculation, the scheduler will caculate the correct date for us.
             courseStartDate.setHours(parseInt(element.StartTime.split(':')[0]));
             courseStartDate.setMinutes(parseInt(element.StartTime.split(':')[1]));
 

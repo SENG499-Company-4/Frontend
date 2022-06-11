@@ -5,7 +5,7 @@ import classData from 'data/clean.json';
 import { CalendarItem } from 'interfaces/interfaces';
 import { Grid } from '@mui/material';
 import { parseCalendarJSON } from 'utils/utils';
-
+import { Container } from '@mui/system';
 
 const data: CalendarItem[] = parseCalendarJSON(JSON.parse(JSON.stringify(classData)));
 
@@ -28,15 +28,26 @@ function Appointment(model: any) {
   // console.log('Class data: ', classData);
 
   return (
-    <Grid container className="showtime-preview" direction="column">
-      <Grid item> {classData.text} </Grid>
-      <Grid item> {classData.teacherName} </Grid>
-      <Grid item>
-        {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
-        {' - '}
-        {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
+    // <Grid container className="showtime-preview" direction="column" sx={{ height: '100%' }}>
+    //   <Grid item> {classData.text} </Grid>
+    //   <Grid item> {classData.teacherName} </Grid>
+    //   <Grid item>
+    //     {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
+    //     {' - '}
+    //     {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
+    //   </Grid>
+    // </Grid>
+    <Container sx={{ height: '100%' }}>
+      <Grid container className="showtime-preview" direction="column" >
+        <Grid item> {classData.text} </Grid>
+        <Grid item> {classData.teacherName} </Grid>
+        <Grid item>
+          {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
+          {' - '}
+          {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
+        </Grid>
       </Grid>
-    </Grid>
+    </Container>
   );
 }
 
