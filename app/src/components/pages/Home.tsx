@@ -1,33 +1,29 @@
 import React from 'react';
-import uviclogo from 'images/uviclogo.png';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
-import Container from '@mui/system/Container';
-import Box from '@mui/system/Box';
+import { useNavigate, NavigateFunction } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 function Home() {
+  let navigate: NavigateFunction = useNavigate();
+
   return (
-    <Container>
-      <Grid container paddingTop={4} spacing={25} direction={'row'}>
-        <Grid item>
-          <img src={uviclogo} alt="uviclogo" width={150}></img>
-        </Grid>
-
-        <Grid item marginTop={1}>
-          <Typography variant="h4">University Scheduler System</Typography>
-        </Grid>
-      </Grid>
-
-      <Divider></Divider>
-
-      <Box display="flex" justifyContent="center" marginTop={20}>
-        Hello World !!
-      </Box>
-      <Box display="flex" justifyContent="center" marginTop={5}>
-        This is the Home page of our University Scheduler System.
-      </Box>
-    </Container>
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignContent: 'center',
+        p: 1,
+        m: 1,
+        bgcolor: 'background.paper',
+        height: 1,
+        width: 1,
+        borderRadius: 1
+      }}
+    >
+      <Button variant="outlined" style={{ width: '30%', height: 50 }} onClick={() => navigate(`/login`)}>
+        Login Now
+      </Button>
+    </Box>
   );
 }
 
