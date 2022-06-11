@@ -52,5 +52,5 @@ export interface CalendarItem {
   startDate: Date;
   endDate: Date;
   teacherName: string;
-  recerrenceRule: string;
+  recurrenceRule: string;
 }
