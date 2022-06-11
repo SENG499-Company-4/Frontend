@@ -20,3 +20,4 @@ export enum willing {
   notWilling = 'notWilling',
   veryWilling = 'veryWilling'
 }
+
