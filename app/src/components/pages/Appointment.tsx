@@ -3,6 +3,7 @@ import Query from 'devextreme/data/query';
 import { formatDate } from 'devextreme/localization';
 import classData from 'data/clean.json';
 import { CalendarItem, Course, Faculty } from 'interfaces/interfaces';
+import { Grid } from '@mui/material';
 
 /**
  * Grab data from python scraper and format it for DevExtreme Scheduler
@@ -46,17 +47,18 @@ function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
   // console.log(targetedAppointmentData)
   const classData: CalendarItem = getClassById(targetedAppointmentData.courseId) || {};
+  console.log('Class data: ', classData);
 
   return (
-    <div className="showtime-preview">
-      <div> {classData.text} </div>
-      <div> {classData.teacherName} </div>
-      <div>
+    <Grid container className="showtime-preview">
+      <Grid item> {classData.text} </Grid>
+      <Grid item> {classData.teacherName} </Grid>
+      <Grid item>
         {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
         {' - '}
         {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }
 

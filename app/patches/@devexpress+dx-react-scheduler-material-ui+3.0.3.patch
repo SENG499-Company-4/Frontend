@@ -1,0 +1,13 @@
+diff --git a/node_modules/@devexpress/dx-react-scheduler-material-ui/dist/dx-react-scheduler-material-ui.d.ts b/node_modules/@devexpress/dx-react-scheduler-material-ui/dist/dx-react-scheduler-material-ui.d.ts
+index 049702e..592ada8 100644
+--- a/node_modules/@devexpress/dx-react-scheduler-material-ui/dist/dx-react-scheduler-material-ui.d.ts
++++ b/node_modules/@devexpress/dx-react-scheduler-material-ui/dist/dx-react-scheduler-material-ui.d.ts
+@@ -926,6 +926,8 @@ export interface SchedulerProps {
+   firstDayOfWeek?: number;
+   /** A component that renders the root layout. */
+   rootComponent?: React.ComponentType<SchedulerBase.RootProps>;
++  /** Children */
++  children?: React.ReactNode;
+ }
+ 
+ /** The Scheduler is a root container component designed to process and display the specified data. The Scheduler's functionality  is implemented in several plugins specified as child components. */
