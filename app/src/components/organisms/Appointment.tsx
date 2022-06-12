@@ -22,13 +22,13 @@ function getClassById(id: string) {
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-  const classData = getClassById(targetedAppointmentData.courseId) || {};
+  const data: CalendarItem = getClassById(targetedAppointmentData.courseId) || {};
 
   return (
     <Container sx={{ height: '100%' }}>
       <Grid container className="showtime-preview" direction="column">
-        <Grid item> {classData.text} </Grid>
-        <Grid item> {classData.teacherName} </Grid>
+        <Grid item> {data.text} </Grid>
+        <Grid item> {data.teacherName} </Grid>
         <Grid item>
           {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
           {' - '}
