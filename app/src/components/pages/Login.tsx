@@ -1,20 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
+import { Role } from 'components/shared/constants/timetable.constants';
+import Cookie from 'universal-cookie';
 
 function Login() {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [hasErrors, setHasErrors] = useState<boolean>(false);
+
+  const cookie = new Cookie();
 
   let navigate: NavigateFunction = useNavigate();
 
+  // This is a temporary hack to demo login.
+  // Enter either "USER" or "ADMIN" in the username box to log in as a user or admin.
   const signIn = (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    if (username === Role.Admin) {
+      cookie.set('user', { username: 'Admin', role: Role.Admin });
+      navigate('/');
+    } else if (username === Role.User) {
+      cookie.set('user', { username: 'User', role: Role.User });
+      navigate('/');
+    } else {
+      setHasErrors(true);
+    }
   };
+
+  useEffect(() => {
+    setHasErrors(false);
+  }, [username, password]);
 
   return (
     <Box component="form" sx={{ width: 300 }} mx="auto" justifyContent="center" noValidate autoComplete="off">
@@ -30,6 +50,13 @@ function Login() {
         <Grid item>
           <Typography variant="h3">Sign In</Typography>
         </Grid>
+        {hasErrors && (
+          <Grid item>
+            <Typography variant="body1" color="error">
+              Username or password is incorrect.
+            </Typography>
+          </Grid>
+        )}
         <Grid item>
           <TextField
             id="outlined-username-input"
