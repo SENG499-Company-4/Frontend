@@ -22,7 +22,7 @@ function getClassById(id: string) {
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-  const classData: CalendarItem = getClassById(targetedAppointmentData.courseId) || {};
+  const classData = getClassById(targetedAppointmentData.courseId) || {};
 
   return (
     <Container sx={{ height: '100%' }}>

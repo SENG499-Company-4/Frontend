@@ -1,17 +1,16 @@
 import { CalendarItem, Course } from 'components/shared/interfaces/timetable.interfaces';
-import { Faculty } from 'components/shared/constants/timetable.constants';
 
 /**
  * Grab data from python scraper and format it for DevExtreme Scheduler
  *  Reference: https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/CustomTemplates/React/Light/
  */
 export function parseCalendarJSON(data: Course[]): CalendarItem[] {
-  var calendarData: CalendarItem[] = [];
+  const calendarData: CalendarItem[] = [];
   data.forEach((course: Course) => {
     course.meetingTimes.forEach((element) => {
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
-      var courseStartDate = new Date(course.startDate);
-      var courseEndDate = new Date(course.startDate);
+      const courseStartDate = new Date(course.startDate);
+      const courseEndDate = new Date(course.startDate);
 
       courseStartDate.setHours(parseInt(element.StartTime.split(':')[0]));
       courseStartDate.setMinutes(parseInt(element.StartTime.split(':')[1]));
@@ -20,9 +19,9 @@ export function parseCalendarJSON(data: Course[]): CalendarItem[] {
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
       const calendarItem: CalendarItem = {
-        courseId: (course.CourseID.subject as Faculty) + course.CourseID.code,
-        teacherId: course.professors[0].id, // TODO: Handle multiple professors
-        text: (course.CourseID.subject as Faculty) + course.CourseID.code,
+        courseId: course.CourseID.subject + course.CourseID.code,
+        teacherId: course.professors[0].id,
+        text: course.CourseID.subject + course.CourseID.code,
         startDate: courseStartDate,
         endDate: courseEndDate,
         teacherName: course.professors[0].username,
