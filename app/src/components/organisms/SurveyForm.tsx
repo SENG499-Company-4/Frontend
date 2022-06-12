@@ -11,24 +11,29 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { ClassData, FormValues, TermPrefs, CourseAbility } from 'components/shared/interfaces/surveyForm.interfaces';
+import {
+  IClassData,
+  IFormValues,
+  ITermPrefs,
+  ICourseAbility
+} from 'components/shared/interfaces/surveyForm.interfaces';
 import { overallDefaults } from 'components/shared/constants/surveyForm.constants';
 import TermOptions from 'components/molecules/TermOptions';
 
-function SurveyForm(props: { formData: ClassData[] }) {
+function SurveyForm(props: { formData: IClassData[] }) {
   const additionalQualifications: boolean = false; //TODO: temporary measure until backend implements qualifications to class info
   const [disable, setDisabled] = useState(true);
   const [formats, setFormats] = useState<string[]>(() => []);
   const [role, setRole] = useState('Teaching');
 
-  const [termPrefs, setTermPrefs] = useState<TermPrefs>({
+  const [termPrefs, setTermPrefs] = useState<ITermPrefs>({
     fall: 'Teaching',
     spring: 'Teaching',
     summer: 'Teaching'
   });
 
   const [values, setValues] = useState(() => {
-    const currentValues: FormValues = {
+    const currentValues: IFormValues = {
       role: 'Teaching',
       relief: 0,
       explanation: '',
@@ -57,7 +62,7 @@ function SurveyForm(props: { formData: ClassData[] }) {
 
   const fieldChanged = (courseName: string, type: string, value: string) => {
     setValues((currentValues) => {
-      currentValues.courses[courseName][type as keyof CourseAbility] = value;
+      currentValues.courses[courseName][type as keyof ICourseAbility] = value;
       return currentValues;
     });
   };

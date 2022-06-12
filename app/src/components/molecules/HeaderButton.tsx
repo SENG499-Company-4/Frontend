@@ -1,14 +1,14 @@
 import React from 'react';
 import { Button } from '@mui/material';
 
-interface HeaderButtonProps {
+interface IHeaderButtonProps {
   children?: React.ReactNode;
   label: string;
   url: string;
   icon?: any;
 }
 
-function HeaderButton(props: HeaderButtonProps) {
+function HeaderButton(props: IHeaderButtonProps) {
   console.log('Type of icon: ', typeof props.icon);
   function navTo(pageName: string) {
     return () => {

@@ -1,13 +1,13 @@
 import React, { ReactNode } from 'react';
 import { Button, Menu, MenuItem } from '@mui/material';
 
-interface HeaderMenuProps {
+interface IHeaderMenuProps {
   children: React.ReactNode;
   label: string;
   icon?: any;
 }
 
-function HeaderMenu(props: HeaderMenuProps) {
+function HeaderMenu(props: IHeaderMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open: boolean = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {

@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Grid, Typography } from '@mui/material';
 
-interface RegisterForm {
+interface IRegisterForm {
   username: string;
   vnum: string;
   password: string;
@@ -13,7 +13,7 @@ interface RegisterForm {
 
 function Register() {
   const [hasErrors, setHasErrors] = useState<boolean>(false);
-  const [formData, setFormData] = useState<RegisterForm>({
+  const [formData, setFormData] = useState<IRegisterForm>({
     username: '',
     vnum: '',
     password: '',

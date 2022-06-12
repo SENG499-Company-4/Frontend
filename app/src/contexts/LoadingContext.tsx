@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-interface Props {
+interface ILoadingContextProps {
   children?: React.ReactNode;
 }
 
@@ -17,7 +17,7 @@ export const LoadingContext = React.createContext<ILoadingState>({
   }
 });
 
-export const LoadingContextProvider: React.FC<Props> = (props: Props) => {
+export const LoadingContextProvider: React.FC<ILoadingContextProps> = (props: ILoadingContextProps) => {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   return (

@@ -24,7 +24,6 @@ function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Box display="flex" flexDirection="row" marginX={4} height={'70px'}>
-          {/* TODO: Implement dynamic routes */}
           <Box marginY={2} display="flex" flexDirection="row">
             <img src={appLogo} alt="app-logo" height={'40px'}></img>
             <Typography variant="h4" marginLeft={2}>

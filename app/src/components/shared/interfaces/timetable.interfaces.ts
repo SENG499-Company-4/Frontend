@@ -1,42 +1,42 @@
 import { Faculty, Role, Term, WeekDay } from 'components/shared/constants/timetable.constants';
 
-export interface ProfessorPreference {
-  id: CourseID;
+export interface IProfessorPreference {
+  id: ICourseID;
   preference: number;
 }
 
-export interface CourseID {
+export interface ICourseID {
   subject: Faculty;
   code: string;
   term: Term;
 }
 
-export interface Professor {
+export interface IProfessor {
   id: number;
   username: string;
   password: string;
   role: Role;
-  preferences: ProfessorPreference;
+  preferences: IProfessorPreference;
   active: boolean;
 }
 
-export interface MeetingTime {
+export interface IMeetingTime {
   Day: WeekDay;
   StartTime: string;
   EndTime: string;
 }
 
-export interface Course {
-  CourseID: CourseID;
+export interface ICourse {
+  CourseID: ICourseID;
   hoursPerWeek: number;
   capacity: number;
-  professors: Professor[];
+  professors: IProfessor[];
   startDate: string;
   endDate: string;
-  meetingTimes: MeetingTime[];
+  meetingTimes: IMeetingTime[];
 }
 
-export interface CalendarItem {
+export interface ICalendarItem {
   courseId: string;
   teacherId: number;
   text: string;
