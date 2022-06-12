@@ -2,7 +2,7 @@ import React from 'react';
 import Query from 'devextreme/data/query';
 import { formatDate } from 'devextreme/localization';
 import classData from 'data/clean.json';
-import { CalendarItem } from 'interfaces/interfaces';
+import { CalendarItem } from 'components/shared/interfaces/timetable.interfaces';
 import { Grid } from '@mui/material';
 import { parseCalendarJSON } from 'utils/utils';
 import { Container } from '@mui/system';
@@ -21,24 +21,12 @@ function getClassById(id: string) {
  * Present data in following format: coursename(subject & code) + teacher + time
  */
 function Appointment(model: any) {
-  // console.log('MODEL: ', model);
   const { targetedAppointmentData } = model.data;
-  // console.log(targetedAppointmentData)
   const classData: CalendarItem = getClassById(targetedAppointmentData.courseId) || {};
-  // console.log('Class data: ', classData);
 
   return (
-    // <Grid container className="showtime-preview" direction="column" sx={{ height: '100%' }}>
-    //   <Grid item> {classData.text} </Grid>
-    //   <Grid item> {classData.teacherName} </Grid>
-    //   <Grid item>
-    //     {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
-    //     {' - '}
-    //     {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
-    //   </Grid>
-    // </Grid>
     <Container sx={{ height: '100%' }}>
-      <Grid container className="showtime-preview" direction="column" >
+      <Grid container className="showtime-preview" direction="column">
         <Grid item> {classData.text} </Grid>
         <Grid item> {classData.teacherName} </Grid>
         <Grid item>

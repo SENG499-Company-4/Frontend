@@ -1,13 +1,4 @@
-export type Term = 'SUMMER' | 'WINTER' | 'SPRING';
-
-export type Faculty = 'CSC' | 'SENG' | 'ECE';
-
-export enum Role {
-  User = 'USER',
-  Admin = 'ADMIN'
-}
-
-export type WeekDay = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+import { Faculty, Role, Term, WeekDay } from 'components/shared/constants/timetable.constants';
 
 export interface ProfessorPreference {
   id: CourseID;

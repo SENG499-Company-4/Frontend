@@ -10,7 +10,6 @@ const currentDate = new Date(2021, 12, 10);
 
 function ScheduleTimetable() {
   const calendarData = parseCalendarJSON(JSON.parse(JSON.stringify(classData)));
-  // console.log('calendarData: ', calendarData);
   return (
     <Scheduler
       timeZone="Canada/Pacific"
