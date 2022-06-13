@@ -4,7 +4,6 @@ import Header from 'components/organisms/Header';
 import Home from 'components/pages/Home';
 import Login from 'components/pages/Login';
 import Register from 'components/pages/Register';
-import Dashboard from 'components/pages/Dashboard';
 import Survey from 'components/pages/Survey';
 import Schedule from 'components/pages/Schedule';
 import ScheduleManage from 'components/pages/ScheduleManage';
@@ -29,14 +28,14 @@ function AppRouter() {
 
   return (
     <Router>
-      <Header />
+      <Header user={user}/>
       <Routes>
         <Route
           path="/"
           element={[
-            <PublicRoute user={user} meta={PublicRouteMeta}>
+            <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
               <Home />
-            </PublicRoute>
+            </ProtectedRoute>
           ]}
         />
         <Route
@@ -56,14 +55,6 @@ function AppRouter() {
           ]}
         />
         <Route
-          path="/dashboard"
-          element={[
-            <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
-              <Dashboard />
-            </ProtectedRoute>
-          ]}
-        />
-        <Route
           path="/survey"
           element={[
             <ProtectedRoute user={user} meta={ProfessorRouteMeta}>
@@ -74,7 +65,7 @@ function AppRouter() {
         <Route
           path="/schedule"
           element={[
-            <ProtectedRoute user={user} meta={AdminRouteMeta}>
+            <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
               <Schedule />
             </ProtectedRoute>
           ]}
@@ -90,7 +81,7 @@ function AppRouter() {
         <Route
           path="/schedule/timetable"
           element={[
-            <ProtectedRoute user={user} meta={AdminRouteMeta}>
+            <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
               <ScheduleTimetable />
             </ProtectedRoute>
           ]}
@@ -106,7 +97,7 @@ function AppRouter() {
         <Route
           path="/professor-profile"
           element={[
-            <ProtectedRoute user={user} meta={AdminRouteMeta}>
+            <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
               <ProfessorProfile />
             </ProtectedRoute>
           ]}

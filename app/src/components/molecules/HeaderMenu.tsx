@@ -32,7 +32,7 @@ function HeaderMenu(props: IHeaderMenuProps) {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         {React.Children.map(props.children, (child: ReactNode) => {
-          return <MenuItem>{child}</MenuItem>;
+          return child ? <MenuItem>{child}</MenuItem>: null;
         })}
       </Menu>
     </>

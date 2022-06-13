@@ -23,10 +23,10 @@ function Login() {
     e.preventDefault();
     if (username === Role.Admin) {
       cookie.set('user', { username: 'Admin', role: Role.Admin });
-      navigate('/');
+      window.location.href = `/`;
     } else if (username === Role.User) {
       cookie.set('user', { username: 'User', role: Role.User });
-      navigate('/');
+      window.location.href = `/`;
     } else {
       setHasErrors(true);
     }

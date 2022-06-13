@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '@mui/material';
+import Cookies from 'universal-cookie';
 
 interface IHeaderButtonProps {
   children?: React.ReactNode;
@@ -9,10 +10,16 @@ interface IHeaderButtonProps {
 }
 
 function HeaderButton(props: IHeaderButtonProps) {
-  console.log('Type of icon: ', typeof props.icon);
+  const cookies = new Cookies();
+
   function navTo(pageName: string) {
     return () => {
-      window.location.href = `${pageName}`;
+      if (pageName === "/logout") {
+        cookies.remove('user');
+        window.location.href = `/`;
+      } else {
+        window.location.href = `${pageName}`;
+      }
     };
   }
 
