@@ -28,7 +28,7 @@ function AppRouter() {
 
   return (
     <Router>
-      <Header user={user}/>
+      <Header user={user} />
       <Routes>
         <Route
           path="/"

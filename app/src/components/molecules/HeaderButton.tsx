@@ -14,7 +14,7 @@ function HeaderButton(props: IHeaderButtonProps) {
 
   function navTo(pageName: string) {
     return () => {
-      if (pageName === "/logout") {
+      if (pageName === '/logout') {
         cookies.remove('user');
         window.location.href = `/`;
       } else {
