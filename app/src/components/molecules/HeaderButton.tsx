@@ -1,23 +1,34 @@
 import React from 'react';
 import { Button } from '@mui/material';
+import Cookies from 'universal-cookie';
 
-interface HeaderButtonProps {
+interface IHeaderButtonProps {
   children?: React.ReactNode;
   label: string;
   url: string;
+  icon?: any;
 }
 
-function HeaderButton(props: HeaderButtonProps) {
+function HeaderButton(props: IHeaderButtonProps) {
+  const cookies = new Cookies();
+
   function navTo(pageName: string) {
     return () => {
-      window.location.href = `${pageName}`;
+      if (pageName === '/logout') {
+        cookies.remove('user');
+        window.location.href = `/`;
+      } else {
+        window.location.href = `${pageName}`;
+      }
     };
   }
 
   return (
-    <Button onClick={navTo(props.url)} color="inherit">
-      {props.label}
-    </Button>
+    <>
+      <Button onClick={navTo(props.url)} color="inherit" startIcon={props.icon}>
+        {props.label}
+      </Button>
+    </>
   );
 }
 

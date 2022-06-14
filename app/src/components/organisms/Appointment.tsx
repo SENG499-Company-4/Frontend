@@ -2,12 +2,12 @@ import React from 'react';
 import Query from 'devextreme/data/query';
 import { formatDate } from 'devextreme/localization';
 import classData from 'data/clean.json';
-import { CalendarItem } from 'components/shared/interfaces/timetable.interfaces';
+import { ICalendarItem } from 'components/shared/interfaces/timetable.interfaces';
 import { Grid } from '@mui/material';
 import { parseCalendarJSON } from 'utils/utils';
 import { Container } from '@mui/system';
 
-const data: CalendarItem[] = parseCalendarJSON(JSON.parse(JSON.stringify(classData)));
+const data: ICalendarItem[] = parseCalendarJSON(JSON.parse(JSON.stringify(classData)));
 
 /**
  * Filter newdata by course id
@@ -22,7 +22,7 @@ function getClassById(id: string) {
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-  const classInfo: CalendarItem = getClassById(targetedAppointmentData.courseId) || {};
+  const classInfo: ICalendarItem = getClassById(targetedAppointmentData.courseId) || {};
 
   return (
     <Container sx={{ height: '100%' }}>

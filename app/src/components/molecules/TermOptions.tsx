@@ -1,14 +1,14 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import React from 'react';
 
-interface TermOptionProps {
+interface ITermOptionProps {
   label: string;
   handleChange: (event: React.ChangeEvent<HTMLInputElement>, term: string) => void;
   term: string;
   prefs: string;
 }
 
-export default function TermOptions(props: TermOptionProps) {
+export default function TermOptions(props: ITermOptionProps) {
   return (
     <>
       <FormControl>
