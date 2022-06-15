@@ -12,6 +12,9 @@ export interface IFormValues {
   role: string;
   relief: number;
   explanation: string;
+  topicsCourse: boolean;
+  topicsCourseTitle: string;
+  topicsCourseDesc: string;
   preferredDays: string[];
   fall: string;
   spring: string;

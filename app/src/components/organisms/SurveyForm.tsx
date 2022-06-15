@@ -19,12 +19,14 @@ import {
 } from 'components/shared/interfaces/surveyForm.interfaces';
 import { overallDefaults } from 'components/shared/constants/surveyForm.constants';
 import TermOptions from 'components/molecules/TermOptions';
+import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 
 function SurveyForm(props: { formData: IClassData[] }) {
   const additionalQualifications: boolean = false; //TODO: temporary measure until backend implements qualifications to class info
   const [disable, setDisabled] = useState(true);
   const [formats, setFormats] = useState<string[]>(() => []);
   const [role, setRole] = useState('Teaching');
+  const [topic, setTopic] = useState(false);
 
   const [termPrefs, setTermPrefs] = useState<ITermPrefs>({
     fall: 'Teaching',
@@ -37,6 +39,9 @@ function SurveyForm(props: { formData: IClassData[] }) {
       role: 'Teaching',
       relief: 0,
       explanation: '',
+      topicsCourse: false,
+      topicsCourseTitle: '',
+      topicsCourseDesc: '',
       preferredDays: [],
       fall: 'Teaching',
       spring: 'Teaching',
@@ -68,6 +73,7 @@ function SurveyForm(props: { formData: IClassData[] }) {
   };
 
   const handleRelief = (event: React.ChangeEvent<HTMLInputElement>, amount: boolean) => {
+    console.log('topic is now: ', topic);
     setValues((currentValues) => {
       if (amount) {
         const reliefAmount = Math.min(Math.max(Number(event.target.value), 0), 6);
@@ -129,6 +135,25 @@ function SurveyForm(props: { formData: IClassData[] }) {
     setValues((currentValues) => {
       const newVal = Number(event.target.value);
       currentValues.classes = newVal;
+      return currentValues;
+    });
+  };
+
+  const handleTopic = (event: React.ChangeEvent<HTMLInputElement>, title: boolean) => {
+    setValues((currentValues) => {
+      if (title) {
+        currentValues.topicsCourseTitle = event.target.value;
+      } else {
+        currentValues.topicsCourseDesc = event.target.value;
+      }
+      return currentValues;
+    });
+  };
+
+  const handleTopicCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTopic(event.target.checked);
+    setValues((currentValues) => {
+      currentValues.topicsCourse = event.target.checked;
       return currentValues;
     });
   };
@@ -246,6 +271,38 @@ function SurveyForm(props: { formData: IClassData[] }) {
             <TermOptions handleChange={handleTerm} term={'fall'} label="Fall" prefs={termPrefs.fall} />
             <TermOptions handleChange={handleTerm} term={'spring'} label="Spring" prefs={termPrefs.spring} />
             <TermOptions handleChange={handleTerm} term={'summer'} label="Summer" prefs={termPrefs.summer} />
+          </Stack>
+
+          <Stack direction="row" spacing={2}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Would you like to teach a topics course?"
+                labelPlacement="start"
+                onChange={(event) => handleTopicCheck(event as React.ChangeEvent<HTMLInputElement>)}
+              />
+            </FormGroup>
+
+            <TextField
+              id="topics-title-textarea"
+              label="Topics course title"
+              disabled={!topic}
+              value={values.topicsCourseTitle}
+              style={{ width: '50%' }}
+              inputProps={{ style: { color: 'black' } }}
+              onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>, true)}
+            />
+
+            <TextField
+              id="topics-description-textarea"
+              label="Description of Topics Course"
+              multiline
+              disabled={!topic}
+              value={values.topicsCourseDesc}
+              style={{ width: '50%' }}
+              inputProps={{ style: { color: 'black' } }}
+              onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>, false)}
+            />
           </Stack>
 
           <Button variant="contained" color="primary" type="submit">
