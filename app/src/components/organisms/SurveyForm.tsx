@@ -287,7 +287,6 @@ function SurveyForm(props: { formData: IClassData[] }) {
               id="topics-title-textarea"
               label="Topics course title"
               disabled={!topic}
-              value={values.topicsCourseTitle}
               style={{ width: '50%' }}
               inputProps={{ style: { color: 'black' } }}
               onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>, true)}
@@ -298,7 +297,6 @@ function SurveyForm(props: { formData: IClassData[] }) {
               label="Description of Topics Course"
               multiline
               disabled={!topic}
-              value={values.topicsCourseDesc}
               style={{ width: '50%' }}
               inputProps={{ style: { color: 'black' } }}
               onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>, false)}
