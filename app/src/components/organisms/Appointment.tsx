@@ -2,19 +2,15 @@ import React from 'react';
 import Query from 'devextreme/data/query';
 import { formatDate } from 'devextreme/localization';
 import classData from 'data/clean.json';
-import { ICalendarItem } from 'components/shared/interfaces/timetable.interfaces';
+import { ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
 import { Grid } from '@mui/material';
-import { parseCalendarJSON } from 'utils/utils';
+import { parseCalendarJSON_Teacher } from 'utils/utils';
 import { Container } from '@mui/system';
 
-const data: ICalendarItem[] = parseCalendarJSON(JSON.parse(JSON.stringify(classData)));
+const data: ICalendarItem_Teacher[] = parseCalendarJSON_Teacher(JSON.parse(JSON.stringify(classData)));
 
-/**
- * Filter newdata by course id
- */
-
-function getClassById(id: string) {
-  return Query(data).filter(['courseId', id]).toArray()[0];
+function getTeacherById(id: number) {
+  return Query(data).filter(['id', id]).toArray()[0];
 }
 
 /**
@@ -22,13 +18,14 @@ function getClassById(id: string) {
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-  const classInfo: ICalendarItem = getClassById(targetedAppointmentData.courseId) || {};
+  const teacherInfo: ICalendarItem_Teacher = getTeacherById(targetedAppointmentData.teacherId) || {};
+  // console.log("classInfor", teacherInfo);
 
   return (
-    <Container sx={{ height: '100%', backgroundColor: classInfo.color }}>
+    <Container sx={{ height: '100%' }}>
       <Grid container className="showtime-preview" direction="column">
-        <Grid item> {classInfo.text} </Grid>
-        <Grid item> {classInfo.teacherName} </Grid>
+        <Grid item> {targetedAppointmentData.courseId} </Grid>
+        <Grid item> {teacherInfo.teacherName} </Grid>
         <Grid item>
           {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
           {' - '}
