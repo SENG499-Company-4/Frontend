@@ -12,7 +12,6 @@ function ScheduleTimetable() {
   const calendarData = parseCalendarJSON(JSON.parse(JSON.stringify(classData)));
   return (
     <Scheduler
-      timeZone="Canada/Pacific"
       dataSource={calendarData}
       defaultCurrentView="day"
       defaultCurrentDate={currentDate}
