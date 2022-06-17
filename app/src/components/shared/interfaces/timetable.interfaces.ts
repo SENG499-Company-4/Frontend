@@ -44,4 +44,12 @@ export interface ICalendarItem {
   endDate: Date;
   teacherName: string;
   recurrenceRule: string;
+  color: string;
+}
+
+export interface ICalendarItem_2 {
+  id: number;
+  teacherId: number;
+  teacherName: string;
+  color: string;
 }

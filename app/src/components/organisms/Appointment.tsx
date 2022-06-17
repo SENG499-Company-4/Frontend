@@ -25,7 +25,7 @@ function Appointment(model: any) {
   const classInfo: ICalendarItem = getClassById(targetedAppointmentData.courseId) || {};
 
   return (
-    <Container sx={{ height: '100%' }}>
+    <Container sx={{ height: '100%', backgroundColor: classInfo.color }}>
       <Grid container className="showtime-preview" direction="column">
         <Grid item> {classInfo.text} </Grid>
         <Grid item> {classInfo.teacherName} </Grid>

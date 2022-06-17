@@ -1,5 +1,5 @@
 import React from 'react';
-import Scheduler from 'devextreme-react/scheduler';
+import { Scheduler, Editing } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
 import classData from 'data/clean.json';
@@ -10,17 +10,34 @@ const currentDate = new Date(2021, 12, 10);
 
 function ScheduleTimetable() {
   const calendarData = parseCalendarJSON(JSON.parse(JSON.stringify(classData)));
+  // const calendarData_2 = parseCalendarJSON_2(JSON.parse(JSON.stringify(classData)));
+
   return (
-    <Scheduler
-      timeZone="Canada/Pacific"
-      dataSource={calendarData}
-      defaultCurrentView="day"
-      defaultCurrentDate={currentDate}
-      startDayHour={8}
-      height={800}
-      appointmentComponent={Appointment}
-      showAllDayPanel={false}
-    />
+    <>
+      {/*@ts-ignore*/}
+      <Scheduler
+        timeZone="Canada/Pacific"
+        dataSource={calendarData}
+        defaultCurrentView="day"
+        defaultCurrentDate={currentDate}
+        startDayHour={8}
+        height={800}
+        appointmentComponent={Appointment}
+        showAllDayPanel={false}
+
+      >
+        <Editing
+          allowAdding={false}
+          allowDragging={false}
+        />
+        {/* <Resource
+          dataSource={calendarData_2}
+          fieldExpr="teacherId"
+          useColorAsDefault={true}
+        /> */}
+      </Scheduler>
+
+    </>
   );
 }
 
