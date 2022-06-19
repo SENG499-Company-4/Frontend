@@ -33,7 +33,9 @@ function ScheduleTimetable() {
         <Resource
           dataSource={calendarData_Teacher}
           fieldExpr="teacherId"
-          allowMultiple={false}
+          displayExpr='teacherName'
+          label='Teacher'
+          allowMultiple={true}
           useColorAsDefault={true}
         />
       </Scheduler>

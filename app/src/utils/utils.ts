@@ -1,11 +1,12 @@
 import { ICalendarItem_Course, ICourse, ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
+import colors from 'themes/CourseColor.json';
 
 /**
  * Grab data from python scraper and format it for DevExtreme Scheduler
  *  Reference: https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/CustomTemplates/React/Light/
  */
 
-const colors = ['#1B5E20', '#9E9D24', '#40C4FF', '#6200EA', '#FF1744'];
+// const colors = ['#1B5E20', '#9E9D24', '#40C4FF', '#6200EA', '#FF1744'];
 
 export function parseCalendarJSON_Teacher(data: ICourse[]): ICalendarItem_Teacher[] {
   const calendarData_Teacher: ICalendarItem_Teacher[] = [];
@@ -13,7 +14,7 @@ export function parseCalendarJSON_Teacher(data: ICourse[]): ICalendarItem_Teache
     const calendarItem: ICalendarItem_Teacher = {
       id: course.professors[0].id,
       teacherName: course.professors[0].username,
-      color: colors[Math.floor(Math.random() * 5)],
+      color: colors[course.professors[0].id % colors.length],
     };
     calendarData_Teacher.push(calendarItem);
   });
