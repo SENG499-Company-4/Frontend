@@ -17,17 +17,14 @@ import {
   ITermPrefs,
   ICourseAbility
 } from 'components/shared/interfaces/surveyForm.interfaces';
-import {
-  overallDefaults,
-  departmentTopics
-} from 'components/shared/constants/surveyForm.constants';
+import { overallDefaults, departmentTopics } from 'components/shared/constants/surveyForm.constants';
 import TermOptions from 'components/molecules/TermOptions';
 import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 
 function SurveyForm(props: { formData: IClassData[] }) {
   const additionalQualifications: boolean = false; //TODO: temporary measure until backend implements qualifications to class info
 
-  const department: string = "SENG"; //TODO: replace this with a function that determines the department of the viewing professor
+  const department: string = 'SENG'; //TODO: replace this with a function that determines the department of the viewing professor
   const departmentTopicCourse: departmentTopics = departmentTopics[department as keyof typeof departmentTopics];
 
   const [disable, setDisabled] = useState(true);
@@ -78,7 +75,6 @@ function SurveyForm(props: { formData: IClassData[] }) {
       } else {
         currentValues.topicsCourseTitle = '';
       }
-
 
       return currentValues;
     });
