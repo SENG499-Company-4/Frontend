@@ -17,12 +17,19 @@ import {
   ITermPrefs,
   ICourseAbility
 } from 'components/shared/interfaces/surveyForm.interfaces';
-import { overallDefaults } from 'components/shared/constants/surveyForm.constants';
+import {
+  overallDefaults,
+  departmentTopics
+} from 'components/shared/constants/surveyForm.constants';
 import TermOptions from 'components/molecules/TermOptions';
 import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 
 function SurveyForm(props: { formData: IClassData[] }) {
   const additionalQualifications: boolean = false; //TODO: temporary measure until backend implements qualifications to class info
+
+  const department: string = "SENG"; //TODO: replace this with a function that determines the department of the viewing professor
+  const departmentTopicCourse: departmentTopics = departmentTopics[department as keyof typeof departmentTopics];
+
   const [disable, setDisabled] = useState(true);
   const [formats, setFormats] = useState<string[]>(() => []);
   const [role, setRole] = useState('Teaching');
@@ -39,9 +46,7 @@ function SurveyForm(props: { formData: IClassData[] }) {
       role: 'Teaching',
       relief: 0,
       explanation: '',
-      topicsCourse: false,
       topicsCourseTitle: '',
-      topicsCourseDesc: '',
       preferredDays: [],
       fall: 'Teaching',
       spring: 'Teaching',
@@ -51,15 +56,32 @@ function SurveyForm(props: { formData: IClassData[] }) {
     };
 
     currentValues.courses = props.formData.reduce((obj: any, field) => {
-      obj[field.CourseID.subject + ' ' + field.CourseID.code] = {
-        ...overallDefaults
-      };
+      if (!field.CourseID.code.includes(departmentTopicCourse)) {
+        obj[field.CourseID.subject + ' ' + field.CourseID.code] = {
+          ...overallDefaults
+        };
+      }
       return obj;
     }, {});
     return currentValues;
   });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    setValues((currentValues) => {
+      const topicTitle = department + ' ' + departmentTopicCourse;
+
+      currentValues.courses[topicTitle] = { ...overallDefaults };
+
+      if (topic) {
+        currentValues.courses[topicTitle].ability = 'can';
+        currentValues.courses[topicTitle].willing = 'veryWilling';
+      } else {
+        currentValues.topicsCourseTitle = '';
+      }
+
+
+      return currentValues;
+    });
     console.log(values);
     e.preventDefault();
     //TODO: submit values somewhere
@@ -139,23 +161,15 @@ function SurveyForm(props: { formData: IClassData[] }) {
     });
   };
 
-  const handleTopic = (event: React.ChangeEvent<HTMLInputElement>, title: boolean) => {
+  const handleTopic = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValues((currentValues) => {
-      if (title) {
-        currentValues.topicsCourseTitle = event.target.value;
-      } else {
-        currentValues.topicsCourseDesc = event.target.value;
-      }
+      currentValues.topicsCourseTitle = event.target.value;
       return currentValues;
     });
   };
 
   const handleTopicCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTopic(event.target.checked);
-    setValues((currentValues) => {
-      currentValues.topicsCourse = event.target.checked;
-      return currentValues;
-    });
   };
 
   return (
@@ -289,17 +303,7 @@ function SurveyForm(props: { formData: IClassData[] }) {
               disabled={!topic}
               style={{ width: '50%' }}
               inputProps={{ style: { color: 'black' } }}
-              onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>, true)}
-            />
-
-            <TextField
-              id="topics-description-textarea"
-              label="Description of Topics Course"
-              multiline
-              disabled={!topic}
-              style={{ width: '50%' }}
-              inputProps={{ style: { color: 'black' } }}
-              onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>, false)}
+              onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>)}
             />
           </Stack>
 
