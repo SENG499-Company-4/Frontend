@@ -1,173 +1,171 @@
 import React, { useState } from 'react';
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Grid from '@mui/material/Grid';
-import Avatar from "@mui/material/Avatar";
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import MenuItem from '@mui/material/MenuItem';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { Term } from 'components/shared/constants/timetable.constants';
+import { Typography } from '@mui/material';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
+import { ISchedule } from 'components/shared/interfaces/scheduleManage.interfaces';
 
-const semesterTypes = [
-  {
-    value: 'summer',
-    label: 'Summer',
-  },
-  {
-    value: 'winter',
-    label: 'Winter',
-  },
-  {
-    value: 'fall',
-    label: 'Fall',
-  }
-];
+const semesterTypes: Term[] = ['SUMMER', 'WINTER', 'SPRING'];
 
-const schedules = [
+const sampleSchedules: ISchedule[] = [
   {
     id: 1,
-    semester: "Summer",
     year: 2022,
-    date: "06-12-2022",
-    name: "Summer 2022 06-12-2022"
+    createdAt: new Date(),
+    courses: [],
+    term: 'SUMMER'
   },
   {
     id: 2,
-    semester: "Winter",
     year: 2022,
-    date: "01-12-2022",
-    name: "Winter 2022 01-12-2022"
+    createdAt: new Date(),
+    courses: [],
+    term: 'WINTER'
   },
   {
     id: 3,
-    semester: "Fall",
     year: 2022,
-    date: "09-12-2022",
-    name: "Fall 2022 09-12-2022"
-  },
-  {
-    id: 4,
-    semester: "Summer",
-    year: 2021,
-    date: "06-12-2021",
-    name: "Summer 2021 06-12-2021"
-  },
-  {
-    id: 5,
-    semester: "Winter",
-    year: 2021,
-    date: "01-12-2021",
-    name: "Winter 2021 01-12-2021"
-  },
-  {
-    id: 6,
-    semester: "Fall",
-    year: 2021,
-    date: "09-12-2021",
-    name: "Fall 2021 09-12-2021"
+    createdAt: new Date(),
+    courses: [],
+    term: 'SPRING'
   }
 ];
 
 function ScheduleManage() {
-  const [search, setSearch] = useState("");
-  const [foundSchedules, setFoundSchedules] = useState(schedules);
-  const [semester, setSemester] = useState('Summer');
+  const [search, setSearch] = useState('');
+  const [foundSchedules, setFoundSchedules] = useState<ISchedule[]>(sampleSchedules);
+  const [semester, setSemester] = useState('SUMMER');
   const [year, setYear] = useState<Date | null>(new Date());
 
   let navigate: NavigateFunction = useNavigate();
 
-  const filter = (e: any) => {
-    const keyword = e.target.value;
-
-    if (keyword !== "") {
-      const results = schedules.filter((schedule) => {
-        return schedule.name.toLowerCase().includes(keyword.toLowerCase());
-        // Use the toLowerCase() method to make it case-insensitive
+  const filter = (inputText: string) => {
+    if (inputText !== '') {
+      const results = sampleSchedules.filter((schedule: ISchedule) => {
+        const matchText = schedule.term + ' ' + schedule.year;
+        return matchText.toLowerCase().includes(inputText.toLowerCase());
       });
       setFoundSchedules(results);
     } else {
-      setFoundSchedules(schedules);
-      // If the text field is empty, show all users
+      // Show all schedules
+      setFoundSchedules(sampleSchedules);
     }
+    setSearch(inputText);
+  };
 
-    setSearch(keyword);
+  const getBgColor = (term: Term) => {
+    switch (term) {
+      case 'SUMMER':
+        return '#ff9800';
+      case 'WINTER':
+        return '#03a9f4';
+      case 'SPRING':
+        return '#ffc107';
+      default:
+        return '#ffc107';
+    }
+  };
+
+  const getIcon = (term: Term) => {
+    switch (term) {
+      case 'SUMMER':
+        return <WbSunnyIcon />;
+      case 'WINTER':
+        return <AcUnitIcon />;
+      case 'SPRING':
+        return <LocalFloristIcon />;
+      default:
+        return <CalendarMonthIcon />;
+    }
   };
 
   return (
-    <div>
-      <Box sx={{ flexGrow: 1, margin: 5 }}>
-        <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems={'center'}>
-          <Grid item xs={4}>
-            <TextField
-              id="outlined-basic"
-              label="Search"
-              variant="outlined"
-              type="search"
-              value={search}
-              onChange={filter}
-              className="input"
-              placeholder="Keyword"
-              sx={{ width: 350 }}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <List
-              sx={{
-                width: "100%",
-                bgcolor: "background.paper",
-                position: "relative",
-                overflow: "auto",
-                maxHeight: 350,
-                "& ul": { padding: 0 }
-              }}
-              subheader={<li />}
-            >
-              {foundSchedules && foundSchedules.length > 0 ? (
-                foundSchedules.map((schedule) => (
-                  <ListItem key={schedule.id}>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <CalendarMonthIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={schedule.semester}
-                      secondary={schedule.year}
-                    />
-                    <Button variant="outlined">View</Button>
-                    <span style={{ marginLeft: 30 }}>
-                      Generated on {schedule.date}
-                    </span>
-                  </ListItem>
-                ))
-              ) : (
-                <h2>No schedules found!</h2>
-              )}
-            </List>
-          </Grid>
-          <Grid item xs={4}>
+    <Box sx={{ flexGrow: 1, margin: 5 }}>
+      <Typography variant="h5" marginBottom={2}>
+        Manage Existing Schedules
+      </Typography>
+      <Grid container rowSpacing={3} alignItems={'center'}>
+        <Grid item>
+          <TextField
+            id="outlined-basic"
+            label="Search schedules..."
+            variant="outlined"
+            type="search"
+            value={search}
+            onChange={(e) => filter(e.target.value)}
+            className="input"
+            placeholder="Keyword"
+            sx={{ width: 350 }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <List
+            sx={{
+              width: '100%',
+              bgcolor: 'background.paper',
+              position: 'relative',
+              overflow: 'auto',
+              maxHeight: 350,
+              '& ul': { padding: 0 }
+            }}
+            subheader={<li />}
+          >
+            {foundSchedules && foundSchedules.length > 0 ? (
+              foundSchedules.map((schedule) => (
+                <ListItem key={schedule.id}>
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: getBgColor(schedule.term) }}>{getIcon(schedule.term)}</Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={schedule.term} secondary={schedule.year} />
+                  <Button variant="outlined">View</Button>
+                  <Typography variant="body2" marginLeft={2}>
+                    Generated on {schedule.createdAt.toString()}
+                  </Typography>
+                </ListItem>
+              ))
+            ) : (
+              <Typography variant="subtitle1">No schedules found!</Typography>
+            )}
+          </List>
+        </Grid>
+
+        <Typography variant="h5" marginY={4}>
+          Generate New Schedule
+        </Typography>
+        <Grid container spacing={2} alignItems={'center'}>
+          <Grid item>
             <TextField
               id="select-semester"
               select
               label="Select Semester"
               value={semester}
               onChange={(e) => setSemester(e.target.value)}
+              style={{ width: '300px' }}
             >
-              {semesterTypes.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              {semesterTypes.map((semester) => (
+                <MenuItem key={semester} value={semester}>
+                  {semester}
                 </MenuItem>
               ))}
             </TextField>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item>
             <LocalizationProvider dateAdapter={AdapterDateFns}>
               <DatePicker
                 views={['year']}
@@ -178,18 +176,25 @@ function ScheduleManage() {
               />
             </LocalizationProvider>
           </Grid>
-          <Grid item xs={4}>
-            <Button variant="contained" onClick={() => navigate(`/schedule/generate`, {
-              state:
-              {
-                semester: { semester },
-                year: { year }
+          <Grid item>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() =>
+                navigate(`/schedule/generate`, {
+                  state: {
+                    semester,
+                    year
+                  }
+                })
               }
-            })}>Generate Schedule</Button>
+            >
+              Generate Schedule
+            </Button>
           </Grid>
         </Grid>
-      </Box>
-    </div>
+      </Grid>
+    </Box>
   );
 }
 
