@@ -13,7 +13,7 @@ const data: ICalendarItem[] = parseCalendarJSON(JSON.parse(JSON.stringify(classD
  * Filter newdata by course id
  */
 
-function getClassById(id: string) {
+export function getClassById(id: string) {
   return Query(data).filter(['courseId', id]).toArray()[0];
 }
 

@@ -34,6 +34,5 @@ export function parseCalendarJSON(data: ICourse[]): ICalendarItem[] {
       calendarData.push(calendarItem);
     });
   });
-  console.log(calendarData);
   return calendarData;
 }
