@@ -7,6 +7,6 @@ test('Testing getClassByID', () => {
   const res = getClassById(expected.courseId);
 
   expect(res).toEqual(expected);
-})
+});
 
-export { };
+export {};
