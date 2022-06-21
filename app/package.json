@@ -35,7 +35,7 @@
   "scripts": {
     "dev": "react-scripts start",
     "start": "serve -s build",
-    "build": "react-scripts build",
+    "build": "node --optimize_for_size --max_old_space_size=460 node_modules/.bin/react-scripts build",
     "test": "react-scripts test",
     "lint": "eslint src/ --ext .jsx,.js,.ts,.tsx",
     "lint:fix": "npm run lint -- --fix",
