@@ -12,11 +12,11 @@ export function parseCalendarJSON(data: ICourse[]): ICalendarItem[] {
       const courseStartDate = new Date(course.startDate);
       const courseEndDate = new Date(course.startDate);
 
-      courseStartDate.setHours(parseInt(element.StartTime.split(':')[0]));
-      courseStartDate.setMinutes(parseInt(element.StartTime.split(':')[1]));
+      courseStartDate.setUTCHours(parseInt(element.StartTime.split(':')[0]));
+      courseStartDate.setUTCMinutes(parseInt(element.StartTime.split(':')[1]));
 
-      courseEndDate.setHours(parseInt(element.EndTime.split(':')[0]));
-      courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
+      courseEndDate.setUTCHours(parseInt(element.EndTime.split(':')[0]));
+      courseEndDate.setUTCMinutes(parseInt(element.EndTime.split(':')[1]));
 
       const calendarItem: ICalendarItem = {
         courseId: course.CourseID.subject + course.CourseID.code,
@@ -34,6 +34,5 @@ export function parseCalendarJSON(data: ICourse[]): ICalendarItem[] {
       calendarData.push(calendarItem);
     });
   });
-  console.log(calendarData);
   return calendarData;
 }
