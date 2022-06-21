@@ -27,8 +27,8 @@ test('Test parseCalendarJSON', () => {
     }
   ]
 
-  const startDate = new Date('2022-01-09T16:30:00.000Z');
-  const endDate = new Date('2022-01-09T17:20:00.000Z');
+  const startDate = new Date('2022-01-10T08:30:00.000Z');
+  const endDate = new Date('2022-01-10T09:20:00.000Z');
   const expected = [
     {
       courseId: 'CSC105',
