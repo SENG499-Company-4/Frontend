@@ -37,6 +37,7 @@ export interface ICourse {
 }
 
 export interface ICalendarItem_Course {
+  text: string;
   courseId: string;
   teacherId: number;
   startDate: Date;
