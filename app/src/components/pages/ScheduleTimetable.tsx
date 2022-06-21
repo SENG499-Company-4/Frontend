@@ -25,6 +25,7 @@ function ScheduleTimetable() {
         height={800}
         appointmentComponent={Appointment}
         showAllDayPanel={false}
+
       >
         <Editing
           allowAdding={false}
@@ -34,7 +35,7 @@ function ScheduleTimetable() {
           dataSource={calendarData_Teacher}
           fieldExpr="teacherId"
           displayExpr='teacherName'
-          label='Teacher'
+          label='Professor'
           allowMultiple={true}
           useColorAsDefault={true}
         />

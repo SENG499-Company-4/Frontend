@@ -18,7 +18,7 @@ function getTeacherById(id: number) {
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-  const teacherInfo: ICalendarItem_Teacher = getTeacherById(targetedAppointmentData.teacherId) || {};
+  const teacherInfo: ICalendarItem_Teacher = getTeacherById(targetedAppointmentData.teacherId) || {}; //link the teacher and course by teacherId
   // console.log("classInfor", teacherInfo);
 
   return (
