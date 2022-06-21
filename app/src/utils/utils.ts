@@ -1,4 +1,8 @@
-import { ICalendarItem_Course, ICourse, ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
+import {
+  ICalendarItem_Course,
+  ICourse,
+  ICalendarItem_Teacher
+} from 'components/shared/interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 
 /**
@@ -12,14 +16,13 @@ export function parseCalendarJSON_Teacher(data: ICourse[]): ICalendarItem_Teache
     const calendarItem: ICalendarItem_Teacher = {
       id: course.professors[0].id,
       teacherName: course.professors[0].username,
-      color: colors[course.professors[0].id % colors.length],
+      color: colors[course.professors[0].id % colors.length]
     };
     calendarData_Teacher.push(calendarItem);
   });
   // console.log("Teacher", calendarData_Teacher);
   return calendarData_Teacher;
 }
-
 
 export function parseCalendarJSON_Course(data: ICourse[]): ICalendarItem_Course[] {
   const calendarData_Course: ICalendarItem_Course[] = [];
@@ -36,7 +39,7 @@ export function parseCalendarJSON_Course(data: ICourse[]): ICalendarItem_Course[
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
       const calendarItem: ICalendarItem_Course = {
-        text: course.CourseID.subject + course.CourseID.code,  //show on subject
+        text: course.CourseID.subject + course.CourseID.code, //show on subject
         courseId: course.CourseID.subject + course.CourseID.code,
         teacherId: course.professors[0].id,
         startDate: courseStartDate,

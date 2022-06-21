@@ -19,15 +19,18 @@ function ScheduleTimetable() {
       <Scheduler
         timeZone="Canada/Pacific"
         dataSource={calendarData_Course}
-        views={[{
-          type: 'day',
-          name: 'Day',
-          maxAppointmentsPerCell: 'auto',
-        }, {
-          type: 'week',
-          name: 'Week',
-          maxAppointmentsPerCell: 2,
-        }]}
+        views={[
+          {
+            type: 'day',
+            name: 'Day',
+            maxAppointmentsPerCell: 'auto'
+          },
+          {
+            type: 'week',
+            name: 'Week',
+            maxAppointmentsPerCell: 2
+          }
+        ]}
         defaultCurrentView="day"
         defaultCurrentDate={currentDate}
         startDayHour={8}
@@ -35,20 +38,16 @@ function ScheduleTimetable() {
         appointmentComponent={Appointment}
         showAllDayPanel={false}
       >
-        <Editing
-          allowAdding={false}
-          allowDragging={false}
-        />
+        <Editing allowAdding={false} allowDragging={false} />
         <Resource
           dataSource={calendarData_Teacher}
           fieldExpr="teacherId"
-          displayExpr='teacherName'
-          label='Professor'
+          displayExpr="teacherName"
+          label="Professor"
           allowMultiple={true}
           useColorAsDefault={true}
         />
       </Scheduler>
-
     </>
   );
 }
