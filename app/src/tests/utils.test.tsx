@@ -63,4 +63,4 @@ test('Test parseCalendarJSON', () => {
   expect(res).toEqual(expected);
 });
 
-export { };
+export {};
