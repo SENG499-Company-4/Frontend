@@ -14,9 +14,10 @@ export interface ICourseID {
 export interface IProfessor {
   id: number;
   username: string;
-  password: string;
+  password?: string;
+  faculty?: Faculty;
   role: Role;
-  preferences: IProfessorPreference;
+  preferences: IProfessorPreference[];
   active: boolean;
 }
 
