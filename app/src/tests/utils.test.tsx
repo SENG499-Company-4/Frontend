@@ -65,4 +65,4 @@ test('Test parseCalendarCourse', () => {
   expect(res).toEqual(expected);
 });
 
-export { };
+export {};

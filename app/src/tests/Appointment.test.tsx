@@ -11,4 +11,4 @@ test('Testing getClassByID', () => {
   expect(res).toEqual(expected.id);
 });
 
-export { };
+export {};
