@@ -66,6 +66,12 @@ test('Test parseCalendarCourse', () => {
 });
 
 test('Test getCoursesForProfessor', () => {
+  const currMonth = new Date().getMonth();
+  const currYear = new Date().getFullYear();
+  const currDay = new Date().getDate();
+
+  const lastMonth = new Date(currYear, currMonth - 1, currDay).toISOString().slice(0, 10);
+  const nextMonth = new Date(currYear, currMonth + 1, currDay).toISOString().slice(0, 10);
   const testData = [
     {
       CourseID: { subject: 'CSC', code: '575', term: 'SPRING' },
@@ -81,8 +87,8 @@ test('Test getCoursesForProfessor', () => {
           active: true
         }
       ],
-      startDate: '2022-01-10',
-      endDate: '2022-04-07',
+      startDate: lastMonth,
+      endDate: nextMonth,
       meetingTimes: [
         { Day: 'MONDAY', StartTime: '10:00:00', EndTime: '11:20:00' },
         { Day: 'THURSDAY', StartTime: '10:00:00', EndTime: '11:20:00' }
@@ -102,8 +108,8 @@ test('Test getCoursesForProfessor', () => {
           active: true
         }
       ],
-      startDate: '2022-01-10',
-      endDate: '2022-04-07',
+      startDate: lastMonth,
+      endDate: nextMonth,
       meetingTimes: [
         { Day: 'MONDAY', StartTime: '13:00:00', EndTime: '14:20:00' },
         { Day: 'THURSDAY', StartTime: '13:00:00', EndTime: '14:20:00' }
