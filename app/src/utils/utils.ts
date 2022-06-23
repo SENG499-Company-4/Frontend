@@ -60,11 +60,14 @@ export function getTeacherById(id: number) {
 
 // Given a data source and a professor username, return courses that professor is teaching or has taught.
 export function getCoursesForProfessor(username: string, data: ICourse[]): ICourse[] {
+  const today = new Date();
   const courses: ICourse[] = [];
   data.forEach((course: ICourse) => {
     course.professors.forEach((professor) => {
       if (professor.username === username) {
-        courses.push(course);
+        if (new Date(course.startDate) <= today && new Date(course.endDate) >= today) {
+          courses.push(course);
+        }
       }
     });
   });
