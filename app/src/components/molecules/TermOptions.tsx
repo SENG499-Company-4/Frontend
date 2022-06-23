@@ -22,9 +22,7 @@ export default function TermOptions(props: ITermOptionProps) {
           sx={{ width: '150px' }}
         >
           <MenuItem value={'Teaching'}>Teaching</MenuItem>
-          <MenuItem value={'Research'}>Research</MenuItem>
-          <MenuItem value={'HalfLeave'}>Half Leave</MenuItem>
-          <MenuItem value={'FullLeave'}>Full Leave</MenuItem>
+          <MenuItem value={'Leave'}>Leave</MenuItem>
         </Select>
       </FormControl>
     </>
