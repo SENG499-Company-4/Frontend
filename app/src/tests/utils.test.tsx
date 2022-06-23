@@ -1,6 +1,6 @@
-import { parseCalendarJSON } from 'utils/utils';
+import { parseCalendarCourse } from 'utils/utils';
 
-test('Test parseCalendarJSON', () => {
+test('Test parseCalendarCourse', () => {
   const testData = [
     {
       CourseID: { subject: 'CSC', code: '105', term: 'SPRING' },
@@ -26,8 +26,13 @@ test('Test parseCalendarJSON', () => {
     }
   ];
 
-  const startDate = new Date('2022-01-10T08:30:00.000Z');
-  const endDate = new Date('2022-01-10T09:20:00.000Z');
+  // new Date('2022-01-10') is 2022-01-09
+  const startDate = new Date('2022-01-10');
+  const endDate = new Date('2022-01-10');
+  startDate.setHours(8);
+  startDate.setMinutes(30);
+  endDate.setHours(9);
+  endDate.setMinutes(20);
   const expected = [
     {
       courseId: 'CSC105',
@@ -35,7 +40,6 @@ test('Test parseCalendarJSON', () => {
       text: 'CSC105',
       startDate: startDate,
       endDate: endDate,
-      teacherName: 'olgagould',
       recurrenceRule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20220407'
     },
     {
@@ -44,7 +48,6 @@ test('Test parseCalendarJSON', () => {
       text: 'CSC105',
       startDate: startDate,
       endDate: endDate,
-      teacherName: 'olgagould',
       recurrenceRule: 'FREQ=WEEKLY;BYDAY=WE;UNTIL=20220407'
     },
     {
@@ -53,14 +56,13 @@ test('Test parseCalendarJSON', () => {
       text: 'CSC105',
       startDate: startDate,
       endDate: endDate,
-      teacherName: 'olgagould',
       recurrenceRule: 'FREQ=WEEKLY;BYDAY=FR;UNTIL=20220407'
     }
   ];
 
-  const res = parseCalendarJSON(JSON.parse(JSON.stringify(testData)));
+  const res = parseCalendarCourse(JSON.parse(JSON.stringify(testData)));
 
   expect(res).toEqual(expected);
 });
 
-export {};
+export { };

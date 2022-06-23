@@ -27,11 +27,11 @@ export function parseCalendarCourse(data: ICourse[]): ICalendarCourseItem[] {
       const courseStartDate = new Date(course.startDate);
       const courseEndDate = new Date(course.startDate);
 
-      courseStartDate.setUTCHours(parseInt(element.StartTime.split(':')[0]));
-      courseStartDate.setUTCMinutes(parseInt(element.StartTime.split(':')[1]));
+      courseStartDate.setHours(parseInt(element.StartTime.split(':')[0]));
+      courseStartDate.setMinutes(parseInt(element.StartTime.split(':')[1]));
 
-      courseEndDate.setUTCHours(parseInt(element.EndTime.split(':')[0]));
-      courseEndDate.setUTCMinutes(parseInt(element.EndTime.split(':')[1]));
+      courseEndDate.setHours(parseInt(element.EndTime.split(':')[0]));
+      courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
       const calendarItem: ICalendarCourseItem = {
         text: course.CourseID.subject + course.CourseID.code, //show on subject
