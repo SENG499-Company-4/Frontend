@@ -36,7 +36,7 @@ export interface ICourse {
   meetingTimes: IMeetingTime[];
 }
 
-export interface ICalendarItem_Course {
+export interface ICalendarCourseItem {
   text: string;
   courseId: string;
   teacherId: number;
@@ -45,7 +45,7 @@ export interface ICalendarItem_Course {
   recurrenceRule: string;
 }
 
-export interface ICalendarItem_Teacher {
+export interface ICalendarTeacherItem {
   id: number;
   teacherName: string;
   color: string;

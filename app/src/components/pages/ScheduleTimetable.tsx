@@ -1,24 +1,23 @@
 import React from 'react';
-import { Scheduler, Editing } from 'devextreme-react/scheduler';
+import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
 import classData from 'data/clean.json';
-import { parseCalendarJSON_Course, parseCalendarJSON_Teacher } from 'utils/utils';
-import { Resource } from 'devextreme-react/scheduler';
+import { parseCalendarCourse, parseCalendarTeacher } from 'utils/utils';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 const currentDate = new Date(2021, 12, 10);
 
 function ScheduleTimetable() {
-  const calendarData_Course = parseCalendarJSON_Course(JSON.parse(JSON.stringify(classData)));
-  const calendarData_Teacher = parseCalendarJSON_Teacher(JSON.parse(JSON.stringify(classData)));
+  const calendarCourseData = parseCalendarCourse(JSON.parse(JSON.stringify(classData)));
+  const calendarTeacherData = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
 
   return (
     <>
       {/*@ts-ignore*/}
       <Scheduler
         timeZone="Canada/Pacific"
-        dataSource={calendarData_Course}
+        dataSource={calendarCourseData}
         views={[
           {
             type: 'day',
@@ -40,7 +39,7 @@ function ScheduleTimetable() {
       >
         <Editing allowAdding={false} allowDragging={false} />
         <Resource
-          dataSource={calendarData_Teacher}
+          dataSource={calendarTeacherData}
           fieldExpr="teacherId"
           displayExpr="teacherName"
           label="Professor"

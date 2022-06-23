@@ -1,8 +1,4 @@
-import {
-  ICalendarItem_Course,
-  ICourse,
-  ICalendarItem_Teacher
-} from 'components/shared/interfaces/timetable.interfaces';
+import { ICalendarCourseItem, ICourse, ICalendarTeacherItem } from 'components/shared/interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 
 /**
@@ -10,22 +6,21 @@ import colors from 'data/CourseColor.json';
  *  Reference: https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/CustomTemplates/React/Light/
  */
 
-export function parseCalendarJSON_Teacher(data: ICourse[]): ICalendarItem_Teacher[] {
-  const calendarData_Teacher: ICalendarItem_Teacher[] = [];
+export function parseCalendarTeacher(data: ICourse[]): ICalendarTeacherItem[] {
+  const calendarTeacherData: ICalendarTeacherItem[] = [];
   data.forEach((course: ICourse) => {
-    const calendarItem: ICalendarItem_Teacher = {
+    const calendarItem: ICalendarTeacherItem = {
       id: course.professors[0].id,
       teacherName: course.professors[0].username,
       color: colors[course.professors[0].id % colors.length]
     };
-    calendarData_Teacher.push(calendarItem);
+    calendarTeacherData.push(calendarItem);
   });
-  // console.log("Teacher", calendarData_Teacher);
-  return calendarData_Teacher;
+  return calendarTeacherData;
 }
 
-export function parseCalendarJSON_Course(data: ICourse[]): ICalendarItem_Course[] {
-  const calendarData_Course: ICalendarItem_Course[] = [];
+export function parseCalendarCourse(data: ICourse[]): ICalendarCourseItem[] {
+  const calendarCourseData: ICalendarCourseItem[] = [];
   data.forEach((course: ICourse) => {
     course.meetingTimes.forEach((element) => {
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
@@ -38,7 +33,7 @@ export function parseCalendarJSON_Course(data: ICourse[]): ICalendarItem_Course[
       courseEndDate.setHours(parseInt(element.EndTime.split(':')[0]));
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
-      const calendarItem: ICalendarItem_Course = {
+      const calendarItem: ICalendarCourseItem = {
         text: course.CourseID.subject + course.CourseID.code, //show on subject
         courseId: course.CourseID.subject + course.CourseID.code,
         teacherId: course.professors[0].id,
@@ -50,9 +45,8 @@ export function parseCalendarJSON_Course(data: ICourse[]): ICalendarItem_Course[
         // And if you click same course on Wednesday, it will show repeat on Wed.
         recurrenceRule: 'FREQ=WEEKLY;BYDAY=' + element.Day.slice(0, 2) + ';UNTIL=' + course.endDate.replaceAll('-', '')
       };
-      calendarData_Course.push(calendarItem);
+      calendarCourseData.push(calendarItem);
     });
   });
-  // console.log("Calendar", calendarData_Course);
-  return calendarData_Course;
+  return calendarCourseData;
 }
