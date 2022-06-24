@@ -1,5 +1,7 @@
 import { ICalendarCourseItem, ICourse, ICalendarTeacherItem } from 'components/shared/interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
+import Query from 'devextreme/data/query';
+import classData from 'data/clean.json';
 
 /**
  * Grab data from python scraper and format it for DevExtreme Scheduler
@@ -49,4 +51,9 @@ export function parseCalendarCourse(data: ICourse[]): ICalendarCourseItem[] {
     });
   });
   return calendarCourseData;
+}
+
+export function getTeacherById(id: number) {
+  const data: ICalendarTeacherItem[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
+  return Query(data).filter(['id', id]).toArray()[0];
 }

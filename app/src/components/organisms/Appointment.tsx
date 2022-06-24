@@ -1,17 +1,9 @@
 import React from 'react';
-import Query from 'devextreme/data/query';
 import { formatDate } from 'devextreme/localization';
-import classData from 'data/clean.json';
 import { ICalendarTeacherItem } from 'components/shared/interfaces/timetable.interfaces';
 import { Grid } from '@mui/material';
-import { parseCalendarTeacher } from 'utils/utils';
 import { Container } from '@mui/system';
-
-const data: ICalendarTeacherItem[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
-
-function getTeacherById(id: number) {
-  return Query(data).filter(['id', id]).toArray()[0];
-}
+import { getTeacherById } from 'utils/utils';
 
 /**
  * Present data in following format: coursename(subject & code) + teacher + time

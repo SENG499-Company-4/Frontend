@@ -1,14 +1,12 @@
 import classData from 'data/clean.json';
-import { parseCalendarTeacher, parseCalendarCourse } from 'utils/utils';
+import { parseCalendarTeacher, parseCalendarCourse, getTeacherById } from 'utils/utils';
 
-import getTeacherById from 'components/organisms/Appointment';
-
-test('Testing getClassByID', () => {
+test('Testing getTeacherByID', () => {
   const expected = parseCalendarTeacher(JSON.parse(JSON.stringify(classData.slice(0, 1))))[0];
   const courseData = parseCalendarCourse(JSON.parse(JSON.stringify(classData.slice(0, 1))))[0];
   const res = getTeacherById(courseData.teacherId);
 
-  expect(res).toEqual(expected.id);
+  expect(res.id).toEqual(expected.id);
 });
 
-export {};
+export { };
