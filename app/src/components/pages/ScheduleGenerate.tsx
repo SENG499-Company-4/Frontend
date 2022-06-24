@@ -1,11 +1,20 @@
 import { Autocomplete, Stack, TextField, Box, Typography, Button } from '@mui/material';
 import React, { useState } from 'react';
 import ClassData from 'data/clean.json';
+import { allTopics } from 'components/shared/constants/surveyForm.constants';
 
 function ScheduleGenerate() {
   const uniqueClassList = Array.from(
-    new Set(ClassData.map(o => JSON.stringify(o.CourseID.subject + " " + o.CourseID.code))),
-    s => JSON.parse(s)
+    new Set(
+      ClassData.map((course) => {
+        const trimmed = course.CourseID.code.replace(/\D/g, ''); //trim all non-numeric characters
+        const code = allTopics[course.CourseID.subject].includes(trimmed) //if course code is a topics course remove its letter
+          ? trimmed
+          : course.CourseID.code;
+        return JSON.stringify(course.CourseID.subject + ' ' + code);
+      })
+    ),
+    (s) => JSON.parse(s)
   );
 
   const [fallClasses, setFallClasses] = useState<string[]>([]);
@@ -17,7 +26,7 @@ function ScheduleGenerate() {
       fall: fallClasses,
       spring: springClasses,
       summer: summerClasses
-    }
+    };
     console.log(output);
     e.preventDefault();
     //TODO: submit values somewhere
@@ -29,27 +38,19 @@ function ScheduleGenerate() {
         Schedule Specific Classes
       </Typography>
       <form onSubmit={onSubmit}>
-        <Stack direction="row" spacing={2}>
-
+        <Stack direction="row" spacing={2} sx={{ marginBottom: '20px' }}>
           <Autocomplete
             multiple
             id="tags-outlined"
             options={uniqueClassList}
             getOptionLabel={(option) => option}
-            sx={{ width: "30%" }}
+            sx={{ width: '30%' }}
             onChange={(event, value) => {
               event.preventDefault();
               setFallClasses(value);
             }}
             filterSelectedOptions
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Fall"
-                placeholder="Fall Courses"
-
-              />
-            )}
+            renderInput={(params) => <TextField {...params} label="Fall" placeholder="Fall Courses" />}
           />
 
           <Autocomplete
@@ -57,20 +58,13 @@ function ScheduleGenerate() {
             id="tags-outlined"
             options={uniqueClassList}
             getOptionLabel={(option) => option}
-            sx={{ width: "30%" }}
+            sx={{ width: '30%' }}
             onChange={(event, value) => {
               event.preventDefault();
               setSpringClasses(value);
             }}
             filterSelectedOptions
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Spring"
-                placeholder="Spring Courses"
-
-              />
-            )}
+            renderInput={(params) => <TextField {...params} label="Spring" placeholder="Spring Courses" />}
           />
 
           <Autocomplete
@@ -78,20 +72,13 @@ function ScheduleGenerate() {
             id="tags-outlined"
             options={uniqueClassList}
             getOptionLabel={(option) => option}
-            sx={{ width: "30%" }}
+            sx={{ width: '30%' }}
             onChange={(event, value) => {
               event.preventDefault();
               setSummerClasses(value);
             }}
             filterSelectedOptions
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Summer"
-                placeholder="Summer Courses"
-
-              />
-            )}
+            renderInput={(params) => <TextField {...params} label="Summer" placeholder="Summer Courses" />}
           />
         </Stack>
 
@@ -99,9 +86,8 @@ function ScheduleGenerate() {
           Submit
         </Button>
       </form>
-
     </Box>
-  )
+  );
 }
 
 export default ScheduleGenerate;
