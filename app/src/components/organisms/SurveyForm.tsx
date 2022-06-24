@@ -17,14 +17,18 @@ import {
   ITermPrefs,
   ICourseAbility
 } from 'components/shared/interfaces/surveyForm.interfaces';
-import { overallDefaults } from 'components/shared/constants/surveyForm.constants';
+import { overallDefaults, departmentTopics, allTopics } from 'components/shared/constants/surveyForm.constants';
 import TermOptions from 'components/molecules/TermOptions';
+import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 
 function SurveyForm(props: { formData: IClassData[] }) {
   const additionalQualifications: boolean = false; //TODO: temporary measure until backend implements qualifications to class info
+
   const [disable, setDisabled] = useState(true);
   const [formats, setFormats] = useState<string[]>(() => []);
   const [role, setRole] = useState('Teaching');
+  const [topic, setTopic] = useState(false);
+  const [topicCourse, setTopicCourse] = useState('SENG 480');
 
   const [termPrefs, setTermPrefs] = useState<ITermPrefs>({
     fall: 'Teaching',
@@ -37,6 +41,7 @@ function SurveyForm(props: { formData: IClassData[] }) {
       role: 'Teaching',
       relief: 0,
       explanation: '',
+      topicsCourseTitle: '',
       preferredDays: [],
       fall: 'Teaching',
       spring: 'Teaching',
@@ -46,15 +51,30 @@ function SurveyForm(props: { formData: IClassData[] }) {
     };
 
     currentValues.courses = props.formData.reduce((obj: any, field) => {
-      obj[field.CourseID.subject + ' ' + field.CourseID.code] = {
-        ...overallDefaults
-      };
+      const strippedLetters: string = field.CourseID.code.replace(/\D/g, ''); //removing letters from topics course for comparison
+      if (!allTopics[field.CourseID.subject].includes(strippedLetters)) {
+        obj[field.CourseID.subject + ' ' + field.CourseID.code] = {
+          ...overallDefaults
+        };
+      }
       return obj;
     }, {});
     return currentValues;
   });
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    setValues((currentValues) => {
+      currentValues.courses[topicCourse] = { ...overallDefaults };
+
+      if (topic) {
+        currentValues.courses[topicCourse].ability = 'can';
+        currentValues.courses[topicCourse].willing = 'veryWilling';
+      } else {
+        currentValues.topicsCourseTitle = '';
+      }
+
+      return currentValues;
+    });
     console.log(values);
     e.preventDefault();
     //TODO: submit values somewhere
@@ -133,6 +153,17 @@ function SurveyForm(props: { formData: IClassData[] }) {
     });
   };
 
+  const handleTopic = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValues((currentValues) => {
+      currentValues.topicsCourseTitle = event.target.value;
+      return currentValues;
+    });
+  };
+
+  const handleTopicCheck = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTopic(event.target.checked);
+  };
+
   return (
     <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'center' }}>
       <form onSubmit={onSubmit}>
@@ -167,6 +198,49 @@ function SurveyForm(props: { formData: IClassData[] }) {
         </Stack>
         <Divider sx={{ marginBottom: '20px' }} />
         <Stack spacing={2}>
+          <Stack direction="row" spacing={2}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Checkbox />}
+                label="Would you like to teach a topics course?"
+                labelPlacement="start"
+                onChange={(event) => handleTopicCheck(event as React.ChangeEvent<HTMLInputElement>)}
+              />
+            </FormGroup>
+
+            <FormControl>
+              <InputLabel id="select-topic-label">Discipline</InputLabel>
+              <Select
+                labelId="select-topic-label"
+                label="Which department"
+                id="select-department"
+                value={topicCourse}
+                disabled={!topic}
+                sx={{ color: 'black' }}
+                onChange={(event) => setTopicCourse((event as React.ChangeEvent<HTMLInputElement>).target.value)}
+              >
+                <MenuItem sx={{ color: 'black' }} value={'SENG ' + departmentTopics.SENG}>
+                  Seng {departmentTopics.SENG}
+                </MenuItem>
+                <MenuItem sx={{ color: 'black' }} value={'CSC ' + departmentTopics.CSC}>
+                  CSC {departmentTopics.CSC}
+                </MenuItem>
+                <MenuItem sx={{ color: 'black' }} value={'ECE ' + departmentTopics.ECE}>
+                  ECE {departmentTopics.ECE}
+                </MenuItem>
+              </Select>
+            </FormControl>
+
+            <TextField
+              id="topics-title-textarea"
+              label="Topics course title"
+              disabled={!topic}
+              style={{ width: '50%' }}
+              inputProps={{ style: { color: 'black' } }}
+              onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>)}
+            />
+          </Stack>
+
           <Stack direction="row" spacing={2}>
             <FormControl>
               <InputLabel id="select-role-label">Type of Faculty </InputLabel>
