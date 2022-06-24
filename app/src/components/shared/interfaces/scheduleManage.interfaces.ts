@@ -1,5 +1,5 @@
-import { Term } from "../constants/timetable.constants";
-import { ICourse } from "./timetable.interfaces";
+import { Term } from '../constants/timetable.constants';
+import { ICourse } from './timetable.interfaces';
 
 export interface ISchedule {
   id: number;
