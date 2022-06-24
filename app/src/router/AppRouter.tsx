@@ -98,7 +98,7 @@ function AppRouter() {
         <Route
           path="/professors-list"
           element={[
-            <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
+            <ProtectedRoute user={user} meta={AdminRouteMeta}>
               <ProfessorsList />
             </ProtectedRoute>
           ]}

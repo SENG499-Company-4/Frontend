@@ -64,7 +64,8 @@ function Header(props: { user: IUser }) {
                 icon={<Event />}
               />
             </HeaderMenu>
-            <HeaderButton key="professors-list" label="Professors" url="/professors-list" icon={<People />} />
+            {role === Role.Admin ? (
+              <HeaderButton key="professors-list" label="Professors" url="/professors-list" icon={<People />} />) : null}
             <HeaderButton key="professor-profile" label="Profile" url="/professor-profile" icon={<School />} />
 
             {role === Role.Admin ? (
