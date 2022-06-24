@@ -26,6 +26,8 @@ const Search = styled('div')(({ theme }) => ({
         backgroundColor: alpha(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
+    marginTop: 20,
+    marginBottom: 10,
     width: '100%',
     [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing(1),
@@ -52,7 +54,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
         transition: theme.transitions.create('width'),
         width: '100%',
         [theme.breakpoints.up('sm')]: {
-            width: '12ch',
+            width: '40ch',
             '&:focus': {
                 width: '20ch',
             },
@@ -88,7 +90,7 @@ function ProfessorsList() {
                     <SearchIcon />
                 </SearchIconWrapper>
                 <StyledInputBase
-                    placeholder="Teacher Name"
+                    placeholder="Search Teacher Name"
                     inputProps={{ 'aria-label': 'search' }}
                     value={search}
                     onChange={(e) => onSearchChange(e.target.value)}
