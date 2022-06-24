@@ -13,6 +13,7 @@ function ScheduleGenerate() {
   return (
     <div>
       <div>ScheduleGenerate</div>
+      <div>Data passed over from Schedule Manage page:</div>
       <div>{semester}</div>
       <div>{year.toISOString()}</div>
     </div>

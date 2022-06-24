@@ -23,6 +23,7 @@ import { ISchedule } from 'components/shared/interfaces/scheduleManage.interface
 
 const semesterTypes: Term[] = ['SUMMER', 'WINTER', 'SPRING'];
 
+// To match API 
 const sampleSchedules: ISchedule[] = [
   {
     id: 1,
