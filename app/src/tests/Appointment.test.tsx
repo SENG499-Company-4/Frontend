@@ -9,4 +9,4 @@ test('Testing getTeacherByID', () => {
   expect(res.id).toEqual(expected.id);
 });
 
-export { };
+export {};
