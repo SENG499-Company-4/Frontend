@@ -6,7 +6,18 @@ import { Typography } from '@mui/material';
 import HeaderMenu from 'components/molecules/HeaderMenu';
 import { Role } from 'components/shared/constants/timetable.constants';
 import { IUser } from 'components/shared/interfaces/user.interfaces';
-import { CalendarMonth, Event, EventRepeat, Home, Login, ModeEdit, Poll, School, Today } from '@mui/icons-material';
+import {
+  CalendarMonth,
+  Event,
+  EventRepeat,
+  Home,
+  Login,
+  ModeEdit,
+  Poll,
+  School,
+  Today,
+  AddCircle
+} from '@mui/icons-material';
 
 const appLogo = require('assets/app-logo.png');
 
@@ -54,6 +65,11 @@ function Header(props: { user: IUser }) {
               />
             </HeaderMenu>
             <HeaderButton key="professor-profile" label="Profile" url="/professor-profile" icon={<School />} />
+
+            {role === Role.Admin ? (
+              <HeaderButton key="register-user" label="Create New User" url="/register" icon={<AddCircle />} />
+            ) : null}
+
             <HeaderButton
               key="login"
               label={role ? 'Logout' : 'Login'}

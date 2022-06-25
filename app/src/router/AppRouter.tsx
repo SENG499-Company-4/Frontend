@@ -49,9 +49,9 @@ function AppRouter() {
         <Route
           path="/register"
           element={[
-            <PublicRoute user={user} meta={PublicRouteMeta}>
+            <ProtectedRoute user={user} meta={AdminRouteMeta}>
               <Register />
-            </PublicRoute>
+            </ProtectedRoute>
           ]}
         />
         <Route
