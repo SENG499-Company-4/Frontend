@@ -1,8 +1,8 @@
-import { BubbleChart, Code, DataObject, DeveloperBoard } from '@mui/icons-material';
+import { BubbleChart, Code, DeveloperBoard } from '@mui/icons-material';
 import { Avatar, ButtonBase, Card, Grid, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
-import { Faculty, Role } from 'components/shared/constants/timetable.constants';
+import { Role } from 'components/shared/constants/timetable.constants';
 import { ICourse, IProfessor, IProfessorPreference } from 'components/shared/interfaces/timetable.interfaces';
-import React, { ReactElement } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCoursesForProfessor } from 'utils/utils';
 import classData from 'data/clean.json';
@@ -28,31 +28,18 @@ function ProfessorProfile() {
     JSON.parse(JSON.stringify(classData))
   );
 
-  function getIcon(faculty: Faculty): ReactElement {
-    switch (faculty) {
-      case 'SENG':
-        return <Code />;
-      case 'CSC':
-        return <BubbleChart />;
-      case 'ECE':
-        return <DeveloperBoard />;
-      default:
-        return <DataObject />;
-    }
-  }
+  const facultyIcons = {
+    SENG: <Code />,
+    CSC: <BubbleChart />,
+    ECE: <DeveloperBoard />
+  };
 
-  function getBgColor(faculty: Faculty): string {
-    switch (faculty) {
-      case 'SENG':
-        return '#ffc107';
-      case 'CSC':
-        return '#4caf50';
-      case 'ECE':
-        return '#2196f3';
-      default:
-        return '#ff9800';
-    }
-  }
+  // Dictionary to store background color given faculty
+  const facultyColors = {
+    SENG: '#ffc107',
+    CSC: '#4caf50',
+    ECE: '#2196f3'
+  };
 
   function getWilling(willingness: number) {
     if (willingness < 120) {
@@ -139,8 +126,8 @@ function ProfessorProfile() {
                     <Card elevation={3} sx={{ width: '300px' }}>
                       <ListItem>
                         <ListItemAvatar>
-                          <Avatar sx={{ bgcolor: getBgColor(course.CourseID.subject) }}>
-                            {getIcon(course.CourseID.subject)}
+                          <Avatar sx={{ bgcolor: facultyColors[course.CourseID.subject] }}>
+                            {facultyIcons[course.CourseID.subject]}
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
