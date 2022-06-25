@@ -1,4 +1,4 @@
-import { getCoursesForProfessor, parseCalendarJSON } from 'utils/utils';
+import { getCoursesForProfessor, parseCalendarCourse } from 'utils/utils';
 
 test('Test parseCalendarCourse', () => {
   const testData = [
