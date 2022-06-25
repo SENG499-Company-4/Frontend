@@ -4,7 +4,6 @@ import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
 import classData from 'data/clean.json';
 import { parseCalendarCourse, parseCalendarTeacher } from 'utils/utils';
-import { parseCalendarJSON } from 'utils/utils';
 // import { ICourse } from 'components/shared/interfaces/timetable.interfaces';
 // import { useLocation } from 'react-router-dom';
 
@@ -22,7 +21,6 @@ function ScheduleTimetable() {
   // const { state } = useLocation();
   // const { course } = state as IStateProps;
 
-  const calendarData = parseCalendarJSON(JSON.parse(JSON.stringify(classData)));
   return (
     <>
       {/*@ts-ignore*/}
