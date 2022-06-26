@@ -16,7 +16,8 @@ export function parseCalendarTeacher(data: ICourse[]): ICalendarTeacherItem[] {
       teacherName: course.professors[0].username,
       courseId: course.CourseID.subject + course.CourseID.code,
       term: course.CourseID.term,
-      color: colors[course.professors[0].id % colors.length]
+      color: colors[course.professors[0].id % colors.length],
+      link: '/professor-profile'
     };
     calendarTeacherData.push(calendarItem);
   });

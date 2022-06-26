@@ -52,4 +52,5 @@ export interface ICalendarItem_Teacher {
   id: number;
   teacherName: string;
   color: string;
+  link: string;
 }
