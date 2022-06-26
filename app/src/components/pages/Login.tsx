@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, NavigateFunction, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -14,8 +14,6 @@ function Login() {
   const [hasErrors, setHasErrors] = useState<boolean>(false);
 
   const cookie = new Cookie();
-
-  let navigate: NavigateFunction = useNavigate();
 
   // This is a temporary hack to demo login.
   // Enter either "USER" or "ADMIN" in the username box to log in as a user or admin.
@@ -79,9 +77,6 @@ function Login() {
         <Grid item>
           <Button variant="contained" style={{ width: 300, marginTop: 15 }} onClick={signIn}>
             Sign In
-          </Button>
-          <Button variant="outlined" style={{ width: 300, marginTop: 15 }} onClick={() => navigate(`/register`)}>
-            Register
           </Button>
         </Grid>
       </Grid>

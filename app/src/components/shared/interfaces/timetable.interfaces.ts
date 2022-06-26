@@ -14,9 +14,10 @@ export interface ICourseID {
 export interface IProfessor {
   id: number;
   username: string;
-  password: string;
+  password?: string;
+  faculty?: Faculty;
   role: Role;
-  preferences: IProfessorPreference;
+  preferences: IProfessorPreference[];
   active: boolean;
 }
 
@@ -36,12 +37,17 @@ export interface ICourse {
   meetingTimes: IMeetingTime[];
 }
 
-export interface ICalendarItem {
+export interface ICalendarCourseItem {
+  text: string;
   courseId: string;
   teacherId: number;
-  text: string;
   startDate: Date;
   endDate: Date;
-  teacherName: string;
   recurrenceRule: string;
+}
+
+export interface ICalendarTeacherItem {
+  id: number;
+  teacherName: string;
+  color: string;
 }
