@@ -8,6 +8,7 @@
   },
   "private": true,
   "dependencies": {
+    "@apollo/client": "^3.6.9",
     "@devexpress/dx-react-core": "^3.0.3",
     "@devexpress/dx-react-scheduler": "^3.0.3",
     "@devexpress/dx-react-scheduler-material-ui": "^3.0.3",
@@ -27,6 +28,7 @@
     "date-fns": "^2.28.0",
     "devextreme": "21.2.7",
     "devextreme-react": "21.2.7",
+    "graphql": "^16.5.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",

@@ -11,10 +11,18 @@ import {
   FormControlLabel,
   FormLabel,
   FormGroup,
-  Checkbox
+  Checkbox,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  DialogActions
 } from '@mui/material';
 import React, { useState } from 'react';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { GENERATE_SCHEDULE } from 'components/shared/api/Mutations';
+import LoadingSpinner from 'components/organisms/LoadingSpinner';
+import ErrorPage from './ErrorPage';
 import ClassData from 'data/clean.json';
 import { allTopics } from 'components/shared/constants/surveyForm.constants';
 
@@ -23,8 +31,6 @@ function ScheduleGenerate() {
   const [year, setYear] = useState<number>(2022);
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
-
-  let navigate: NavigateFunction = useNavigate();
 
   const uniqueClassList = Array.from(
     new Set(
@@ -39,16 +45,36 @@ function ScheduleGenerate() {
     (s) => JSON.parse(s)
   );
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    const output = {
-      term: term,
-      classes: classes
-    };
-    console.log(output);
-    e.preventDefault();
-    navigate('/schedule');
-    //TODO: submit values somewhere
-  };
+  const [submitHandler, { data, loading, error }] = useMutation(GENERATE_SCHEDULE);
+
+  if (data) {
+    console.log(data);
+    console.log(classes);
+    return (
+      <Dialog
+        open={true}
+        keepMounted
+        onClose={() => (window.location.href = '/schedule/generate')}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{'Submission Successful'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Your generation request was submitted successfully. When the scheduling algorithm completes, you'll be able
+            to view the schedule on the management page.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => (window.location.href = '/schedule/generate')}>Ok</Button>
+        </DialogActions>
+      </Dialog>
+    );
+  } else if (loading) {
+    return <LoadingSpinner />;
+  } else if (error) {
+    console.log(error);
+    return <ErrorPage code={'400'} message="Schedule generation failed. Please try again." />;
+  }
 
   return (
     <Box>
@@ -56,7 +82,7 @@ function ScheduleGenerate() {
         Generate a New Schedule
       </Typography>
       <Box>
-        <form onSubmit={onSubmit}>
+        <form>
           <Box sx={{ width: '60%', marginLeft: '20%' }}>
             <Stack direction="row" spacing={2} sx={{ marginBottom: '20px' }}>
               <FormControl>
@@ -132,7 +158,22 @@ function ScheduleGenerate() {
                   />
                 </FormGroup>
               </Box>
-              <Button variant="contained" color="primary" disabled={!riskAck} type="submit" sx={{ float: 'right' }}>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!riskAck}
+                type="submit"
+                sx={{ float: 'right' }}
+                onClick={() =>
+                  submitHandler({
+                    variables: {
+                      input: {
+                        year: year
+                      }
+                    }
+                  })
+                }
+              >
                 Submit
               </Button>
             </Stack>

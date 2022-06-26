@@ -1,39 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
+import { useMutation } from '@apollo/client';
+import { LOGIN } from 'components/shared/api/Mutations';
+import LoadingSpinner from 'components/organisms/LoadingSpinner';
 import { Role } from 'components/shared/constants/timetable.constants';
 import Cookie from 'universal-cookie';
 
-function Login() {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+const Login = () => {
+  const [formState, setFormState] = useState({
+    username: '',
+    password: ''
+  });
+
   const [hasErrors, setHasErrors] = useState<boolean>(false);
 
   const cookie = new Cookie();
 
-  // This is a temporary hack to demo login.
-  // Enter either "USER" or "ADMIN" in the username box to log in as a user or admin.
-  const signIn = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    if (username === Role.Admin) {
-      cookie.set('user', { username: 'Admin', role: Role.Admin });
-      window.location.href = `/`;
-    } else if (username === Role.User) {
-      cookie.set('user', { username: 'User', role: Role.User });
-      window.location.href = `/`;
-    } else {
+  const [loginHandler, { data, loading, error }] = useMutation(LOGIN);
+
+  if (data) {
+    const loginResponse = data.login;
+    console.log(loginResponse);
+    if (loginResponse.success) {
+      if (loginResponse.message.includes('keith')) {
+        cookie.set('user', { username: formState.username, role: Role.Admin });
+        window.location.href = `/`;
+      } else {
+        cookie.set('user', { username: formState.username, role: Role.User });
+        window.location.href = `/`;
+      }
+    } else if (!hasErrors) {
       setHasErrors(true);
     }
-  };
-
-  useEffect(() => {
-    setHasErrors(false);
-  }, [username, password]);
-
+  } else if (loading) {
+    return <LoadingSpinner />;
+  } else if (error && !hasErrors) {
+    console.log(error);
+    setHasErrors(true);
+  }
   return (
     <Box component="form" sx={{ width: 300 }} mx="auto" justifyContent="center" noValidate autoComplete="off">
       <Grid container spacing={2} className="login">
@@ -60,8 +69,13 @@ function Login() {
             id="outlined-username-input"
             style={{ width: 300 }}
             label="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={formState.username}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                username: e.target.value
+              })
+            }
           />
         </Grid>
         <Grid item>
@@ -70,18 +84,34 @@ function Login() {
             style={{ width: 300 }}
             label="Password"
             type="password"
-            value={password}
-            onChange={(p) => setPassword(p.target.value)}
+            value={formState.password}
+            onChange={(e) =>
+              setFormState({
+                ...formState,
+                password: e.target.value
+              })
+            }
           />
         </Grid>
         <Grid item>
-          <Button variant="contained" style={{ width: 300, marginTop: 15 }} onClick={signIn}>
+          <Button
+            variant="contained"
+            style={{ width: 300, marginTop: 15 }}
+            onClick={() =>
+              loginHandler({
+                variables: {
+                  username: formState.username,
+                  password: formState.password
+                }
+              })
+            }
+          >
             Sign In
           </Button>
         </Grid>
       </Grid>
     </Box>
   );
-}
+};
 
 export default Login;
