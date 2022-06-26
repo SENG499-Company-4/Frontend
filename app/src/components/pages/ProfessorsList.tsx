@@ -23,11 +23,11 @@ const columns: GridColDef[] = [
 function ProfessorsList() {
   const allData: ICalendarTeacherItem[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
   const [search, setSearch] = useState<string>('');
-  const [rows, setRows] = useState<any>(allData);
+  const [rows, setRows] = useState<ICalendarTeacherItem[]>(allData);
 
-  function filter(data: any, search: any) {
-    var newData: any = [];
-    data.map((item: any) => {
+  function filter(data: ICalendarTeacherItem[], search: string) {
+    var newData: ICalendarTeacherItem[] = [];
+    data.forEach((item: ICalendarTeacherItem) => {
       if (item.teacherName.includes(search)) {
         newData.push(item);
       }
