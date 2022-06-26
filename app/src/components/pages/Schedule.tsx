@@ -5,14 +5,14 @@ import LoadingSpinner from 'components/organisms/LoadingSpinner';
 import ErrorPage from './ErrorPage';
 
 function Schedule() {
-  const {loading, error, data} = useQuery(GET_SCHEDULE, {
+  const { loading, error, data } = useQuery(GET_SCHEDULE, {
     variables: {
       year: 2022
     }
   });
 
   if (!data || loading) {
-    return <LoadingSpinner/>;
+    return <LoadingSpinner />;
   } else if (error) {
     return <ErrorPage code={'400'} message="Schedule retrieval failed. Please try again." />;
   }

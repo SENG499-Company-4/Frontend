@@ -54,18 +54,18 @@ function ScheduleGenerate() {
       <Dialog
         open={true}
         keepMounted
-        onClose={() => window.location.href = '/schedule/generate'}
+        onClose={() => (window.location.href = '/schedule/generate')}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{"Submission Successful"}</DialogTitle>
+        <DialogTitle>{'Submission Successful'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            Your generation request was submitted successfully. 
-            When the scheduling algorithm completes, you'll be able to view the schedule on the management page.
+            Your generation request was submitted successfully. When the scheduling algorithm completes, you'll be able
+            to view the schedule on the management page.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => window.location.href = '/schedule/generate'}>Ok</Button>
+          <Button onClick={() => (window.location.href = '/schedule/generate')}>Ok</Button>
         </DialogActions>
       </Dialog>
     );
@@ -159,17 +159,17 @@ function ScheduleGenerate() {
                   />
                 </FormGroup>
               </Box>
-              <Button 
-                variant="contained" 
-                color="primary" 
-                disabled={!riskAck} 
-                type="submit" 
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={!riskAck}
+                type="submit"
                 sx={{ float: 'right' }}
                 onClick={() =>
                   submitHandler({
                     variables: {
-                      "input": {
-                        "year": year
+                      input: {
+                        year: year
                       }
                     }
                   })
