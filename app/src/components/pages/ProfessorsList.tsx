@@ -1,6 +1,6 @@
 import React from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { parseCalendarJSON_Teacher } from 'utils/utils';
+import { parseCalendarTeacher } from 'utils/utils';
 import classData from 'data/clean.json';
 import { Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -68,7 +68,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function ProfessorsList() {
-  const allData: ICalendarItem_Teacher[] = parseCalendarJSON_Teacher(JSON.parse(JSON.stringify(classData)));
+  const allData: ICalendarTeacherItem[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
   const [search, setSearch] = useState<string>('');
   const [rows, setRows] = useState<any>(allData);
 
@@ -107,3 +107,4 @@ function ProfessorsList() {
 }
 
 export default ProfessorsList;
+
