@@ -14,9 +14,9 @@ import {
   Login,
   ModeEdit,
   Poll,
+  People,
   School,
-  Today,
-  AddCircle
+  Today
 } from '@mui/icons-material';
 
 const appLogo = require('assets/app-logo.png');
@@ -64,6 +64,7 @@ function Header(props: { user: IUser }) {
                 icon={<Event />}
               />
             </HeaderMenu>
+            <HeaderButton key="professors-list" label="Professors" url="/professors-list" icon={<People />} />
             <HeaderButton key="professor-profile" label="Profile" url="/professor-profile" icon={<School />} />
 
             {role === Role.Admin ? (
