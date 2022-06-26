@@ -5,10 +5,11 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
-import { useMutation } from "@apollo/client";
+import { useMutation } from '@apollo/client';
 import { LOGIN } from 'components/shared/api/Mutations';
 import LoadingSpinner from 'components/organisms/LoadingSpinner';
-import { Role } from 'components/shared/constants/timetable.constants';import Cookie from 'universal-cookie';
+import { Role } from 'components/shared/constants/timetable.constants';
+import Cookie from 'universal-cookie';
 
 const Login = () => {
   const [formState, setFormState] = useState({
@@ -26,7 +27,7 @@ const Login = () => {
     const loginResponse = data.login;
     console.log(loginResponse);
     if (loginResponse.success) {
-      if (loginResponse.message.includes("keith")) {
+      if (loginResponse.message.includes('keith')) {
         cookie.set('user', { username: formState.username, role: Role.Admin });
         window.location.href = `/`;
       } else {
@@ -37,7 +38,7 @@ const Login = () => {
       setHasErrors(true);
     }
   } else if (loading) {
-    return <LoadingSpinner/>;
+    return <LoadingSpinner />;
   } else if (error && !hasErrors) {
     console.log(error);
     setHasErrors(true);
@@ -69,7 +70,7 @@ const Login = () => {
             style={{ width: 300 }}
             label="Username"
             value={formState.username}
-            onChange={(e) => 
+            onChange={(e) =>
               setFormState({
                 ...formState,
                 username: e.target.value
@@ -84,7 +85,7 @@ const Login = () => {
             label="Password"
             type="password"
             value={formState.password}
-            onChange={(e) => 
+            onChange={(e) =>
               setFormState({
                 ...formState,
                 password: e.target.value
@@ -93,21 +94,24 @@ const Login = () => {
           />
         </Grid>
         <Grid item>
-          <Button 
-            variant="contained" 
-            style={{ width: 300, marginTop: 15 }} 
-            onClick={() => loginHandler(
-              {variables: {
-                username: formState.username,
-                password: formState.password
-              }}
-            )}>
+          <Button
+            variant="contained"
+            style={{ width: 300, marginTop: 15 }}
+            onClick={() =>
+              loginHandler({
+                variables: {
+                  username: formState.username,
+                  password: formState.password
+                }
+              })
+            }
+          >
             Sign In
           </Button>
         </Grid>
       </Grid>
     </Box>
   );
-}
+};
 
 export default Login;
