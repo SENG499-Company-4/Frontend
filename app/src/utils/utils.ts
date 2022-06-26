@@ -14,6 +14,8 @@ export function parseCalendarTeacher(data: ICourse[]): ICalendarTeacherItem[] {
     const calendarItem: ICalendarTeacherItem = {
       id: course.professors[0].id,
       teacherName: course.professors[0].username,
+      courseId: course.CourseID.subject + course.CourseID.code,
+      term: course.CourseID.term,
       color: colors[course.professors[0].id % colors.length]
     };
     calendarTeacherData.push(calendarItem);
