@@ -8,7 +8,6 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import MenuItem from '@mui/material/MenuItem';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -70,30 +69,16 @@ function ScheduleManage() {
     setSearch(inputText);
   };
 
-  const getBgColor = (term: Term) => {
-    switch (term) {
-      case 'SUMMER':
-        return '#ff9800';
-      case 'WINTER':
-        return '#03a9f4';
-      case 'SPRING':
-        return '#ffc107';
-      default:
-        return '#ffc107';
-    }
+  const bgColor = {
+    SUMMER: '#ff9800',
+    WINTER: '#03a9f4',
+    SPRING: '#ffc107'
   };
 
-  const getIcon = (term: Term) => {
-    switch (term) {
-      case 'SUMMER':
-        return <WbSunnyIcon />;
-      case 'WINTER':
-        return <AcUnitIcon />;
-      case 'SPRING':
-        return <LocalFloristIcon />;
-      default:
-        return <CalendarMonthIcon />;
-    }
+  const semesterIcon = {
+    SUMMER: <WbSunnyIcon />,
+    WINTER: <AcUnitIcon />,
+    SPRING: <LocalFloristIcon />
   };
 
   return (
@@ -131,10 +116,17 @@ function ScheduleManage() {
               foundSchedules.map((schedule) => (
                 <ListItem key={schedule.id}>
                   <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: getBgColor(schedule.term) }}>{getIcon(schedule.term)}</Avatar>
+                    <Avatar sx={{ bgcolor: bgColor[schedule.term] }}>{semesterIcon[schedule.term]}</Avatar>
                   </ListItemAvatar>
                   <ListItemText primary={schedule.term} secondary={schedule.year} />
-                  <Button variant="outlined">View</Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      navigate('/schedule/timetable');
+                    }}
+                  >
+                    View
+                  </Button>
                   <Typography variant="body2" marginLeft={2}>
                     Generated on {schedule.createdAt.toString()}
                   </Typography>
@@ -159,9 +151,9 @@ function ScheduleManage() {
               onChange={(e) => setSemester(e.target.value)}
               style={{ width: '300px' }}
             >
-              {semesterTypes.map((semester) => (
-                <MenuItem key={semester} value={semester}>
-                  {semester}
+              {semesterTypes.map((semesterItem: Term) => (
+                <MenuItem key={semesterItem} value={semesterItem}>
+                  {semesterItem}
                 </MenuItem>
               ))}
             </TextField>
