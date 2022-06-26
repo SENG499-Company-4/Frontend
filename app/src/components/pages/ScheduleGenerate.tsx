@@ -1,11 +1,25 @@
-import { Autocomplete, Stack, TextField, Box, Typography, Button, Radio, RadioGroup, FormControl, FormControlLabel, FormLabel, FormGroup, Checkbox } from '@mui/material';
+import {
+  Autocomplete,
+  Stack,
+  TextField,
+  Box,
+  Typography,
+  Button,
+  Radio,
+  RadioGroup,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  FormGroup,
+  Checkbox
+} from '@mui/material';
 import React, { useState } from 'react';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import ClassData from 'data/clean.json';
 import { allTopics } from 'components/shared/constants/surveyForm.constants';
 
 function ScheduleGenerate() {
-  const [term, setTerm] = useState<string>("Spring");
+  const [term, setTerm] = useState<string>('Spring');
   const [year, setYear] = useState<number>(2022);
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
@@ -32,7 +46,7 @@ function ScheduleGenerate() {
     };
     console.log(output);
     e.preventDefault();
-    navigate("/schedule");
+    navigate('/schedule');
     //TODO: submit values somewhere
   };
 
@@ -43,12 +57,10 @@ function ScheduleGenerate() {
       </Typography>
       <Box>
         <form onSubmit={onSubmit}>
-          <Box sx={{ width: '60%', marginLeft: '20%'}}>
-            <Stack direction="row" spacing={2} sx={{ marginBottom: '20px' }}> 
+          <Box sx={{ width: '60%', marginLeft: '20%' }}>
+            <Stack direction="row" spacing={2} sx={{ marginBottom: '20px' }}>
               <FormControl>
-                <FormLabel sx={{ marginTop: '10px' }}>
-                  Select a year:
-                </FormLabel>
+                <FormLabel sx={{ marginTop: '10px' }}>Select a year:</FormLabel>
                 <RadioGroup row aria-labelledby="Year" name="row-radio-buttons-group">
                   <FormControlLabel
                     onChange={() => setYear(2022)}
@@ -67,25 +79,23 @@ function ScheduleGenerate() {
             </Stack>
             <Stack direction="row" spacing={2} sx={{ marginBottom: '20px' }}>
               <FormControl>
-                <FormLabel sx={{ marginTop: '10px' }}>
-                  Select a semester:
-                </FormLabel>
+                <FormLabel sx={{ marginTop: '10px' }}>Select a semester:</FormLabel>
                 <RadioGroup row aria-labelledby="Term" name="row-radio-buttons-group">
                   <FormControlLabel
-                    onChange={() => setTerm("Spring")}
-                    checked={term === "Spring"}
+                    onChange={() => setTerm('Spring')}
+                    checked={term === 'Spring'}
                     control={<Radio />}
                     label="Spring"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm("Summer")}
-                    checked={term === "Summer"}
+                    onChange={() => setTerm('Summer')}
+                    checked={term === 'Summer'}
                     control={<Radio />}
                     label="Summer"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm("Fall")}
-                    checked={term === "Fall"}
+                    onChange={() => setTerm('Fall')}
+                    checked={term === 'Fall'}
                     control={<Radio />}
                     label="Fall"
                   />
@@ -112,7 +122,12 @@ function ScheduleGenerate() {
                 <FormGroup>
                   <FormControlLabel
                     control={<Checkbox onChange={(e) => setRiskAck(e.target.checked)} />}
-                    label={<Typography sx={{ fontSize: 15, fontStyle: 'italic' }}>I acknowledge that generating a new schedule for this term will overwrite any existing schedules for this term.</Typography>}
+                    label={
+                      <Typography sx={{ fontSize: 15, fontStyle: 'italic' }}>
+                        I acknowledge that generating a new schedule for this term will overwrite any existing schedules
+                        for this term.
+                      </Typography>
+                    }
                     labelPlacement="start"
                   />
                 </FormGroup>
