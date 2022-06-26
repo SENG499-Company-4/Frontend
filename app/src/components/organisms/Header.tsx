@@ -14,6 +14,7 @@ import {
   Login,
   ModeEdit,
   Poll,
+  People,
   School,
   Today,
   AddCircle
@@ -64,6 +65,9 @@ function Header(props: { user: IUser }) {
                 icon={<Event />}
               />
             </HeaderMenu>
+            {role === Role.Admin ? (
+              <HeaderButton key="professors-list" label="Professors" url="/professors-list" icon={<People />} />
+            ) : null}
             <HeaderButton key="professor-profile" label="Profile" url="/professor-profile" icon={<School />} />
 
             {role === Role.Admin ? (

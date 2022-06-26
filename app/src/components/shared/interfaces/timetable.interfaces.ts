@@ -46,8 +46,11 @@ export interface ICalendarCourseItem {
   recurrenceRule: string;
 }
 
-export interface ICalendarTeacherItem {
+export interface ICalendarItem_Teacher {
+  courseId: string;
+  term: string;
   id: number;
   teacherName: string;
   color: string;
+  link: string;
 }

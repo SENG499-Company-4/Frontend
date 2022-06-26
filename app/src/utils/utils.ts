@@ -1,4 +1,4 @@
-import { ICalendarCourseItem, ICourse, ICalendarTeacherItem } from 'components/shared/interfaces/timetable.interfaces';
+import { ICalendarCourseItem, ICourse, ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';
@@ -8,13 +8,16 @@ import classData from 'data/clean.json';
  *  Reference: https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/CustomTemplates/React/Light/
  */
 
-export function parseCalendarTeacher(data: ICourse[]): ICalendarTeacherItem[] {
-  const calendarTeacherData: ICalendarTeacherItem[] = [];
+export function parseCalendarTeacher(data: ICourse[]): ICalendarItem_Teacher[] {
+  const calendarTeacherData: ICalendarItem_Teacher[] = [];
   data.forEach((course: ICourse) => {
-    const calendarItem: ICalendarTeacherItem = {
+    const calendarItem: ICalendarItem_Teacher = {
       id: course.professors[0].id,
       teacherName: course.professors[0].username,
-      color: colors[course.professors[0].id % colors.length]
+      courseId: course.CourseID.subject + course.CourseID.code,
+      term: course.CourseID.term,
+      color: colors[course.professors[0].id % colors.length],
+      link: '/professor-profile/' + course.professors[0].username
     };
     calendarTeacherData.push(calendarItem);
   });
@@ -54,7 +57,7 @@ export function parseCalendarCourse(data: ICourse[]): ICalendarCourseItem[] {
 }
 
 export function getTeacherById(id: number) {
-  const data: ICalendarTeacherItem[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
+  const data: ICalendarItem_Teacher[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
   return Query(data).filter(['id', id]).toArray()[0];
 }
 

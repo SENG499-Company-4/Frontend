@@ -10,6 +10,7 @@ import ScheduleManage from 'components/pages/ScheduleManage';
 import ScheduleGenerate from 'components/pages/ScheduleGenerate';
 import ScheduleTimetable from 'components/pages/ScheduleTimetable';
 import ProfessorProfile from 'components/pages/ProfessorProfile';
+import ProfessorsList from 'components/pages/ProfessorsList';
 import ErrorPage from 'components/pages/ErrorPage';
 import {
   PublicRouteMeta,
@@ -91,6 +92,14 @@ function AppRouter() {
           element={[
             <ProtectedRoute user={user} meta={AdminRouteMeta}>
               <ScheduleGenerate />
+            </ProtectedRoute>
+          ]}
+        />
+        <Route
+          path="/professors-list"
+          element={[
+            <ProtectedRoute user={user} meta={AdminRouteMeta}>
+              <ProfessorsList />
             </ProtectedRoute>
           ]}
         />
