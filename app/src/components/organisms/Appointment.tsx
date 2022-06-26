@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatDate } from 'devextreme/localization';
-import { ICalendarTeacherItem } from 'components/shared/interfaces/timetable.interfaces';
+import { ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
 import { Grid } from '@mui/material';
 import { Container } from '@mui/system';
 import { getTeacherById } from 'utils/utils';
@@ -10,7 +10,7 @@ import { getTeacherById } from 'utils/utils';
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-  const teacherInfo: ICalendarTeacherItem = getTeacherById(targetedAppointmentData.teacherId) || {}; //link the teacher and course by teacherId
+  const teacherInfo: ICalendarItem_Teacher = getTeacherById(targetedAppointmentData.teacherId) || {}; //link the teacher and course by teacherId
 
   return (
     <Container sx={{ height: '100%' }}>

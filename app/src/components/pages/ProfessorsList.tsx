@@ -6,7 +6,7 @@ import { Box } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Search, SearchIconWrapper, StyledInputBase } from 'components/styles/styles';
 import { useState } from 'react';
-import { ICalendarTeacherItem } from 'components/shared/interfaces/timetable.interfaces';
+import { ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
 import Link from '@mui/material/Link';
 
 const columns: GridColDef[] = [
@@ -21,13 +21,13 @@ const columns: GridColDef[] = [
 ];
 
 function ProfessorsList() {
-  const allData: ICalendarTeacherItem[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
+  const allData: ICalendarItem_Teacher[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
   const [search, setSearch] = useState<string>('');
-  const [rows, setRows] = useState<ICalendarTeacherItem[]>(allData);
+  const [rows, setRows] = useState<ICalendarItem_Teacher[]>(allData);
 
-  function filter(data: ICalendarTeacherItem[], search: string) {
-    var newData: ICalendarTeacherItem[] = [];
-    data.forEach((item: ICalendarTeacherItem) => {
+  function filter(data: ICalendarItem_Teacher[], search: string) {
+    var newData: ICalendarItem_Teacher[] = [];
+    data.forEach((item: ICalendarItem_Teacher) => {
       if (item.teacherName.includes(search)) {
         newData.push(item);
       }
@@ -60,4 +60,3 @@ function ProfessorsList() {
 }
 
 export default ProfessorsList;
-

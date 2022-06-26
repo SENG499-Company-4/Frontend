@@ -16,7 +16,8 @@ import {
   Poll,
   People,
   School,
-  Today
+  Today,
+  AddCircle
 } from '@mui/icons-material';
 
 const appLogo = require('assets/app-logo.png');
