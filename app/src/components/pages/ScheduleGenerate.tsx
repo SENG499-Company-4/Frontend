@@ -69,7 +69,6 @@ function ScheduleGenerate() {
         </DialogActions>
       </Dialog>
     );
-    window.location.href = '/schedule/generate';
   } else if (loading) {
     return <LoadingSpinner />;
   } else if (error) {
