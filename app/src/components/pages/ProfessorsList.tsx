@@ -20,7 +20,6 @@ const columns: GridColDef[] = [
   }
 ];
 
-
 function ProfessorsList() {
   const allData: ICalendarTeacherItem[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
   const [search, setSearch] = useState<string>('');
@@ -61,3 +60,4 @@ function ProfessorsList() {
 }
 
 export default ProfessorsList;
+
