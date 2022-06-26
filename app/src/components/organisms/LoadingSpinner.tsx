@@ -1,17 +1,16 @@
-import { CircularProgress } from '@mui/material';
-import React from 'react';
+import { Backdrop, CircularProgress } from '@mui/material';
+import React, { ReactElement } from 'react';
 
-function LoadingSpinner() {
+interface LoadingSpinnerProps {
+  isLoading: boolean;
+}
+
+function LoadingSpinner(props: LoadingSpinnerProps): ReactElement<LoadingSpinnerProps> {
   return (
-    <div
-      style={{
-        marginTop: '20%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-      }}
-    >
-      <CircularProgress size={60} thickness={4} color="primary" />
+    <div>
+      <Backdrop open={props.isLoading} sx={{ color: '#fff', zIndex: (theme: any) => theme.zIndex.drawer + 1 }}>
+        <CircularProgress size={60} thickness={4} color="inherit" />
+      </Backdrop>
     </div>
   );
 }

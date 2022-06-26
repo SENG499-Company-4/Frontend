@@ -1,3 +1,4 @@
+import LoadingSpinner from 'components/organisms/LoadingSpinner';
 import * as React from 'react';
 import { useState } from 'react';
 
@@ -27,6 +28,7 @@ export const LoadingContextProvider: React.FC<ILoadingContextProps> = (props: IL
         setLoading
       }}
     >
+      <LoadingSpinner isLoading={isLoading} />
       {props.children}
     </LoadingContext.Provider>
   );
