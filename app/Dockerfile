@@ -1,8 +1,9 @@
 FROM node:lts-alpine
 WORKDIR /app
 COPY package*.json ./
-COPY . .
 RUN npm install --omit-dev
-COPY . .
+COPY ./public ./public
+COPY ./src ./src
+RUN npm run build
 RUN npm install -g serve
 CMD serve -s build
