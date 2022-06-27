@@ -1,7 +1,7 @@
 import { BubbleChart, Code, DeveloperBoard } from '@mui/icons-material';
 import { Avatar, ButtonBase, Card, Grid, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
 import { Role } from 'components/shared/constants/timetable.constants';
-import { ICourse, IProfessor, IProfessorPreference } from 'components/shared/interfaces/timetable.interfaces';
+import { ICourse, IProfessor, IPreference } from 'components/shared/interfaces/timetable.interfaces';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCoursesForProfessor } from 'utils/utils';
@@ -92,7 +92,7 @@ function ProfessorProfile() {
             </Typography>
           </Grid>
           {professor.preferences.length > 0 ? (
-            professor.preferences?.map((preference: IProfessorPreference) => (
+            professor.preferences?.map((preference: IPreference) => (
               <Grid item>
                 <Typography variant="body1">
                   <b>{preference.id.subject + ' ' + preference.id.code}</b>: {getWilling(preference.preference)}

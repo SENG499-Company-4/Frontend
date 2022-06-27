@@ -1,6 +1,6 @@
 import { Faculty, Role, Term, WeekDay } from 'components/shared/constants/timetable.constants';
 
-export interface IProfessorPreference {
+export interface IPreference {
   id: ICourseID;
   preference: number;
 }
@@ -17,7 +17,7 @@ export interface IProfessor {
   password?: string;
   faculty?: Faculty;
   role: Role;
-  preferences: IProfessorPreference[];
+  preferences: IPreference[];
   active: boolean;
 }
 
