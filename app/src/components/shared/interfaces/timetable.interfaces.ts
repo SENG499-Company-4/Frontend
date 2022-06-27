@@ -45,6 +45,18 @@ export interface ICalendarCourseItem {
   recurrenceRule: string;
 }
 
+export interface IScheduleListItem {
+  courseNumber: string;
+  title: string;
+  professors: IProfessor[];
+  startDate: string;
+  endDate: string;
+  timeOfDay: string;
+  daysOffered: string[];
+  section?: string;
+  capacity?: number;
+}
+
 export interface ICalendarItem_Teacher {
   courseId: string;
   term: string;
