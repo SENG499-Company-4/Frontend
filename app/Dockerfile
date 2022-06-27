@@ -4,4 +4,4 @@ COPY package*.json ./
 RUN npm install --omit-dev
 COPY . .
 RUN npm install -g serve
-ENTRYPOINT ["serve", "-s", "build"]
+CMD serve -s build
