@@ -3,12 +3,27 @@ import { Avatar, ButtonBase, Card, Grid, ListItem, ListItemAvatar, ListItemText,
 import { Role } from 'components/shared/constants/timetable.constants';
 import { ICourse, IProfessor, IProfessorPreference } from 'components/shared/interfaces/timetable.interfaces';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getCoursesForProfessor } from 'utils/utils';
 import classData from 'data/clean.json';
+import { useQuery } from '@apollo/client';
+import { GET_USER } from 'components/shared/api/Queries';
 
 function ProfessorProfile() {
   const navigate = useNavigate();
+
+  const { id } = useParams();
+  console.log('Visiting profile of ' + id);
+
+  // TBD: When backend completes the User object, grab user by ID and populate the page with data from API.
+  // Currently this code does nothing because it returns undefined.
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: {
+      id: id
+    }
+  });
+
+  console.log(data, loading, error);
 
   const professor: IProfessor = {
     active: true,
