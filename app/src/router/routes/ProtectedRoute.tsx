@@ -3,7 +3,6 @@ import { Role } from 'components/shared/constants/timetable.constants';
 import { IProtectedRouteMeta } from 'components/shared/interfaces/route.interfaces';
 import { IUser } from 'components/shared/interfaces/user.interfaces';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface IProtectedRouteProps {
   user: IUser;
@@ -14,10 +13,9 @@ interface IProtectedRouteProps {
 export function ProtectedRoute(props: IProtectedRouteProps) {
   console.log('Protected Route Props: ', props);
 
-  const navigate = useNavigate();
   if (!props.user) {
-    // Redirect to 401 page if user is not logged in
-    navigate('/login');
+    // Redirect to login page if user is not logged in
+    window.location.href = '/login';
     return null;
   }
   const acceptedRoles = props.meta.role;

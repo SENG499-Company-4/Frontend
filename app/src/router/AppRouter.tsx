@@ -96,7 +96,7 @@ function AppRouter() {
           ]}
         />
         <Route
-          path="/professors-list"
+          path="/professors"
           element={[
             <ProtectedRoute user={user} meta={AdminRouteMeta}>
               <ProfessorsList />
@@ -104,7 +104,7 @@ function AppRouter() {
           ]}
         />
         <Route
-          path="/professor-profile"
+          path="/professors/:id"
           element={[
             <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
               <ProfessorProfile />
@@ -116,6 +116,14 @@ function AppRouter() {
           element={[
             <PublicRoute user={user} meta={AdminRouteMeta}>
               <ErrorPage />
+            </PublicRoute>
+          ]}
+        />
+        <Route
+          path="*"
+          element={[
+            <PublicRoute user={user} meta={PublicRouteMeta}>
+              <ErrorPage code={'404'} message={'Page not found'} />
             </PublicRoute>
           ]}
         />
