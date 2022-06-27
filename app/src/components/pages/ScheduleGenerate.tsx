@@ -56,21 +56,11 @@ function ScheduleGenerate() {
   }
 
   useEffect(() => {
+    loadingContext.setLoading(loading);
     if (data) {
-      console.log('DATA: ', data);
-      console.log('CLASSES: ', classes);
       setSuccessDialogOpen(true);
     }
-    if (loading === true) {
-      console.log('LOADING TRUE');
-      loadingContext.setLoading(true);
-    }
-    if (loading === false) {
-      console.log('LOADING FALSE');
-      loadingContext.setLoading(false);
-    }
     if (error) {
-      console.log('ERROR OCCURRED: ', error);
       errorContext.setErrorDialog({
         code: error.graphQLErrors[0].extensions.code,
         message: 'Schedule generation failed. Please try again.' + error.graphQLErrors[0].message,
@@ -78,6 +68,16 @@ function ScheduleGenerate() {
       });
     }
   }, [data, loading, error]);
+
+  function submit() {
+    submitHandler({
+      variables: {
+        input: {
+          year: year
+        }
+      }
+    });
+  }
 
   return (
     <Box>
@@ -188,22 +188,7 @@ function ScheduleGenerate() {
                   />
                 </FormGroup>
               </Box>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={!riskAck}
-                type="submit"
-                sx={{ float: 'right' }}
-                onClick={() =>
-                  submitHandler({
-                    variables: {
-                      input: {
-                        year: year
-                      }
-                    }
-                  })
-                }
-              >
+              <Button variant="contained" color="primary" disabled={!riskAck} sx={{ float: 'right' }} onClick={submit}>
                 Submit
               </Button>
             </Stack>
