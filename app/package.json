@@ -46,7 +46,7 @@
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --check \"./src/**/*.{js,jsx,ts,tsx,css,scss}\"",
     "format:fix": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json,css,scss}\"",
-    "heroku-postbuild": "react-scripts build"
+    "heroku-postbuild": "npm run build"
   },
   "eslintConfig": {
     "extends": [
