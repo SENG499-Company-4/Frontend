@@ -35,13 +35,13 @@ function Schedule() {
 
   const columns: GridColDef[] = [
     { field: 'title', headerName: 'Course Title', width: 130 },
-    { field: 'startDate', headerName: 'Start Date', width: 120 },
-    { field: 'endDate', headerName: 'End Date', width: 120 },
-    { field: 'timeOfDay', headerName: 'Time of Day', width: 160 },
+    { field: 'startDate', headerName: 'Start Date', width: 140 },
+    { field: 'endDate', headerName: 'End Date', width: 140 },
+    { field: 'timeOfDay', headerName: 'Time of Day', width: 220 },
     {
       field: 'daysOffered',
       headerName: 'Days of Week',
-      width: 220,
+      width: 240,
       renderCell: (params) => {
         return parseDaysOfWeek(params.value);
       }
