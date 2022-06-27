@@ -70,6 +70,7 @@ function ScheduleGenerate() {
   }, [data, loading, error]);
 
   function submit() {
+    console.log('Creating schedule with classes: ', classes);
     submitHandler({
       variables: {
         input: {
