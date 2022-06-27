@@ -18,7 +18,7 @@ function HeaderButton(props: IHeaderButtonProps) {
     return () => {
       if (pageName === '/logout') {
         cookies.remove('user');
-        navigate('/');
+        navigate('/login');
       } else {
         navigate(pageName);
       }
