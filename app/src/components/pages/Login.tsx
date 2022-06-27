@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -23,6 +23,8 @@ function Login() {
 
   const cookie = new Cookie();
 
+  const navigate = useNavigate();
+
   const [loginHandler, { data, loading, error }] = useMutation(LOGIN);
 
   if (data) {
@@ -31,10 +33,10 @@ function Login() {
     if (loginResponse.success) {
       if (loginResponse.message.includes('keith')) {
         cookie.set('user', { username: formState.username, role: Role.Admin });
-        window.location.href = `/`;
+        navigate('/');
       } else {
         cookie.set('user', { username: formState.username, role: Role.User });
-        window.location.href = `/`;
+        navigate('/');
       }
     } else if (!hasErrors) {
       setHasErrors(true);
