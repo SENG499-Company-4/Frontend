@@ -3,13 +3,16 @@ import appTheme from 'themes/appTheme';
 import React from 'react';
 import AppRouter from 'router/AppRouter';
 import { LoadingContextProvider } from 'contexts/LoadingContext';
+import { ErrorContextProvider } from 'contexts/ErrorContext';
 
 function App() {
   return (
     <LoadingContextProvider>
-      <ThemeProvider theme={appTheme}>
-        <AppRouter />
-      </ThemeProvider>
+      <ErrorContextProvider>
+        <ThemeProvider theme={appTheme}>
+          <AppRouter />
+        </ThemeProvider>
+      </ErrorContextProvider>
     </LoadingContextProvider>
   );
 }

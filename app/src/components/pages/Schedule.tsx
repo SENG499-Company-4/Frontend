@@ -12,7 +12,7 @@ function Schedule() {
   });
 
   if (!data || loading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner isLoading={true} />;
   } else if (error) {
     return <ErrorPage code={'400'} message="Schedule retrieval failed. Please try again." />;
   }

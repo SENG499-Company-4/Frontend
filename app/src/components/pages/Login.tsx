@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -7,15 +7,17 @@ import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from 'components/shared/api/Mutations';
-import LoadingSpinner from 'components/organisms/LoadingSpinner';
 import { Role } from 'components/shared/constants/timetable.constants';
 import Cookie from 'universal-cookie';
+import { LoadingContext } from 'contexts/LoadingContext';
 
-const Login = () => {
+function Login() {
   const [formState, setFormState] = useState({
     username: '',
     password: ''
   });
+
+  const { setLoading } = useContext(LoadingContext);
 
   const [hasErrors, setHasErrors] = useState<boolean>(false);
 
@@ -37,11 +39,13 @@ const Login = () => {
     } else if (!hasErrors) {
       setHasErrors(true);
     }
+    setLoading(false);
   } else if (loading) {
-    return <LoadingSpinner />;
+    setLoading(true);
   } else if (error && !hasErrors) {
     console.log(error);
     setHasErrors(true);
+    setLoading(false);
   }
   return (
     <Box component="form" sx={{ width: 300 }} mx="auto" justifyContent="center" noValidate autoComplete="off">
@@ -112,6 +116,6 @@ const Login = () => {
       </Grid>
     </Box>
   );
-};
+}
 
 export default Login;

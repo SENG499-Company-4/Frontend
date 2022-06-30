@@ -18,19 +18,23 @@ import {
   DialogTitle,
   DialogActions
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { GENERATE_SCHEDULE } from 'components/shared/api/Mutations';
-import LoadingSpinner from 'components/organisms/LoadingSpinner';
-import ErrorPage from './ErrorPage';
 import ClassData from 'data/clean.json';
 import { allTopics } from 'components/shared/constants/surveyForm.constants';
+import { LoadingContext } from 'contexts/LoadingContext';
+import { ErrorContext } from 'contexts/ErrorContext';
 
 function ScheduleGenerate() {
+  const loadingContext = useContext(LoadingContext);
+  const errorContext = useContext(ErrorContext);
+
   const [term, setTerm] = useState<string>('Spring');
   const [year, setYear] = useState<number>(2022);
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
+  const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
 
   const uniqueClassList = Array.from(
     new Set(
@@ -48,13 +52,43 @@ function ScheduleGenerate() {
   const [submitHandler, { data, loading, error }] = useMutation(GENERATE_SCHEDULE);
 
   if (data) {
-    console.log(data);
-    console.log(classes);
-    return (
+    console.log('DATA: ', data);
+  }
+
+  useEffect(() => {
+    loadingContext.setLoading(loading);
+    if (data) {
+      setSuccessDialogOpen(true);
+    }
+    if (error) {
+      errorContext.setErrorDialog({
+        code: error.graphQLErrors[0].extensions.code,
+        message: 'Schedule generation failed. Please try again.' + error.graphQLErrors[0].message,
+        namespace: 'graphql'
+      });
+    }
+  }, [data, loading, error]);
+
+  function submit() {
+    console.log('Creating schedule with classes: ', classes);
+    submitHandler({
+      variables: {
+        input: {
+          year: year
+        }
+      }
+    });
+  }
+
+  return (
+    <Box>
       <Dialog
-        open={true}
-        keepMounted
-        onClose={() => (window.location.href = '/schedule/generate')}
+        fullWidth={true}
+        maxWidth={'sm'}
+        open={successDialogOpen}
+        onClose={() => {
+          setSuccessDialogOpen(false);
+        }}
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>{'Submission Successful'}</DialogTitle>
@@ -65,19 +99,15 @@ function ScheduleGenerate() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => (window.location.href = '/schedule/generate')}>Ok</Button>
+          <Button
+            onClick={() => {
+              setSuccessDialogOpen(false);
+            }}
+          >
+            Ok
+          </Button>
         </DialogActions>
       </Dialog>
-    );
-  } else if (loading) {
-    return <LoadingSpinner />;
-  } else if (error) {
-    console.log(error);
-    return <ErrorPage code={'400'} message="Schedule generation failed. Please try again." />;
-  }
-
-  return (
-    <Box>
       <Typography variant="h4" gutterBottom marginY={4} textAlign={'center'}>
         Generate a New Schedule
       </Typography>
@@ -87,7 +117,7 @@ function ScheduleGenerate() {
             <Stack direction="row" spacing={2} sx={{ marginBottom: '20px' }}>
               <FormControl>
                 <FormLabel sx={{ marginTop: '10px' }}>Select a year:</FormLabel>
-                <RadioGroup row aria-labelledby="Year" name="row-radio-buttons-group">
+                <RadioGroup row aria-labelledby="Year">
                   <FormControlLabel
                     onChange={() => setYear(2022)}
                     checked={year === 2022}
@@ -106,7 +136,7 @@ function ScheduleGenerate() {
             <Stack direction="row" spacing={2} sx={{ marginBottom: '20px' }}>
               <FormControl>
                 <FormLabel sx={{ marginTop: '10px' }}>Select a semester:</FormLabel>
-                <RadioGroup row aria-labelledby="Term" name="row-radio-buttons-group">
+                <RadioGroup row aria-labelledby="Term">
                   <FormControlLabel
                     onChange={() => setTerm('Spring')}
                     checked={term === 'Spring'}
@@ -131,6 +161,7 @@ function ScheduleGenerate() {
             <Stack direction="row" spacing={2} sx={{ marginBottom: '20px' }}>
               <Autocomplete
                 multiple
+                disableCloseOnSelect
                 id="tags-outlined"
                 options={uniqueClassList}
                 getOptionLabel={(option) => option}
@@ -158,22 +189,7 @@ function ScheduleGenerate() {
                   />
                 </FormGroup>
               </Box>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={!riskAck}
-                type="submit"
-                sx={{ float: 'right' }}
-                onClick={() =>
-                  submitHandler({
-                    variables: {
-                      input: {
-                        year: year
-                      }
-                    }
-                  })
-                }
-              >
+              <Button variant="contained" color="primary" disabled={!riskAck} sx={{ float: 'right' }} onClick={submit}>
                 Submit
               </Button>
             </Stack>
