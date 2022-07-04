@@ -3,6 +3,10 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Grid, Typography } from '@mui/material';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface IRegisterForm {
   username: string;
@@ -30,6 +34,11 @@ function Register() {
       ? setHasErrors(false)
       : setHasErrors(true);
   }, [formData.password, formData.confirmPassword, formData.vnum.length]);
+
+  const [faculty, setFaculty] = React.useState('');
+  const handleChange = (event: SelectChangeEvent) => {
+    setFaculty(event.target.value as string);
+  };
 
   return (
     <Box
@@ -63,14 +72,21 @@ function Register() {
           />
         </Grid>
         <Grid item>
-          <TextField
-            id="outlined-required"
-            label="UVic ID"
-            placeholder="V00123456"
-            style={{ width: 300 }}
-            value={formData.vnum}
-            onChange={(e) => setFormData({ ...formData, vnum: e.target.value })}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="select-label">Faculty</InputLabel>
+            <Select
+              labelId="select-label"
+              id="outlined-faculty"
+              value={faculty}
+              label="Faculty"
+              style={{ width: 300 }}
+              onChange={handleChange}
+            >
+              <MenuItem value={'CSC'}>CSC</MenuItem>
+              <MenuItem value={'SENG'}>SENG</MenuItem>
+              <MenuItem value={'ECE'}>ECE</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item>
           <TextField
