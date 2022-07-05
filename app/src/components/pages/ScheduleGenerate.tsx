@@ -16,7 +16,12 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  DialogActions
+  DialogActions,
+  Paper,
+  InputLabel,
+  MenuItem,
+  Select,
+  Grid
 } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
@@ -25,6 +30,7 @@ import ClassData from 'data/clean.json';
 import { allTopics } from 'components/shared/constants/surveyForm.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
+import { ISections } from 'components/shared/interfaces/ScheduleGenerate.interfaces';
 
 function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
@@ -35,6 +41,7 @@ function ScheduleGenerate() {
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
+  const [sections, setSections] = useState<ISections>({});
 
   const uniqueClassList = Array.from(
     new Set(
@@ -71,6 +78,7 @@ function ScheduleGenerate() {
 
   function submit() {
     console.log('Creating schedule with classes: ', classes);
+    console.log('sections: ', sections);
     submitHandler({
       variables: {
         input: {
@@ -166,14 +174,60 @@ function ScheduleGenerate() {
                 options={uniqueClassList}
                 getOptionLabel={(option) => option}
                 sx={{ width: '100%' }}
-                onChange={(event, value) => {
+                onChange={(event, value, reason, detail) => {
                   event.preventDefault();
                   setClasses(value);
+
+                  if (reason === 'removeOption') {
+                    setSections((currentSections) => {
+                      delete currentSections[detail?.option];
+
+                      return currentSections;
+                    });
+                  } else if (reason === 'selectOption') {
+                    setSections({ ...sections, [detail?.option]: 1 });
+                  }
                 }}
                 filterSelectedOptions
                 renderInput={(params) => <TextField {...params} label="Courses" placeholder="Courses to be offered" />}
               />
             </Stack>
+
+            <Grid container rowSpacing={1} columnSpacing={1} columns={{ xs: 1, md: 2, xl: 4 }}>
+              {classes.map((className) => {
+                return (
+                  <Grid item xs={1} key={className}>
+                    <Paper key={className} sx={{ textAlign: 'center', p: '1%' }} elevation={3}>
+                      <Typography sx={{ m: '5%' }} variant="h5">
+                        {className}
+                      </Typography>
+                      <Stack spacing={2} direction="row">
+                        <Typography sx={{ m: '4%' }}>Sections to be offered</Typography>
+                        <FormControl sx={{ width: '30%', m: '5%' }}>
+                          <InputLabel id={className + "-sections-select-label"}>Sections</InputLabel>
+                          <Select
+                            labelId={className + "-sections-select-label"}
+                            id={className + "-sections-select"}
+                            defaultValue={1}
+                            label="Sections to be offered"
+                            onChange={(event) => {
+                              setSections({ ...sections, [className]: event.target.value as number });
+                            }}
+                          >
+                            {[1, 2, 3, 4, 5, 6].map((amount) => (
+                              <MenuItem key={amount} value={amount}>
+                                {amount}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Stack>
+                    </Paper>
+                  </Grid>
+                );
+              })}
+            </Grid>
+
             <Stack direction="row" spacing={2} sx={{ float: 'right', marginBottom: '20px' }}>
               <Box>
                 <FormGroup>
