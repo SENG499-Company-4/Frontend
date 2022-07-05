@@ -7,6 +7,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { Faculty } from 'components/shared/constants/timetable.constants';
 
 interface IRegisterForm {
   username: string;
@@ -35,6 +36,7 @@ function Register() {
       : setHasErrors(true);
   }, [formData.password, formData.confirmPassword, formData.vnum.length]);
 
+  const facultytypes: Faculty[] = ['CSC', 'SENG', 'ECE'];
   const [faculty, setFaculty] = React.useState('');
   const handleChange = (event: SelectChangeEvent) => {
     setFaculty(event.target.value as string);
@@ -82,9 +84,9 @@ function Register() {
               style={{ width: 300 }}
               onChange={handleChange}
             >
-              <MenuItem value={'CSC'}>CSC</MenuItem>
-              <MenuItem value={'SENG'}>SENG</MenuItem>
-              <MenuItem value={'ECE'}>ECE</MenuItem>
+              <MenuItem value={facultytypes[0]}>CSC</MenuItem>
+              <MenuItem value={facultytypes[1]}>SENG</MenuItem>
+              <MenuItem value={facultytypes[2]}>ECE</MenuItem>
             </Select>
           </FormControl>
         </Grid>
