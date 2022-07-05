@@ -204,10 +204,10 @@ function ScheduleGenerate() {
                       <Stack spacing={2} direction="row">
                         <Typography sx={{ m: '4%' }}>Sections to be offered</Typography>
                         <FormControl sx={{ width: '30%', m: '5%' }}>
-                          <InputLabel id={className + "-sections-select-label"}>Sections</InputLabel>
+                          <InputLabel id={className + '-sections-select-label'}>Sections</InputLabel>
                           <Select
-                            labelId={className + "-sections-select-label"}
-                            id={className + "-sections-select"}
+                            labelId={className + '-sections-select-label'}
+                            id={className + '-sections-select'}
                             defaultValue={1}
                             label="Sections to be offered"
                             onChange={(event) => {
