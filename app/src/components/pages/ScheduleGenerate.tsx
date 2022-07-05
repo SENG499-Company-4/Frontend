@@ -16,7 +16,7 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  DialogActions
+  DialogActions,
 } from '@mui/material';
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
@@ -25,6 +25,7 @@ import LoadingSpinner from 'components/organisms/LoadingSpinner';
 import ErrorPage from './ErrorPage';
 import ClassData from 'data/clean.json';
 import { allTopics } from 'components/shared/constants/surveyForm.constants';
+import ClassSelection from 'components/organisms/ClassSelection';
 
 function ScheduleGenerate() {
   const [term, setTerm] = useState<string>('Spring');
@@ -143,6 +144,35 @@ function ScheduleGenerate() {
                 renderInput={(params) => <TextField {...params} label="Courses" placeholder="Courses to be offered" />}
               />
             </Stack>
+
+            <Stack sx={{ marginBottom: '20px' }}>
+              {classes.map((className) => {
+                return (
+
+                  <ClassSelection className={className} key={className} />
+                  // <Accordion key={className}>
+                  //   <AccordionSummary
+                  //     expandIcon={<ExpandMore />}
+                  //     aria-controls="panel1a-content"
+                  //     id="panel1a-header"
+                  //   >
+                  //     <Typography>{className}</Typography>
+                  //   </AccordionSummary>
+                  //   <AccordionDetails>
+                  //     <Typography>
+                  //       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
+                  //       malesuada lacus ex, sit amet blandit leo lobortis eget.
+                  //     </Typography>
+                  //     <Checkbox {...label} />
+                  //   </AccordionDetails>
+                  // </Accordion>
+                );
+              })}
+            </Stack>
+
+
+
+
             <Stack direction="row" spacing={2} sx={{ float: 'right', marginBottom: '20px' }}>
               <Box>
                 <FormGroup>
