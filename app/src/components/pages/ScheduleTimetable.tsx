@@ -32,6 +32,7 @@ function ScheduleTimetable() {
       <Scheduler
         timeZone="Canada/Pacific"
         dataSource={calendarCourseData}
+        textExpr='courseId'
         views={[
           {
             type: 'day',

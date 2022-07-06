@@ -16,7 +16,7 @@ function Appointment(model: any) {
   return (
     <Container sx={{ height: '100%' }}>
       <Grid container className="showtime-preview" direction="column">
-        <Grid item> {targetedAppointmentData.text} </Grid>
+        <Grid item> {targetedAppointmentData.courseId} </Grid>
         <Grid item> {teacherInfo.teacherName} </Grid>
         <Grid item>
           {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
