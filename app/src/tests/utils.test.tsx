@@ -122,4 +122,4 @@ test('Test getCoursesForProfessor', () => {
   expect(res).toEqual(expected);
 });
 
-export { };
+export {};
