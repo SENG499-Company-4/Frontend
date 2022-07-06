@@ -10,7 +10,6 @@ import { getTeacherById } from 'utils/utils';
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-  // console.log(targetedAppointmentData)
   const teacherInfo: ICalendarItem_Teacher = getTeacherById(targetedAppointmentData.teacherId) || {}; //link the teacher and course by teacherId
 
   return (
