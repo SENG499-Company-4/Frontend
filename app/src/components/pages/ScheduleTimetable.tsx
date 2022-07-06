@@ -23,7 +23,7 @@ function ScheduleTimetable() {
   // const { course } = state as IStateProps;
 
   function exportState() {
-    console.log(calendarCourseData)
+    console.log(calendarCourseData);
   }
 
   return (
@@ -32,7 +32,7 @@ function ScheduleTimetable() {
       <Scheduler
         timeZone="Canada/Pacific"
         dataSource={calendarCourseData}
-        textExpr='courseId'
+        textExpr="courseId"
         views={[
           {
             type: 'day',
@@ -63,13 +63,12 @@ function ScheduleTimetable() {
           useColorAsDefault={true}
         />
       </Scheduler>
-      <Box display="flex" justifyContent="center" marginTop='10px'>
+      <Box display="flex" justifyContent="center" marginTop="10px">
         <Button variant="contained" size="large" onClick={exportState}>
           Save
         </Button>
       </Box>
     </>
-
   );
 }
 
