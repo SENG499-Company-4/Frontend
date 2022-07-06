@@ -10,12 +10,13 @@ import { getTeacherById } from 'utils/utils';
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
+  // console.log(targetedAppointmentData)
   const teacherInfo: ICalendarItem_Teacher = getTeacherById(targetedAppointmentData.teacherId) || {}; //link the teacher and course by teacherId
 
   return (
     <Container sx={{ height: '100%' }}>
       <Grid container className="showtime-preview" direction="column">
-        <Grid item> {targetedAppointmentData.courseId} </Grid>
+        <Grid item> {targetedAppointmentData.text} </Grid>
         <Grid item> {teacherInfo.teacherName} </Grid>
         <Grid item>
           {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
