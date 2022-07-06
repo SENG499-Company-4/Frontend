@@ -36,7 +36,7 @@ function Register() {
       : setHasErrors(true);
   }, [formData.password, formData.confirmPassword, formData.vnum.length]);
 
-  const facultytypes: Faculty[] = ['CSC', 'SENG', 'ECE'];
+  const faculties: Faculty[] = ['CSC', 'SENG', 'ECE'];
   const [faculty, setFaculty] = React.useState('');
   const handleChange = (event: SelectChangeEvent) => {
     setFaculty(event.target.value as string);
@@ -84,9 +84,9 @@ function Register() {
               style={{ width: 300 }}
               onChange={handleChange}
             >
-              <MenuItem value={facultytypes[0]}>CSC</MenuItem>
-              <MenuItem value={facultytypes[1]}>SENG</MenuItem>
-              <MenuItem value={facultytypes[2]}>ECE</MenuItem>
+              <MenuItem value={faculties[0]}>CSC</MenuItem>
+              <MenuItem value={faculties[1]}>SENG</MenuItem>
+              <MenuItem value={faculties[2]}>ECE</MenuItem>
             </Select>
           </FormControl>
         </Grid>
