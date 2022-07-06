@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
 import { useMutation } from '@apollo/client';
-import { LOGIN } from 'components/shared/api/Mutations';
+import { LOGIN } from 'api/Mutations';
 import { Role } from 'components/shared/constants/timetable.constants';
 import Cookie from 'universal-cookie';
 import { LoadingContext } from 'contexts/LoadingContext';

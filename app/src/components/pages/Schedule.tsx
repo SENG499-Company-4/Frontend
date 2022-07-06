@@ -1,16 +1,18 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_SCHEDULE } from 'components/shared/api/Queries';
+import { GET_SCHEDULE } from 'api/Queries';
 import { Box, Button, Chip, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { IScheduleListItem } from 'components/shared/interfaces/timetable.interfaces';
 import classData from 'data/clean.json';
 import { parseScheduleListItems } from 'utils/utils';
 import { useNavigate } from 'react-router-dom';
+import { LoadingContext } from 'contexts/LoadingContext';
 
 function Schedule() {
   const allData: IScheduleListItem[] = parseScheduleListItems(JSON.parse(JSON.stringify(classData)));
   const [rows] = useState<IScheduleListItem[]>(allData);
+  const loadingContext = useContext(LoadingContext);
   const navigate = useNavigate();
 
   const { loading, error, data } = useQuery(GET_SCHEDULE, {
@@ -20,7 +22,10 @@ function Schedule() {
   });
 
   useEffect(() => {
-    console.log('Got information from GQL: ', data);
+    loadingContext.setLoading(loading);
+    if (data) {
+      console.log('Got information from GQL: ', data);
+    }
   }, [loading, data, error]);
 
   function parseDaysOfWeek(daysOfWeek: string[]): ReactNode {
@@ -73,10 +78,10 @@ function Schedule() {
         getRowId={(row: IScheduleListItem) => {
           return row.professors[0].id + row.title + row.capacity + row.courseNumber;
         }}
+        loading={loading}
         autoHeight
         rows={rows}
         columns={columns}
-        pageSize={20}
         rowsPerPageOptions={[5]}
       />
     </Box>

@@ -7,7 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getCoursesForProfessor } from 'utils/utils';
 import classData from 'data/clean.json';
 import { useQuery } from '@apollo/client';
-import { GET_USER } from 'components/shared/api/Queries';
+import { GET_USER } from 'api/Queries';
 
 function ProfessorProfile() {
   const navigate = useNavigate();

@@ -27,7 +27,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { GENERATE_SCHEDULE } from 'components/shared/api/Mutations';
+import { GENERATE_SCHEDULE } from 'api/Mutations';
 import ClassData from 'data/clean.json';
 import { allTopics } from 'components/shared/constants/surveyForm.constants';
 import { LoadingContext } from 'contexts/LoadingContext';

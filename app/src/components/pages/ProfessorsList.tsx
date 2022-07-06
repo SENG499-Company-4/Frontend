@@ -82,7 +82,7 @@ function ProfessorsList() {
           onChange={(e) => onSearchChange(e.target.value)}
         ></StyledInputBase>
       </Search>
-      <DataGrid autoHeight rows={rows} columns={columns} pageSize={20} rowsPerPageOptions={[5]} />
+      <DataGrid autoHeight rows={rows} columns={columns} rowsPerPageOptions={[5]} />
     </Box>
   );
 }
