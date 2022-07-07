@@ -219,7 +219,7 @@ function ScheduleGenerate() {
                           >
                             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => (
                               <MenuItem key={amount} value={amount}>
-                                {amount != 0 ? amount : "Algorithm Determined"}
+                                {amount != 0 ? amount : 'Algorithm Determined'}
                               </MenuItem>
                             ))}
                           </Select>
