@@ -211,15 +211,15 @@ function ScheduleGenerate() {
                           <Select
                             labelId={className + '-sections-select-label'}
                             id={className + '-sections-select'}
-                            defaultValue={1}
+                            defaultValue={0}
                             label="Sections to be offered"
                             onChange={(event) => {
                               setSections({ ...sections, [className]: event.target.value as number });
                             }}
                           >
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => (
+                            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => (
                               <MenuItem key={amount} value={amount}>
-                                {amount}
+                                {amount != 0 ? amount : "Algorithm Determined"}
                               </MenuItem>
                             ))}
                           </Select>
