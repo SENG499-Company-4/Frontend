@@ -21,8 +21,10 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Grid
+  Grid,
+  IconButton
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { GENERATE_SCHEDULE } from 'components/shared/api/Mutations';
@@ -174,6 +176,7 @@ function ScheduleGenerate() {
                 options={uniqueClassList}
                 getOptionLabel={(option) => option}
                 sx={{ width: '100%' }}
+                renderTags={() => null}
                 onChange={(event, value, reason, detail) => {
                   event.preventDefault();
                   setClasses(value);
@@ -193,17 +196,21 @@ function ScheduleGenerate() {
               />
             </Stack>
 
-            <Grid container rowSpacing={1} columnSpacing={1} columns={{ xs: 1, md: 2, xl: 4 }}>
+            <Stack spacing={1} sx={{ marginBottom: '1%' }}>
               {classes.map((className) => {
                 return (
-                  <Grid item xs={1} key={className}>
-                    <Paper key={className} sx={{ textAlign: 'center', p: '1%' }} elevation={3}>
-                      <Typography sx={{ m: '5%' }} variant="h5">
-                        {className}
-                      </Typography>
-                      <Stack spacing={2} direction="row">
-                        <Typography sx={{ m: '4%' }}>Sections to be offered</Typography>
-                        <FormControl sx={{ width: '30%', m: '5%' }}>
+                  <Paper key={className} sx={{ p: '1%' }} elevation={3}>
+                    <Grid alignItems="center" container columnSpacing={1} columns={{ xs: 12 }}>
+                      <Grid item xs={2}>
+                        <Typography variant="h6">{className}</Typography>
+                      </Grid>
+
+                      <Grid item xs={4}>
+                        <Typography align="right">Sections to be offered</Typography>
+                      </Grid>
+
+                      <Grid item xs={2}>
+                        <FormControl size="small" sx={{ width: '50%' }}>
                           <InputLabel id={className + '-sections-select-label'}>Sections</InputLabel>
                           <Select
                             labelId={className + '-sections-select-label'}
@@ -221,12 +228,30 @@ function ScheduleGenerate() {
                             ))}
                           </Select>
                         </FormControl>
-                      </Stack>
-                    </Paper>
-                  </Grid>
+                      </Grid>
+
+                      <Grid item xs={4}>
+                        <Box display="flex" justifyContent="flex-end">
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                              console.log(sections);
+                              setSections((currentSections) => {
+                                delete currentSections[className];
+                                return currentSections;
+                              });
+                              setClasses(classes.filter((remove) => remove !== className));
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Paper>
                 );
               })}
-            </Grid>
+            </Stack>
 
             <Stack direction="row" spacing={2} sx={{ float: 'right', marginBottom: '20px' }}>
               <Box>
