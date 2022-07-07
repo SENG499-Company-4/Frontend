@@ -112,6 +112,7 @@ function ScheduleGenerate() {
           <Button
             onClick={() => {
               setSuccessDialogOpen(false);
+              window.location.reload();
             }}
           >
             Ok
@@ -180,14 +181,7 @@ function ScheduleGenerate() {
                 onChange={(event, value, reason, detail) => {
                   event.preventDefault();
                   setClasses(value);
-
-                  if (reason === 'removeOption') {
-                    setSections((currentSections) => {
-                      delete currentSections[detail?.option];
-
-                      return currentSections;
-                    });
-                  } else if (reason === 'selectOption') {
+                  if (reason === 'selectOption') {
                     setSections({ ...sections, [detail?.option]: 1 });
                   }
                 }}
@@ -209,7 +203,7 @@ function ScheduleGenerate() {
                         <Typography align="right">Sections to be offered</Typography>
                       </Grid>
 
-                      <Grid item xs={2}>
+                      <Grid item xs={3}>
                         <FormControl size="small" sx={{ width: '50%' }}>
                           <InputLabel id={className + '-sections-select-label'}>Sections</InputLabel>
                           <Select
@@ -221,7 +215,7 @@ function ScheduleGenerate() {
                               setSections({ ...sections, [className]: event.target.value as number });
                             }}
                           >
-                            {[1, 2, 3, 4, 5, 6].map((amount) => (
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => (
                               <MenuItem key={amount} value={amount}>
                                 {amount}
                               </MenuItem>
@@ -230,7 +224,7 @@ function ScheduleGenerate() {
                         </FormControl>
                       </Grid>
 
-                      <Grid item xs={4}>
+                      <Grid item xs={3}>
                         <Box display="flex" justifyContent="flex-end">
                           <IconButton
                             aria-label="delete"
