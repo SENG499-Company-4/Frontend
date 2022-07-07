@@ -55,22 +55,18 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
 
       // Conditional return rules based on props
       if (professorProp && courseProp) {
-        console.log('Have professor and course props', professorProp, courseProp);
         if (calendarItem.teacherId === professorProp && courseProp === calendarItem.courseId) {
           calendarCourseData.push(calendarItem);
         }
       } else if (courseProp && !professorProp) {
-        console.log('Have course props', professorProp, courseProp);
         if (calendarItem.courseId === courseProp) {
           calendarCourseData.push(calendarItem);
         }
       } else if (!courseProp && professorProp) {
-        console.log('Have professor props', professorProp, courseProp);
         if (calendarItem.teacherId === professorProp) {
           calendarCourseData.push(calendarItem);
         }
       } else {
-        console.log('No props', professorProp, courseProp);
         calendarCourseData.push(calendarItem);
       }
     });
