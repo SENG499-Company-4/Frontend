@@ -183,6 +183,8 @@ function ScheduleGenerate() {
                   setClasses(value);
                   if (reason === 'selectOption') {
                     setSections({ ...sections, [detail?.option]: 1 });
+                  } else if (reason === 'clear') {
+                    setSections({});
                   }
                 }}
                 filterSelectedOptions
