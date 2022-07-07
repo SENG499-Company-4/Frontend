@@ -28,6 +28,11 @@ function ScheduleTimetable() {
 
   return (
     <>
+      <Box display="flex" justifyContent="right" margin="5px">
+        <Button variant="contained" size="large" onClick={exportState}>
+          Save
+        </Button>
+      </Box>
       {/*@ts-ignore*/}
       <Scheduler
         timeZone="Canada/Pacific"
@@ -63,11 +68,6 @@ function ScheduleTimetable() {
           useColorAsDefault={true}
         />
       </Scheduler>
-      <Box display="flex" justifyContent="center" marginTop="10px">
-        <Button variant="contained" size="large" onClick={exportState}>
-          Save
-        </Button>
-      </Box>
     </>
   );
 }
