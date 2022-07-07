@@ -182,7 +182,7 @@ function ScheduleGenerate() {
                   event.preventDefault();
                   setClasses(value);
                   if (reason === 'selectOption') {
-                    setSections({ ...sections, [detail?.option]: 1 });
+                    setSections({ ...sections, [detail?.option]: 0 });
                   } else if (reason === 'clear') {
                     setSections({});
                   }
