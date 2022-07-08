@@ -16,8 +16,15 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  DialogActions
+  DialogActions,
+  Paper,
+  InputLabel,
+  MenuItem,
+  Select,
+  Grid,
+  IconButton
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { GENERATE_SCHEDULE } from 'components/shared/api/Mutations';
@@ -25,6 +32,7 @@ import ClassData from 'data/clean.json';
 import { allTopics } from 'components/shared/constants/surveyForm.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
+import { ISections } from 'components/shared/interfaces/ScheduleGenerate.interfaces';
 
 function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
@@ -35,6 +43,7 @@ function ScheduleGenerate() {
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
+  const [sections, setSections] = useState<ISections>({});
 
   const uniqueClassList = Array.from(
     new Set(
@@ -71,6 +80,7 @@ function ScheduleGenerate() {
 
   function submit() {
     console.log('Creating schedule with classes: ', classes);
+    console.log('sections: ', sections);
     submitHandler({
       variables: {
         input: {
@@ -102,6 +112,7 @@ function ScheduleGenerate() {
           <Button
             onClick={() => {
               setSuccessDialogOpen(false);
+              window.location.reload();
             }}
           >
             Ok
@@ -166,14 +177,78 @@ function ScheduleGenerate() {
                 options={uniqueClassList}
                 getOptionLabel={(option) => option}
                 sx={{ width: '100%' }}
-                onChange={(event, value) => {
+                renderTags={() => null}
+                onChange={(event, value, reason, detail) => {
                   event.preventDefault();
                   setClasses(value);
+                  if (reason === 'selectOption') {
+                    setSections({ ...sections, [detail?.option]: 0 });
+                  } else if (reason === 'clear') {
+                    setSections({});
+                  }
                 }}
                 filterSelectedOptions
                 renderInput={(params) => <TextField {...params} label="Courses" placeholder="Courses to be offered" />}
               />
             </Stack>
+
+            <Stack spacing={1} sx={{ marginBottom: '1%' }}>
+              {classes.map((className) => {
+                return (
+                  <Paper key={className} sx={{ p: '1%' }} elevation={3}>
+                    <Grid alignItems="center" container columnSpacing={1} columns={{ xs: 12 }}>
+                      <Grid item xs={2}>
+                        <Typography variant="h6">{className}</Typography>
+                      </Grid>
+
+                      <Grid item xs={4}>
+                        <Typography align="right">Sections to be offered</Typography>
+                      </Grid>
+
+                      <Grid item xs={3}>
+                        <FormControl size="small" sx={{ width: '50%' }}>
+                          <InputLabel id={className + '-sections-select-label'}>Sections</InputLabel>
+                          <Select
+                            labelId={className + '-sections-select-label'}
+                            id={className + '-sections-select'}
+                            defaultValue={0}
+                            label="Sections to be offered"
+                            onChange={(event) => {
+                              setSections({ ...sections, [className]: event.target.value as number });
+                            }}
+                          >
+                            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => (
+                              <MenuItem key={amount} value={amount}>
+                                {amount != 0 ? amount : 'Algorithm Determined'}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+
+                      <Grid item xs={3}>
+                        <Box display="flex" justifyContent="flex-end">
+                          <IconButton
+                            aria-label="delete"
+                            onClick={() => {
+                              console.log(sections);
+                              setSections((currentSections) => {
+                                delete currentSections[className];
+                                return currentSections;
+                              });
+                              setClasses(classes.filter((remove) => remove !== className));
+                            }}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Box>
+                      </Grid>
+                    </Grid>
+                  </Paper>
+                );
+              })}
+            </Stack>
+
             <Stack direction="row" spacing={2} sx={{ float: 'right', marginBottom: '20px' }}>
               <Box>
                 <FormGroup>
