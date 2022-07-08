@@ -39,7 +39,6 @@ export function parseCalendarCourse(data: ICourse[]): ICalendarCourseItem[] {
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
       const calendarItem: ICalendarCourseItem = {
-        text: course.CourseID.subject + course.CourseID.code, //show on subject
         courseId: course.CourseID.subject + course.CourseID.code,
         teacherId: course.professors[0].id,
         startDate: courseStartDate,

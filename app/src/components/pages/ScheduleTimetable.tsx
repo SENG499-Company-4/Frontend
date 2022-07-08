@@ -6,6 +6,7 @@ import classData from 'data/clean.json';
 import { parseCalendarCourse, parseCalendarTeacher } from 'utils/utils';
 // import { ICourse } from 'components/shared/interfaces/timetable.interfaces';
 // import { useLocation } from 'react-router-dom';
+import { Button, Box } from '@mui/material';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 const currentDate = new Date(2021, 12, 10);
@@ -21,12 +22,22 @@ function ScheduleTimetable() {
   // const { state } = useLocation();
   // const { course } = state as IStateProps;
 
+  function exportState() {
+    console.log(calendarCourseData);
+  }
+
   return (
     <>
+      <Box display="flex" justifyContent="right" margin="5px">
+        <Button variant="contained" size="large" onClick={exportState}>
+          Save
+        </Button>
+      </Box>
       {/*@ts-ignore*/}
       <Scheduler
         timeZone="Canada/Pacific"
         dataSource={calendarCourseData}
+        textExpr="courseId"
         views={[
           {
             type: 'day',
@@ -45,6 +56,7 @@ function ScheduleTimetable() {
         height={800}
         appointmentComponent={Appointment}
         showAllDayPanel={false}
+        editingAppointment={false}
       >
         <Editing allowAdding={false} allowDragging={false} />
         <Resource

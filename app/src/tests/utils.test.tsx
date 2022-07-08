@@ -37,7 +37,6 @@ test('Test parseCalendarCourse', () => {
     {
       courseId: 'CSC105',
       teacherId: 3402,
-      text: 'CSC105',
       startDate: startDate,
       endDate: endDate,
       recurrenceRule: 'FREQ=WEEKLY;BYDAY=TU;UNTIL=20220407'
@@ -45,7 +44,6 @@ test('Test parseCalendarCourse', () => {
     {
       courseId: 'CSC105',
       teacherId: 3402,
-      text: 'CSC105',
       startDate: startDate,
       endDate: endDate,
       recurrenceRule: 'FREQ=WEEKLY;BYDAY=WE;UNTIL=20220407'
@@ -53,7 +51,6 @@ test('Test parseCalendarCourse', () => {
     {
       courseId: 'CSC105',
       teacherId: 3402,
-      text: 'CSC105',
       startDate: startDate,
       endDate: endDate,
       recurrenceRule: 'FREQ=WEEKLY;BYDAY=FR;UNTIL=20220407'
