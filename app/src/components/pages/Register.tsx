@@ -3,10 +3,15 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { Grid, Typography } from '@mui/material';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { Faculty } from 'components/shared/constants/timetable.constants';
 
 interface IRegisterForm {
   username: string;
-  vnum: string;
+  faculty: string;
   password: string;
   confirmPassword: string;
 }
@@ -15,7 +20,7 @@ function Register() {
   const [hasErrors, setHasErrors] = useState<boolean>(false);
   const [formData, setFormData] = useState<IRegisterForm>({
     username: '',
-    vnum: '',
+    faculty: '',
     password: '',
     confirmPassword: ''
   });
@@ -26,10 +31,15 @@ function Register() {
   };
 
   useEffect(() => {
-    (formData.password === formData.confirmPassword && formData.password.length > 0) || formData.vnum.length === 0
+    (formData.password === formData.confirmPassword && formData.password.length > 0) || formData.faculty.length === 0
       ? setHasErrors(false)
       : setHasErrors(true);
-  }, [formData.password, formData.confirmPassword, formData.vnum.length]);
+  }, [formData.password, formData.confirmPassword, formData.faculty]);
+
+  const faculties: Faculty[] = ['CSC', 'SENG', 'ECE'];
+  const handleChange = (event: SelectChangeEvent) => {
+    setFormData({ ...formData, faculty: event.target.value });
+  };
 
   return (
     <Box
@@ -63,14 +73,20 @@ function Register() {
           />
         </Grid>
         <Grid item>
-          <TextField
-            id="outlined-required"
-            label="UVic ID"
-            placeholder="V00123456"
-            style={{ width: 300 }}
-            value={formData.vnum}
-            onChange={(e) => setFormData({ ...formData, vnum: e.target.value })}
-          />
+          <FormControl fullWidth>
+            <InputLabel id="select-label">Faculty</InputLabel>
+            <Select
+              labelId="select-label"
+              id="outlined-faculty"
+              label="Faculty"
+              style={{ width: 300 }}
+              onChange={handleChange}
+            >
+              <MenuItem value={faculties[0]}>CSC</MenuItem>
+              <MenuItem value={faculties[1]}>SENG</MenuItem>
+              <MenuItem value={faculties[2]}>ECE</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item>
           <TextField
