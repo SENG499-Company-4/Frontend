@@ -37,9 +37,7 @@ function Register() {
   }, [formData.password, formData.confirmPassword, formData.faculty]);
 
   const faculties: Faculty[] = ['CSC', 'SENG', 'ECE'];
-  const [faculty, setFaculty] = React.useState('');
   const handleChange = (event: SelectChangeEvent) => {
-    setFaculty(event.target.value as string);
     setFormData({ ...formData, faculty: event.target.value })
   };
 
@@ -80,7 +78,6 @@ function Register() {
             <Select
               labelId="select-label"
               id="outlined-faculty"
-              value={faculty}
               label="Faculty"
               style={{ width: 300 }}
               onChange={handleChange}
