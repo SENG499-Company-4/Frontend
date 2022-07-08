@@ -38,7 +38,7 @@ function Register() {
 
   const faculties: Faculty[] = ['CSC', 'SENG', 'ECE'];
   const handleChange = (event: SelectChangeEvent) => {
-    setFormData({ ...formData, faculty: event.target.value })
+    setFormData({ ...formData, faculty: event.target.value });
   };
 
   return (
