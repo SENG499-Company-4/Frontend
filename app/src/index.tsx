@@ -5,7 +5,7 @@ import reportWebVitals from 'reportWebVitals';
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 const client = new ApolloClient({
-  uri: 'https://seng499company4backend.herokuapp.com/',
+  uri: process.env.REACT_APP_BACKEND_URL,
   cache: new InMemoryCache()
 });
 

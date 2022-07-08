@@ -81,6 +81,8 @@ function ScheduleGenerate() {
   function submit() {
     console.log('Creating schedule with classes: ', classes);
     console.log('sections: ', sections);
+    console.log('Algorithm 1: ', process.env.REACT_APP_ALGORITHM_1);
+    console.log('Algorithm 2: ', process.env.REACT_APP_ALGORITHM_2);
     submitHandler({
       variables: {
         input: {

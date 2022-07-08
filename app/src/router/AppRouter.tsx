@@ -12,6 +12,7 @@ import ScheduleTimetable from 'components/pages/ScheduleTimetable';
 import ProfessorProfile from 'components/pages/ProfessorProfile';
 import ProfessorsList from 'components/pages/ProfessorsList';
 import ErrorPage from 'components/pages/ErrorPage';
+import PlugAndPlay from 'components/pages/PlugAndPlay';
 import {
   PublicRouteMeta,
   AdminRouteMeta,
@@ -108,6 +109,14 @@ function AppRouter() {
           element={[
             <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
               <ProfessorProfile />
+            </ProtectedRoute>
+          ]}
+        />
+        <Route
+          path="/plug-and-play"
+          element={[
+            <ProtectedRoute user={user} meta={AdminRouteMeta}>
+              <PlugAndPlay />
             </ProtectedRoute>
           ]}
         />
