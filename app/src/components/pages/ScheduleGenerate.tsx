@@ -196,7 +196,13 @@ function ScheduleGenerate() {
               {classes.map((className) => {
                 return (
                   <Paper key={className} sx={{ p: '1%' }} elevation={3}>
-                    <Grid alignItems="center" justifyContent={"flex-start"} container columnSpacing={1} columns={{ xs: 12 }}>
+                    <Grid
+                      alignItems="center"
+                      justifyContent={'flex-start'}
+                      container
+                      columnSpacing={1}
+                      columns={{ xs: 12 }}
+                    >
                       <Grid item xs={3}>
                         <Typography variant="h6">{className}</Typography>
                       </Grid>
