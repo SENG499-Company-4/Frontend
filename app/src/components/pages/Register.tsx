@@ -40,7 +40,7 @@ function Register() {
   const [faculty, setFaculty] = React.useState('');
   const handleChange = (event: SelectChangeEvent) => {
     setFaculty(event.target.value as string);
-    setFormData({ ...formData, faculty: event.target.value })
+    setFormData({ ...formData, faculty: event.target.value });
   };
 
   return (
