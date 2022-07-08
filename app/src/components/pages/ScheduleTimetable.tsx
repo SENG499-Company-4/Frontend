@@ -8,6 +8,7 @@ import { parseCalendarCourse, parseCalendarTeacher } from 'utils/utils';
 // import { useLocation } from 'react-router-dom';
 import { Button, Box } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
+import { Chip } from '@mui/material';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 const currentDate = new Date(2021, 12, 10);
@@ -38,6 +39,24 @@ function ScheduleTimetable() {
           Save
         </Button>
       </Box>
+      {professorId && (
+        <Chip
+          color="primary"
+          label={'Filtered by Professor: ' + professorId}
+          sx={{
+            margin: '10px'
+          }}
+        />
+      )}
+      {courseId && (
+        <Chip
+          color="primary"
+          label={'Filtered by Course: ' + courseId}
+          sx={{
+            margin: '10px'
+          }}
+        />
+      )}
       {/*@ts-ignore*/}
       <Scheduler
         timeZone="Canada/Pacific"
@@ -63,7 +82,7 @@ function ScheduleTimetable() {
         showAllDayPanel={false}
         editingAppointment={false}
       >
-        <Editing allowAdding={false} allowDragging={false} />
+        <Editing allowAdding={false} allowDragging={true} />
         <Resource
           dataSource={calendarTeacherData}
           fieldExpr="teacherId"
