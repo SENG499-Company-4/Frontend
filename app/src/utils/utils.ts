@@ -24,8 +24,11 @@ export function parseCalendarTeacher(data: ICourse[]): ICalendarItem_Teacher[] {
   return calendarTeacherData;
 }
 
-export function parseCalendarCourse(data: ICourse[]): ICalendarCourseItem[] {
+export function parseCalendarCourse(data: ICourse[], courseId?: string, professorId?: number): ICalendarCourseItem[] {
   const calendarCourseData: ICalendarCourseItem[] = [];
+  let courseProp = courseId ? courseId : undefined;
+  let professorProp = professorId ? professorId : undefined;
+
   data.forEach((course: ICourse) => {
     course.meetingTimes.forEach((element) => {
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
@@ -49,7 +52,27 @@ export function parseCalendarCourse(data: ICourse[]): ICalendarCourseItem[] {
         // And if you click same course on Wednesday, it will show repeat on Wed.
         recurrenceRule: 'FREQ=WEEKLY;BYDAY=' + element.Day.slice(0, 2) + ';UNTIL=' + course.endDate.replaceAll('-', '')
       };
-      calendarCourseData.push(calendarItem);
+
+      // Conditional return rules based on props
+      if (professorProp && courseProp) {
+        console.log('Have professor and course props', professorProp, courseProp);
+        if (calendarItem.teacherId === professorProp && courseProp === calendarItem.courseId) {
+          calendarCourseData.push(calendarItem);
+        }
+      } else if (courseProp && !professorProp) {
+        console.log('Have course props', professorProp, courseProp);
+        if (calendarItem.courseId === courseProp) {
+          calendarCourseData.push(calendarItem);
+        }
+      } else if (!courseProp && professorProp) {
+        console.log('Have professor props', professorProp, courseProp);
+        if (calendarItem.teacherId === professorProp) {
+          calendarCourseData.push(calendarItem);
+        }
+      } else {
+        console.log('No props', professorProp, courseProp);
+        calendarCourseData.push(calendarItem);
+      }
     });
   });
   return calendarCourseData;

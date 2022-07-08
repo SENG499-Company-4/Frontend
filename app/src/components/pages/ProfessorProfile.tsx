@@ -117,7 +117,7 @@ function ProfessorProfile() {
                     onClick={() => {
                       navigate('/schedule/timetable', {
                         state: {
-                          course
+                          courseId: course.CourseID.subject + course.CourseID.code
                         }
                       });
                     }}
