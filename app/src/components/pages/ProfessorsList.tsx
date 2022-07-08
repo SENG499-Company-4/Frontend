@@ -42,7 +42,7 @@ function ProfessorsList() {
               });
             }}
           >
-            <Link>View Coures</Link>
+            <Link>View Courses</Link>
           </ButtonBase>
         );
       }
