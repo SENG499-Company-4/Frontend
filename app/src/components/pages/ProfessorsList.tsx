@@ -24,7 +24,10 @@ function ProfessorsList() {
       field: 'link',
       headerName: 'View Professor Profile',
       width: 200,
-      renderCell: (params) => <Link href={params.value}> View profile </Link>
+      renderCell: (params) => {
+        console.log('PARAMS: ', params);
+        return <Link href={'/professor-profile/' + params.id}> View profile </Link>;
+      }
     },
     {
       field: 'courses',
