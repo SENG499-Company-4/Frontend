@@ -17,7 +17,7 @@ import {
   People,
   School,
   Today,
-  AddCircle, 
+  AddCircle,
   AccountCircle,
   Power
 } from '@mui/icons-material';
@@ -74,12 +74,7 @@ function Header(props: { user: IUser }) {
               </HeaderMenu>
             ) : null}
             {role === Role.Admin ? (
-              <HeaderButton
-                key="plug-and-play"
-                label="Plug and Play"
-                url="/plug-and-play"
-                icon={<Power />}
-              />
+              <HeaderButton key="plug-and-play" label="Plug and Play" url="/plug-and-play" icon={<Power />} />
             ) : null}
             <HeaderButton
               key="login"

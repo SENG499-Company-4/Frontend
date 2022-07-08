@@ -1,6 +1,6 @@
 export enum company {
   company3 = 'Company 3',
-  company4  = 'Company 4'
+  company4 = 'Company 4'
 }
 
 export enum companyInverse {
