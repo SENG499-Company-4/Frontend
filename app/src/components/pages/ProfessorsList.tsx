@@ -52,6 +52,7 @@ function ProfessorsList() {
     }
   ];
 
+
   function filter(data: ICalendarItem_Teacher[], search: string) {
     var newData: ICalendarItem_Teacher[] = [];
     data.forEach((item: ICalendarItem_Teacher) => {
