@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -6,47 +6,43 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
 import { useMutation } from '@apollo/client';
-import { LOGIN } from 'components/shared/api/Mutations';
+import { LOGIN } from 'api/Mutations';
 import { Role } from 'components/shared/constants/timetable.constants';
 import Cookie from 'universal-cookie';
 import { LoadingContext } from 'contexts/LoadingContext';
 
-function Login() {
+const Login = () => {
+  const [hasErrors, setHasErrors] = useState<boolean>(false);
   const [formState, setFormState] = useState({
     username: '',
     password: ''
   });
 
-  const { setLoading } = useContext(LoadingContext);
-
-  const [hasErrors, setHasErrors] = useState<boolean>(false);
+  const loadingContext = useContext(LoadingContext);
 
   const cookie = new Cookie();
 
   const [loginHandler, { data, loading, error }] = useMutation(LOGIN);
 
-  if (data) {
-    const loginResponse = data.login;
-    console.log(loginResponse);
-    if (loginResponse.success) {
-      if (loginResponse.message.includes('keith')) {
-        cookie.set('user', { username: formState.username, role: Role.Admin });
-        window.location.href = `/`;
-      } else {
-        cookie.set('user', { username: formState.username, role: Role.User });
-        window.location.href = `/`;
+  useEffect(() => {
+    loadingContext.setLoading(loading);
+    if (data) {
+      const loginResponse = data.login;
+      if (loginResponse.success) {
+        if (loginResponse.message.includes('keith')) {
+          cookie.set('user', { username: formState.username, role: Role.Admin });
+          window.location.href = '/';
+        } else {
+          cookie.set('user', { username: formState.username, role: Role.User });
+          window.location.href = '/';
+        }
       }
-    } else if (!hasErrors) {
+    }
+    if (error && !hasErrors) {
       setHasErrors(true);
     }
-    setLoading(false);
-  } else if (loading) {
-    setLoading(true);
-  } else if (error && !hasErrors) {
-    console.log(error);
-    setHasErrors(true);
-    setLoading(false);
-  }
+  }, [data, loading, error]);
+
   return (
     <Box component="form" sx={{ width: 300 }} mx="auto" justifyContent="center" noValidate autoComplete="off">
       <Grid container spacing={2} className="login">
@@ -116,6 +112,6 @@ function Login() {
       </Grid>
     </Box>
   );
-}
+};
 
 export default Login;

@@ -1,4 +1,9 @@
-import { ICalendarCourseItem, ICourse, ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
+import {
+  ICalendarCourseItem,
+  ICourse,
+  ICalendarItem_Teacher,
+  IScheduleListItem
+} from 'components/shared/interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';
@@ -17,7 +22,7 @@ export function parseCalendarTeacher(data: ICourse[]): ICalendarItem_Teacher[] {
       courseId: course.CourseID.subject + course.CourseID.code,
       term: course.CourseID.term,
       color: colors[course.professors[0].id % colors.length],
-      link: '/professor-profile/' + course.professors[0].username
+      link: '/professors/' + course.professors[0].id
     };
     calendarTeacherData.push(calendarItem);
   });
@@ -72,6 +77,32 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
     });
   });
   return calendarCourseData;
+}
+
+export function parseScheduleListItems(data: ICourse[]): IScheduleListItem[] {
+  const scheduleListItemData: IScheduleListItem[] = [];
+  data.forEach((course: ICourse) => {
+    const daysOfWeek: string[] = [];
+    course.meetingTimes.forEach((element) => {
+      if (element.Day === 'THURSDAY') {
+        daysOfWeek.push('R');
+      } else {
+        daysOfWeek.push(element.Day.slice(0, 1));
+      }
+    });
+    const scheduleListItem: IScheduleListItem = {
+      courseNumber: course.CourseID.code,
+      title: course.CourseID.subject + course.CourseID.code,
+      professors: course.professors,
+      startDate: course.startDate,
+      endDate: course.endDate,
+      timeOfDay: course.meetingTimes[0].StartTime + ' - ' + course.meetingTimes[0].EndTime,
+      daysOffered: daysOfWeek,
+      capacity: course.capacity
+    };
+    scheduleListItemData.push(scheduleListItem);
+  });
+  return scheduleListItemData;
 }
 
 export function getTeacherById(id: number) {

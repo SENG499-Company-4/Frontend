@@ -34,29 +34,33 @@ function ScheduleTimetable() {
 
   return (
     <>
-      <Box display="flex" justifyContent="right" margin="5px">
-        <Button variant="contained" size="large" onClick={exportState}>
-          Save
+      <Box display="flex" justifyContent="space-between" margin="5px">
+        <div>
+          {professorId && (
+            <Chip
+              color="primary"
+              label={'Filtered by Professor: ' + professorId}
+              sx={{
+                margin: '10px'
+              }}
+            />
+          )}
+          {courseId && (
+            <Chip
+              color="primary"
+              label={'Filtered by Course: ' + courseId}
+              sx={{
+                margin: '10px'
+              }}
+            />
+          )}
+        </div>
+
+        <Button variant="contained" size="large" color="secondary" onClick={exportState}>
+          Save Schedule
         </Button>
       </Box>
-      {professorId && (
-        <Chip
-          color="primary"
-          label={'Filtered by Professor: ' + professorId}
-          sx={{
-            margin: '10px'
-          }}
-        />
-      )}
-      {courseId && (
-        <Chip
-          color="primary"
-          label={'Filtered by Course: ' + courseId}
-          sx={{
-            margin: '10px'
-          }}
-        />
-      )}
+
       {/*@ts-ignore*/}
       <Scheduler
         timeZone="Canada/Pacific"

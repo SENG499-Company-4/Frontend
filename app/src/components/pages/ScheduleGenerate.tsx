@@ -27,7 +27,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { GENERATE_SCHEDULE } from 'components/shared/api/Mutations';
+import { GENERATE_SCHEDULE } from 'api/Mutations';
 import ClassData from 'data/clean.json';
 import { allTopics } from 'components/shared/constants/surveyForm.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
@@ -196,8 +196,14 @@ function ScheduleGenerate() {
               {classes.map((className) => {
                 return (
                   <Paper key={className} sx={{ p: '1%' }} elevation={3}>
-                    <Grid alignItems="center" container columnSpacing={1} columns={{ xs: 12 }}>
-                      <Grid item xs={2}>
+                    <Grid
+                      alignItems="center"
+                      justifyContent={'flex-start'}
+                      container
+                      columnSpacing={1}
+                      columns={{ xs: 12 }}
+                    >
+                      <Grid item xs={3}>
                         <Typography variant="h6">{className}</Typography>
                       </Grid>
 
@@ -205,21 +211,22 @@ function ScheduleGenerate() {
                         <Typography align="right">Sections to be offered</Typography>
                       </Grid>
 
-                      <Grid item xs={3}>
-                        <FormControl size="small" sx={{ width: '50%' }}>
+                      <Grid item xs={2}>
+                        <FormControl size="small" sx={{ width: '100%' }}>
                           <InputLabel id={className + '-sections-select-label'}>Sections</InputLabel>
                           <Select
+                            sx={{ width: '300px' }}
                             labelId={className + '-sections-select-label'}
                             id={className + '-sections-select'}
                             defaultValue={0}
-                            label="Sections to be offered"
+                            label="Sections to be offered: "
                             onChange={(event) => {
                               setSections({ ...sections, [className]: event.target.value as number });
                             }}
                           >
                             {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => (
                               <MenuItem key={amount} value={amount}>
-                                {amount != 0 ? amount : 'Algorithm Determined'}
+                                {amount !== 0 ? amount : 'Algorithm Determined'}
                               </MenuItem>
                             ))}
                           </Select>

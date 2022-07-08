@@ -66,14 +66,13 @@ function Header(props: { user: IUser }) {
               />
             </HeaderMenu>
             {role === Role.Admin ? (
-              <HeaderButton key="professors-list" label="Professors" url="/professors-list" icon={<People />} />
+              <HeaderButton key="professors" label="Professors" url="/professors" icon={<People />} />
             ) : null}
-            <HeaderButton key="professor-profile" label="Profile" url="/professor-profile" icon={<School />} />
-
+            {/* TODO: Have this route to the current user's ID */}
+            <HeaderButton key="professor/" label="Profile" url="/professors/me" icon={<School />} />
             {role === Role.Admin ? (
               <HeaderButton key="register-user" label="Create New User" url="/register" icon={<AddCircle />} />
             ) : null}
-
             <HeaderButton
               key="login"
               label={role ? 'Logout' : 'Login'}

@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/system/Container';
+import { useNavigate } from 'react-router-dom';
 
 interface IErrorPageProps {
   message?: string;
@@ -15,6 +16,8 @@ function ErrorPage(props: IErrorPageProps) {
   const errorText = props.message
     ? props.message
     : 'The application encountered an unknown error processing your request.';
+
+  const navigate = useNavigate();
   return (
     <Container>
       <Box display="flex" justifyContent="center" alignItems="center">
@@ -27,7 +30,7 @@ function ErrorPage(props: IErrorPageProps) {
         {errorText}
       </Typography>
       <Box display="flex" justifyContent="center" marginTop={6}>
-        <Button variant="text" href="/" size={'large'}>
+        <Button variant="text" onClick={() => navigate('/')} size={'large'}>
           Back to Home Page
         </Button>
       </Box>
