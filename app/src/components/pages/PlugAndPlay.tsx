@@ -58,15 +58,21 @@ function PlugAndPlay() {
     }
     
     useEffect(() => {
-        setBackend(backendUrl[process.env.REACT_APP_BACKEND_URL as keyof typeof backendUrl]);
-        setAlgorithm1(company[process.env.REACT_APP_ALGORITHM_1 as keyof typeof company]);
-        setAlgorithm2(company[process.env.REACT_APP_ALGORITHM_2 as keyof typeof company]);
-        setOldConfig({
-            REACT_APP_BACKEND_URL: process.env.REACT_APP_BACKEND_URL,
-            REACT_APP_ALGORITHM_1: process.env.REACT_APP_ALGORITHM_1,
-            REACT_APP_ALGORITHM_2: process.env.REACT_APP_ALGORITHM_2
-        });
-        setLoading(false);
+        const config = {
+            headers: {
+                Accept: "application/vnd.heroku+json; version=3",
+                Authorization: `Bearer ${process.env.REACT_APP_HEROKU}`
+              }
+        }
+        axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config)
+            .then(res => {
+                const configVars = res.data;
+                setOldConfig(configVars);
+                setBackend(backendUrl[configVars.REACT_APP_BACKEND_URL as keyof typeof backendUrl]);
+                setAlgorithm1(company[configVars.REACT_APP_ALGORITHM_1 as keyof typeof company]);
+                setAlgorithm2(company[configVars.REACT_APP_ALGORITHM_2 as keyof typeof company]);
+                setLoading(false);
+            })
     }, []);
 
     if (loading) {
