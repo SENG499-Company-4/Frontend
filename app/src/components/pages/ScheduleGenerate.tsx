@@ -72,7 +72,7 @@ function ScheduleGenerate() {
     }
     if (error) {
       const errorCode = error.graphQLErrors.length > 0 ? error.graphQLErrors[0].extensions.code : 400;
-      const errorMessage = error.graphQLErrors.length > 0 ? error.graphQLErrors[0].message : "";
+      const errorMessage = error.graphQLErrors.length > 0 ? error.graphQLErrors[0].message : '';
       errorContext.setErrorDialog({
         code: errorCode,
         message: 'Schedule generation failed. Please try again.' + errorMessage,
@@ -84,21 +84,20 @@ function ScheduleGenerate() {
   function submit() {
     const config = {
       headers: {
-          Accept: "application/vnd.heroku+json; version=3",
-          Authorization: `Bearer ${process.env.REACT_APP_HEROKU}`
+        Accept: 'application/vnd.heroku+json; version=3',
+        Authorization: `Bearer ${process.env.REACT_APP_HEROKU}`
+      }
+    };
+    axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config).then((res) => {
+      const configVars = res.data;
+      submitHandler({
+        variables: {
+          input: {
+            year: year
+          }
         }
-    }
-    axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config)
-      .then(res => {
-          const configVars = res.data;
-          submitHandler({
-            variables: {
-              input: {
-                year: year
-              }
-            }
-          });
-      })
+      });
+    });
   }
 
   return (
