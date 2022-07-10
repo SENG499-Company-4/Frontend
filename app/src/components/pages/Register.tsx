@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -8,6 +8,10 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Faculty } from 'constants/timetable.constants';
+import { CREATE_USER } from 'api/Mutations';
+import { LoadingContext } from 'contexts/LoadingContext';
+import { ErrorContext } from 'contexts/ErrorContext';
+import { useMutation } from '@apollo/client';
 
 interface IRegisterForm {
   username: string;
@@ -24,10 +28,26 @@ function Register() {
     password: '',
     confirmPassword: ''
   });
+  const loadingContext = useContext(LoadingContext);
+  const errorContext = useContext(ErrorContext);
+
+  const [createUser, { loading, data, error }] = useMutation(CREATE_USER);
+
+  useEffect(() => {
+    loadingContext.setLoading(loading);
+    if (data) {
+      console.log('Data returned from create user: ', data);
+      // const createUserResponse = data.createUser;
+      // if (createUserResponse.success) {
+      // }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, data, error]);
 
   const createAccount = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     // Create POST request here
+    // Before we implement createUser, need to check with backend on what the payload should be
   };
 
   useEffect(() => {

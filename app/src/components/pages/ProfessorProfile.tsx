@@ -1,13 +1,13 @@
 import { BubbleChart, Code, DeveloperBoard } from '@mui/icons-material';
 import { Avatar, ButtonBase, Card, Grid, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
-import { Role } from 'constants/timetable.constants';
+import { Faculty, Role } from 'constants/timetable.constants';
 import { ICourse, IProfessor, IProfessorPreference } from 'interfaces/timetable.interfaces';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCoursesForProfessor } from 'utils/utils';
 import classData from 'data/clean.json';
 import { useQuery } from '@apollo/client';
-import { GET_USER } from 'api/Queries';
+import { GET_ME, GET_USER_BY_ID } from 'api/Queries';
 
 function ProfessorProfile() {
   const navigate = useNavigate();
@@ -17,13 +17,19 @@ function ProfessorProfile() {
 
   // TBD: When backend completes the User object, grab user by ID and populate the page with data from API.
   // Currently this code does nothing because it returns undefined.
-  const { loading, error, data } = useQuery(GET_USER, {
+  const { loading: meLoading, error: meError, data: meData } = useQuery(GET_ME);
+  const {
+    loading: userLoading,
+    error: userError,
+    data: userData
+  } = useQuery(GET_USER_BY_ID, {
     variables: {
       id: id
     }
   });
 
-  console.log(data, loading, error);
+  console.log('ME DATA: ', meData, meLoading, meError);
+  console.log('USER DATA: ', userData, userLoading, userError);
 
   const professor: IProfessor = {
     active: true,
@@ -141,8 +147,8 @@ function ProfessorProfile() {
                     <Card elevation={3} sx={{ width: '300px' }}>
                       <ListItem>
                         <ListItemAvatar>
-                          <Avatar sx={{ bgcolor: facultyColors[course.CourseID.subject] }}>
-                            {facultyIcons[course.CourseID.subject]}
+                          <Avatar sx={{ bgcolor: facultyColors[course.CourseID.subject as Faculty] }}>
+                            {facultyIcons[course.CourseID.subject as Faculty]}
                           </Avatar>
                         </ListItemAvatar>
                         <ListItemText
