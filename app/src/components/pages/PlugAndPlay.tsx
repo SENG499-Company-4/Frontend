@@ -15,12 +15,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import {
-  backendUrl,
-  backendUrlInverse,
-  company,
-  companyInverse
-} from 'components/shared/constants/plugandplay.constants';
+import { backendUrl, backendUrlInverse, company, companyInverse } from 'constants/plugandplay.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 
 const companies: company[] = [company.company3, company.company4];
