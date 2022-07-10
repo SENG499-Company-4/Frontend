@@ -1,6 +1,8 @@
+import { LoadingContext } from 'contexts/LoadingContext';
 import { IPublicRouteMeta } from 'interfaces/route.interfaces';
 import { IUser } from 'interfaces/user.interfaces';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface IPublicRouteProps {
   user?: IUser;
@@ -9,5 +11,13 @@ interface IPublicRouteProps {
 }
 
 export function PublicRoute(props: IPublicRouteProps) {
+  const location = useLocation();
+  const loadingContext = useContext(LoadingContext);
+
+  useEffect(() => {
+    loadingContext.setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
+
   return <div>{props.children}</div>;
 }

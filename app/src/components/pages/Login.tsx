@@ -22,12 +22,12 @@ const Login = () => {
 
   const cookie = new Cookie();
 
-  const [loginHandler, { data, loading, error }] = useMutation(LOGIN);
+  const [login, { data: loginData, loading: loginLoading, error: loginError }] = useMutation(LOGIN);
 
   useEffect(() => {
-    loadingContext.setLoading(loading);
-    if (data) {
-      const loginResponse = data.login;
+    loadingContext.setLoading(loginLoading);
+    if (loginData) {
+      const loginResponse = loginData.login;
       if (loginResponse.success) {
         if (loginResponse.message.includes('keith')) {
           cookie.set('user', { username: formState.username, role: Role.Admin });
@@ -38,10 +38,11 @@ const Login = () => {
         }
       }
     }
-    if (error && !hasErrors) {
+    if (loginData && !hasErrors) {
       setHasErrors(true);
     }
-  }, [data, loading, error]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loginData, loginLoading, loginError]);
 
   return (
     <Box component="form" sx={{ width: 300 }} mx="auto" justifyContent="center" noValidate autoComplete="off">
@@ -98,7 +99,7 @@ const Login = () => {
             variant="contained"
             style={{ width: 300, marginTop: 15 }}
             onClick={() =>
-              loginHandler({
+              login({
                 variables: {
                   username: formState.username,
                   password: formState.password

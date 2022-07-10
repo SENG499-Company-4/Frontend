@@ -1,8 +1,10 @@
 import ErrorPage from 'components/pages/ErrorPage';
 import { Role } from 'constants/timetable.constants';
+import { LoadingContext } from 'contexts/LoadingContext';
 import { IProtectedRouteMeta } from 'interfaces/route.interfaces';
 import { IUser } from 'interfaces/user.interfaces';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface IProtectedRouteProps {
   user: IUser;
@@ -11,14 +13,21 @@ interface IProtectedRouteProps {
 }
 
 export function ProtectedRoute(props: IProtectedRouteProps) {
-  console.log('Protected Route Props: ', props);
+  const location = useLocation();
+  const loadingContext = useContext(LoadingContext);
+  const acceptedRoles = props.meta.role;
+
+  useEffect(() => {
+    loadingContext.setLoading(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location]);
 
   if (!props.user) {
     // Redirect to login page if user is not logged in
     window.location.href = '/login';
     return null;
   }
-  const acceptedRoles = props.meta.role;
+
   if (acceptedRoles.includes(props.user.role as Role)) {
     return <div>{props.children}</div>;
   } else {
