@@ -26,6 +26,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useContext, useEffect, useState } from 'react';
+import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { GENERATE_SCHEDULE } from 'api/Mutations';
 import ClassData from 'data/clean.json';
@@ -70,23 +71,32 @@ function ScheduleGenerate() {
       setSuccessDialogOpen(true);
     }
     if (error) {
+      const errorCode = error.graphQLErrors.length > 0 ? error.graphQLErrors[0].extensions.code : 400;
+      const errorMessage = error.graphQLErrors.length > 0 ? error.graphQLErrors[0].message : '';
       errorContext.setErrorDialog({
-        code: error.graphQLErrors[0].extensions.code,
-        message: 'Schedule generation failed. Please try again.' + error.graphQLErrors[0].message,
+        code: errorCode,
+        message: 'Schedule generation failed. Please try again.' + errorMessage,
         namespace: 'graphql'
       });
     }
   }, [data, loading, error]);
 
   function submit() {
-    console.log('Creating schedule with classes: ', classes);
-    console.log('sections: ', sections);
-    submitHandler({
-      variables: {
-        input: {
-          year: year
-        }
+    const config = {
+      headers: {
+        Accept: 'application/vnd.heroku+json; version=3',
+        Authorization: `Bearer ${process.env.REACT_APP_HEROKU}`
       }
+    };
+    axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config).then((res) => {
+      const configVars = res.data;
+      submitHandler({
+        variables: {
+          input: {
+            year: year
+          }
+        }
+      });
     });
   }
 

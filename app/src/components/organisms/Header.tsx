@@ -17,7 +17,9 @@ import {
   People,
   School,
   Today,
-  AddCircle
+  AddCircle,
+  AccountCircle,
+  Power
 } from '@mui/icons-material';
 
 const appLogo = require('assets/app-logo.png');
@@ -66,12 +68,13 @@ function Header(props: { user: IUser }) {
               />
             </HeaderMenu>
             {role === Role.Admin ? (
-              <HeaderButton key="professors" label="Professors" url="/professors" icon={<People />} />
+              <HeaderMenu key="professors" label="Professors" icon={<School />}>
+                <HeaderButton key="professors-list" label="Professors List" url="/professors" icon={<People />} />
+                <HeaderButton key="register-user" label="Create New User" url="/register" icon={<AddCircle />} />
+              </HeaderMenu>
             ) : null}
-            {/* TODO: Have this route to the current user's ID */}
-            <HeaderButton key="professor/" label="Profile" url="/professors/me" icon={<School />} />
             {role === Role.Admin ? (
-              <HeaderButton key="register-user" label="Create New User" url="/register" icon={<AddCircle />} />
+              <HeaderButton key="plug-and-play" label="Plug and Play" url="/plug-and-play" icon={<Power />} />
             ) : null}
             <HeaderButton
               key="login"

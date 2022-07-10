@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM --platform=linux/amd64 node:lts-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit-dev
