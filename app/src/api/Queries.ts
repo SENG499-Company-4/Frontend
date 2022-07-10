@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
 
+/**
+ * Get the currently logged in user's information
+ */
 export const GET_ME = gql`
   query Me {
     me {
@@ -22,7 +25,10 @@ export const GET_ME = gql`
   }
 `;
 
-export const GET_USER = gql`
+/**
+ * Gets a user by an id (int)
+ */
+export const GET_USER_BY_ID = gql`
   query FindUserById($id: Int!) {
     findUserById(id: $id) {
       id
@@ -44,6 +50,9 @@ export const GET_USER = gql`
   }
 `;
 
+/**
+ * Gets the survey for the current user.
+ */
 export const GET_SURVEY = gql`
   query Survey {
     survey {
@@ -60,6 +69,9 @@ export const GET_SURVEY = gql`
   }
 `;
 
+/**
+ * Fetch a list of courses for a given term and year
+ */
 export const GET_COURSES = gql`
   query Courses($term: Term, $year: Int) {
     courses(term: $term, year: $year) {
@@ -99,6 +111,9 @@ export const GET_COURSES = gql`
   }
 `;
 
+/**
+ * Fetch the schedule for a given year.
+ */
 export const GET_SCHEDULE = gql`
   query Query($year: Int) {
     schedule(year: $year)
