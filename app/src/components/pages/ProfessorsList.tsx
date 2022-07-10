@@ -25,8 +25,7 @@ function ProfessorsList() {
       headerName: 'View Professor Profile',
       width: 200,
       renderCell: (params) => {
-        console.log('PARAMS: ', params);
-        return <Link href={'/professor-profile/' + params.id}> View profile </Link>;
+        return <Link href={'/professors/' + params.id}> View profile </Link>;
       }
     },
     {
@@ -34,7 +33,6 @@ function ProfessorsList() {
       headerName: 'Currently Teaching',
       width: 300,
       renderCell: (params) => {
-        console.log('params', params);
         return (
           <ButtonBase
             onClick={() => {
