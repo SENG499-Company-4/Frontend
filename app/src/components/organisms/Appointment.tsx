@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatDate } from 'devextreme/localization';
-import { ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
+import { ICalendarItem_Teacher } from 'interfaces/timetable.interfaces';
 import { Grid } from '@mui/material';
 import { Container } from '@mui/system';
 import { getTeacherById } from 'utils/utils';

@@ -3,7 +3,7 @@ import {
   ICourse,
   ICalendarItem_Teacher,
   IScheduleListItem
-} from 'components/shared/interfaces/timetable.interfaces';
+} from 'interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';

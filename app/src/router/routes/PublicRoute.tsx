@@ -1,5 +1,5 @@
-import { IPublicRouteMeta } from 'components/shared/interfaces/route.interfaces';
-import { IUser } from 'components/shared/interfaces/user.interfaces';
+import { IPublicRouteMeta } from 'interfaces/route.interfaces';
+import { IUser } from 'interfaces/user.interfaces';
 import React from 'react';
 
 interface IPublicRouteProps {

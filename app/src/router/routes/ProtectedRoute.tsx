@@ -1,7 +1,7 @@
 import ErrorPage from 'components/pages/ErrorPage';
-import { Role } from 'components/shared/constants/timetable.constants';
-import { IProtectedRouteMeta } from 'components/shared/interfaces/route.interfaces';
-import { IUser } from 'components/shared/interfaces/user.interfaces';
+import { Role } from 'constants/timetable.constants';
+import { IProtectedRouteMeta } from 'interfaces/route.interfaces';
+import { IUser } from 'interfaces/user.interfaces';
 import React from 'react';
 
 interface IProtectedRouteProps {

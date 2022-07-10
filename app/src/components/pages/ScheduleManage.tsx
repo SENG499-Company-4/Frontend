@@ -13,12 +13,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
-import { Term } from 'components/shared/constants/timetable.constants';
+import { Term } from 'constants/timetable.constants';
 import { Typography } from '@mui/material';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import { ISchedule } from 'components/shared/interfaces/scheduleManage.interfaces';
+import { ISchedule } from 'interfaces/scheduleManage.interfaces';
 
 const semesterTypes: Term[] = ['SUMMER', 'WINTER', 'SPRING'];
 

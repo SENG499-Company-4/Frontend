@@ -1,7 +1,7 @@
 import { BubbleChart, Code, DeveloperBoard } from '@mui/icons-material';
 import { Avatar, ButtonBase, Card, Grid, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
-import { Role } from 'components/shared/constants/timetable.constants';
-import { ICourse, IProfessor, IProfessorPreference } from 'components/shared/interfaces/timetable.interfaces';
+import { Role } from 'constants/timetable.constants';
+import { ICourse, IProfessor, IProfessorPreference } from 'interfaces/timetable.interfaces';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCoursesForProfessor } from 'utils/utils';

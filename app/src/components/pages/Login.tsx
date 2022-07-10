@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import { Grid } from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from 'api/Mutations';
-import { Role } from 'components/shared/constants/timetable.constants';
+import { Role } from 'constants/timetable.constants';
 import Cookie from 'universal-cookie';
 import { LoadingContext } from 'contexts/LoadingContext';
 

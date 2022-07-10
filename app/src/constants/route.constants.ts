@@ -1,4 +1,4 @@
-import { Role } from 'components/shared/constants/timetable.constants';
+import { Role } from 'constants/timetable.constants';
 import { IPublicRouteMeta, IProtectedRouteMeta } from '../interfaces/route.interfaces';
 
 export const AdminRouteMeta: IProtectedRouteMeta = {

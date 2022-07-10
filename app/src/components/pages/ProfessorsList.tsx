@@ -6,7 +6,7 @@ import { Box, ButtonBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Search, SearchIconWrapper, StyledInputBase } from 'components/styles/styles';
 import { useState } from 'react';
-import { ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
+import { ICalendarItem_Teacher } from 'interfaces/timetable.interfaces';
 import Link from '@mui/material/Link';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 

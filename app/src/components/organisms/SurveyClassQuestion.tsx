@@ -5,7 +5,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Stack from '@mui/material/Stack';
-import { willingRadio, ability, willing } from 'components/shared/constants/surveyForm.constants';
+import { willingRadio, ability, willing } from 'constants/surveyForm.constants';
 import { Divider } from '@mui/material';
 
 function SurveyClassQuestion(props: {

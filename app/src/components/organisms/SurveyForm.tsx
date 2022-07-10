@@ -11,13 +11,8 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import {
-  IClassData,
-  IFormValues,
-  ITermPrefs,
-  ICourseAbility
-} from 'components/shared/interfaces/surveyForm.interfaces';
-import { overallDefaults, departmentTopics, allTopics } from 'components/shared/constants/surveyForm.constants';
+import { IClassData, IFormValues, ITermPrefs, ICourseAbility } from 'interfaces/surveyForm.interfaces';
+import { overallDefaults, departmentTopics, allTopics } from 'constants/surveyForm.constants';
 import TermOptions from 'components/molecules/TermOptions';
 import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
 

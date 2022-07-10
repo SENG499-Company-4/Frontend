@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import HeaderButton from 'components/molecules/HeaderButton';
 import { Typography } from '@mui/material';
 import HeaderMenu from 'components/molecules/HeaderMenu';
-import { Role } from 'components/shared/constants/timetable.constants';
-import { IUser } from 'components/shared/interfaces/user.interfaces';
+import { Role } from 'constants/timetable.constants';
+import { IUser } from 'interfaces/user.interfaces';
 import {
   CalendarMonth,
   Event,

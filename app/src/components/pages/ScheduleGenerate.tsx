@@ -30,10 +30,10 @@ import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { GENERATE_SCHEDULE } from 'api/Mutations';
 import ClassData from 'data/clean.json';
-import { allTopics } from 'components/shared/constants/surveyForm.constants';
+import { allTopics } from 'constants/surveyForm.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { ISections } from 'components/shared/interfaces/ScheduleGenerate.interfaces';
+import { ISections } from 'interfaces/ScheduleGenerate.interfaces';
 
 function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
