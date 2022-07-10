@@ -59,7 +59,7 @@ function ScheduleGenerate() {
     (s) => JSON.parse(s)
   );
 
-  const [submitHandler, { data, loading, error }] = useMutation(GENERATE_SCHEDULE);
+  const [generateSchedule, { data, loading, error }] = useMutation(GENERATE_SCHEDULE);
 
   if (data) {
     console.log('DATA: ', data);
@@ -79,6 +79,7 @@ function ScheduleGenerate() {
         namespace: 'graphql'
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, loading, error]);
 
   function submit() {
@@ -90,7 +91,8 @@ function ScheduleGenerate() {
     };
     axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config).then((res) => {
       const configVars = res.data;
-      submitHandler({
+      console.log('Config vars: ', configVars);
+      generateSchedule({
         variables: {
           input: {
             year: year

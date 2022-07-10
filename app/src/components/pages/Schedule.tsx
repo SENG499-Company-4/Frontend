@@ -26,6 +26,7 @@ function Schedule() {
     if (data) {
       console.log('Got information from GQL: ', data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, data, error]);
 
   function parseDaysOfWeek(daysOfWeek: string[]): ReactNode {
