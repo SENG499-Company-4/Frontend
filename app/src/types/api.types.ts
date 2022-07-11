@@ -45,6 +45,8 @@ export type CourseId = {
   subject: Scalars['String'];
   /** Term course is offered in */
   term: Term;
+  /** Course Title e.g. Introduction to Artificial Intelligence */
+  title?: Maybe<Scalars['String']>;
   /** Year course is offered in */
   year: Scalars['Int'];
 };
@@ -179,6 +181,8 @@ export type MutationUpdateUserArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  /** Get all users */
+  allUsers?: Maybe<Array<User>>;
   /** Get a list of courses for a given term and/or year */
   courses?: Maybe<Array<CourseSection>>;
   /** Find a user by their id */
@@ -186,7 +190,7 @@ export type Query = {
   /** Get the current user */
   me?: Maybe<User>;
   /** Schedule for a given term. If year is given, returns the most recent schedule generated for that year. */
-  schedule?: Maybe<Scalars['String']>;
+  schedule?: Maybe<Schedule>;
   /** Get Teaching Preference Survey for the current user */
   survey: TeachingPreferenceSurvey;
 };
