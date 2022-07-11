@@ -25,7 +25,7 @@ interface IRegisterForm {
 
 function Register() {
   const [hasErrors, setHasErrors] = useState<boolean>(false);
-  const [userCreated, setUserCreated] = useState<boolean>(true);
+  const [userCreated, setUserCreated] = useState<boolean>(false);
   const [formData, setFormData] = useState<IRegisterForm>({
     username: '',
     faculty: '',
