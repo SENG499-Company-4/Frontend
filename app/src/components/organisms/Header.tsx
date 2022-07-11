@@ -18,7 +18,6 @@ import {
   School,
   Today,
   AddCircle,
-  AccountCircle,
   Power
 } from '@mui/icons-material';
 
