@@ -14,7 +14,17 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { IClassData, IFormValues, ITermPrefs, ICourseAbility } from 'interfaces/surveyForm.interfaces';
 import { overallDefaults, departmentTopics, allTopics } from 'constants/surveyForm.constants';
 import TermOptions from 'components/molecules/TermOptions';
-import { FormGroup, FormControlLabel, Checkbox } from '@mui/material';
+import {
+  FormGroup,
+  FormControlLabel,
+  Checkbox,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
+} from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function SurveyForm(props: { formData: IClassData[] }) {
   const additionalQualifications: boolean = false; //TODO: temporary measure until backend implements qualifications to class info
@@ -24,6 +34,9 @@ function SurveyForm(props: { formData: IClassData[] }) {
   const [role, setRole] = useState('Teaching');
   const [topic, setTopic] = useState(false);
   const [topicCourse, setTopicCourse] = useState('SENG 480');
+  const [formSubmitted, setFormSubmitted] = useState(false);
+
+  const navigate = useNavigate();
 
   const [termPrefs, setTermPrefs] = useState<ITermPrefs>({
     fall: 'Teaching',
@@ -68,9 +81,13 @@ function SurveyForm(props: { formData: IClassData[] }) {
         currentValues.topicsCourseTitle = '';
       }
 
+      console.log('Submitting: ', currentValues);
+      setFormSubmitted(true);
+
       return currentValues;
     });
     console.log(values);
+
     e.preventDefault();
     //TODO: submit values somewhere
   };
@@ -161,6 +178,30 @@ function SurveyForm(props: { formData: IClassData[] }) {
 
   return (
     <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'center' }}>
+      <Dialog
+        fullWidth={true}
+        maxWidth={'sm'}
+        open={formSubmitted}
+        onClose={() => {
+          setFormSubmitted(false);
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">Success!</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Your survey has been submitted successfully. You will be notified when the schedule is released.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            Back to home
+          </Button>
+        </DialogActions>
+      </Dialog>
       <form onSubmit={onSubmit}>
         <Typography variant="overline" gutterBottom>
           * = additional qualifications neccessary

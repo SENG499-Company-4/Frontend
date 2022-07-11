@@ -18,7 +18,8 @@ import {
   School,
   Today,
   AddCircle,
-  Power
+  Power,
+  Person
 } from '@mui/icons-material';
 
 const appLogo = require('assets/app-logo.png');
@@ -75,6 +76,7 @@ function Header(props: { user: IUser }) {
             {role === Role.Admin ? (
               <HeaderButton key="plug-and-play" label="Plug and Play" url="/plug-and-play" icon={<Power />} />
             ) : null}
+            <HeaderButton key="profile" label="Profile" url={'/professors/' + props.user.userId} icon={<Person />} />
             <HeaderButton
               key="login"
               label={role ? 'Logout' : 'Login'}
