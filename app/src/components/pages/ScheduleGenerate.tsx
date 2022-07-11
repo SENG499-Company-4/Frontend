@@ -34,7 +34,7 @@ import { allTopics } from 'constants/surveyForm.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { ISections } from 'interfaces/ScheduleGenerate.interfaces';
-import { Term } from 'types/api.types';
+import { CourseInput, Term } from 'types/api.types';
 
 function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
@@ -92,15 +92,25 @@ function ScheduleGenerate() {
     };
     axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config).then((res) => {
       const configVars = res.data;
+      console.log('Config vars: ', configVars);
+      const courses: CourseInput[] = classes.map((classInfo) => {
+        return {
+          subject: classInfo.split(' ')[0],
+          code: classInfo.split(' ')[1],
+          section: 0
+        };
+      });
       const variables = {
         input: {
           year: year,
           term: term,
+          courses: courses,
           algorithm1: configVars.REACT_APP_ALGORITHM_1.toUpperCase(),
           algorithm2: configVars.REACT_APP_ALGORITHM_2.toUpperCase()
         }
       };
 
+      console.log('SENDING VARIABLES: ', variables);
       generateSchedule({ variables });
     });
   }
