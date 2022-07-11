@@ -292,4 +292,3 @@ export type User = {
   /** Username */
   username: Scalars['String'];
 };
-
