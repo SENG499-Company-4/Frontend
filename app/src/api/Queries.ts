@@ -141,7 +141,47 @@ export const GET_COURSES = gql`
  * Fetch the schedule for a given year.
  */
 export const GET_SCHEDULE = gql`
-  query Query($year: Int) {
-    schedule(year: $year)
+  query Schedule($year: Int, $term: Term!) {
+    schedule(year: $year) {
+      id
+      year
+      createdAt
+      courses(term: $term) {
+        CourseID {
+          subject
+          title
+          code
+          term
+          year
+        }
+        hoursPerWeek
+        capacity
+        professors {
+          id
+          username
+          name
+          password
+          role
+          preferences {
+            id {
+              subject
+              title
+              code
+              term
+              year
+            }
+            preference
+          }
+          active
+        }
+        startDate
+        endDate
+        meetingTimes {
+          day
+          startTime
+          endTime
+        }
+      }
+    }
   }
 `;
