@@ -64,12 +64,14 @@ const Login = () => {
     if (getUserError) {
       errorContext.setErrorDialog(getUserError);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getUserData, getUserLoading, getUserError]);
 
   useEffect(() => {
     if (tokenLoaded) {
       getUserByID({ variables: { id: userId } });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenLoaded]);
 
   return (

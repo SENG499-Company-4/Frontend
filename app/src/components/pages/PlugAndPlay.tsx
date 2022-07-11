@@ -85,6 +85,7 @@ function PlugAndPlay() {
       setAlgorithm2(company[configVars.REACT_APP_ALGORITHM_2 as keyof typeof company]);
       loadingContext.setLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
