@@ -5,7 +5,6 @@ import Home from 'components/pages/Home';
 import Login from 'components/pages/Login';
 import Register from 'components/pages/Register';
 import Survey from 'components/pages/Survey';
-import Schedule from 'components/pages/Schedule';
 import ScheduleManage from 'components/pages/ScheduleManage';
 import ScheduleGenerate from 'components/pages/ScheduleGenerate';
 import ScheduleTimetable from 'components/pages/ScheduleTimetable';
@@ -18,6 +17,7 @@ import { PublicRoute } from 'router/routes/PublicRoute';
 import { ProtectedRoute } from 'router/routes/ProtectedRoute';
 import { IUser } from 'interfaces/user.interfaces';
 import Cookie from 'universal-cookie';
+import ScheduleList from 'components/pages/ScheduleList';
 
 function AppRouter() {
   const cookie = new Cookie();
@@ -63,7 +63,7 @@ function AppRouter() {
           path="/schedule"
           element={[
             <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
-              <Schedule />
+              <ScheduleList />
             </ProtectedRoute>
           ]}
         />
