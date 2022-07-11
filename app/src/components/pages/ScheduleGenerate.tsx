@@ -34,12 +34,13 @@ import { allTopics } from 'constants/surveyForm.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { ISections } from 'interfaces/ScheduleGenerate.interfaces';
+import { Term } from 'types/api.types';
 
 function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
 
-  const [term, setTerm] = useState<string>('Spring');
+  const [term, setTerm] = useState<string>(Term.Summer);
   const [year, setYear] = useState<number>(2022);
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
@@ -91,14 +92,16 @@ function ScheduleGenerate() {
     };
     axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config).then((res) => {
       const configVars = res.data;
-      console.log('Config vars: ', configVars);
-      generateSchedule({
-        variables: {
-          input: {
-            year: year
-          }
+      const variables = {
+        input: {
+          year: year,
+          term: term,
+          algorithm1: configVars.REACT_APP_ALGORITHM_1.toUpperCase(),
+          algorithm2: configVars.REACT_APP_ALGORITHM_2.toUpperCase()
         }
-      });
+      };
+
+      generateSchedule({ variables });
     });
   }
 
@@ -161,20 +164,20 @@ function ScheduleGenerate() {
                 <FormLabel sx={{ marginTop: '10px' }}>Select a semester:</FormLabel>
                 <RadioGroup row aria-labelledby="Term">
                   <FormControlLabel
-                    onChange={() => setTerm('Spring')}
-                    checked={term === 'Spring'}
+                    onChange={() => setTerm(Term.Spring)}
+                    checked={term === Term.Spring}
                     control={<Radio />}
                     label="Spring"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm('Summer')}
-                    checked={term === 'Summer'}
+                    onChange={() => setTerm(Term.Summer)}
+                    checked={term === Term.Summer}
                     control={<Radio />}
                     label="Summer"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm('Fall')}
-                    checked={term === 'Fall'}
+                    onChange={() => setTerm(Term.Fall)}
+                    checked={term === Term.Fall}
                     control={<Radio />}
                     label="Fall"
                   />
