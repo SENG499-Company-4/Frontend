@@ -54,10 +54,10 @@ const Login = () => {
     loadingContext.setLoading(getUserLoading);
     if (getUserData) {
       if (getUserData.findUserById.role === Role.Admin) {
-        cookie.set('user', { username: formState.username, role: Role.Admin });
+        cookie.set('user', { username: formState.username, userId: userId, role: Role.Admin });
         window.location.href = '/';
       } else {
-        cookie.set('user', { username: formState.username, role: Role.User });
+        cookie.set('user', { username: formState.username, userId: userId, role: Role.User });
         window.location.href = '/';
       }
     }
