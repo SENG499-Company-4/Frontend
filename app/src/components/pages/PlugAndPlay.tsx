@@ -15,12 +15,7 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import {
-  backendUrl,
-  backendUrlInverse,
-  company,
-  companyInverse
-} from 'components/shared/constants/plugandplay.constants';
+import { backendUrl, backendUrlInverse, company, companyInverse } from 'constants/plugandplay.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 
 const companies: company[] = [company.company3, company.company4];
@@ -90,6 +85,7 @@ function PlugAndPlay() {
       setAlgorithm2(company[configVars.REACT_APP_ALGORITHM_2 as keyof typeof company]);
       loadingContext.setLoading(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

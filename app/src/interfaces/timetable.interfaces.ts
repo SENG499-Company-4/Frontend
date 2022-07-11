@@ -1,4 +1,4 @@
-import { Faculty, Role, Term, WeekDay } from 'components/shared/constants/timetable.constants';
+import { Faculty, Role, Term, WeekDay } from 'constants/timetable.constants';
 
 export interface IProfessorPreference {
   id: ICourseID;

@@ -1,4 +1,4 @@
-import { Role } from 'components/shared/constants/timetable.constants';
+import { Role } from 'constants/timetable.constants';
 
 export interface IPublicRouteMeta {
   auth: boolean;

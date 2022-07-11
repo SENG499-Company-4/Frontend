@@ -1,5 +1,8 @@
 import { gql } from '@apollo/client';
 
+/**
+ * Log in a user
+ */
 export const LOGIN = gql`
   mutation Login($username: String!, $password: String!) {
     login(username: $username, password: $password) {
@@ -10,6 +13,9 @@ export const LOGIN = gql`
   }
 `;
 
+/**
+ * Log out a user
+ */
 export const LOGOUT = gql`
   mutation Mutation {
     logout {
@@ -20,6 +26,9 @@ export const LOGOUT = gql`
   }
 `;
 
+/**
+ * Create a new user
+ */
 export const CREATE_USER = gql`
   mutation Mutation($input: CreateUserInput!) {
     createUser(input: $input) {
@@ -31,6 +40,9 @@ export const CREATE_USER = gql`
   }
 `;
 
+/**
+ * Update a user
+ */
 export const UPDATE_USER = gql`
   mutation Mutation($input: UpdateUserInput!) {
     updateUser(input: $input) {
@@ -58,6 +70,9 @@ export const UPDATE_USER = gql`
   }
 `;
 
+/**
+ * Change a user password
+ */
 export const CHANGE_USER_PASSWORD = gql`
   mutation Mutation($input: ChangeUserPasswordInput!) {
     changeUserPassword(input: $input) {
@@ -67,6 +82,9 @@ export const CHANGE_USER_PASSWORD = gql`
   }
 `;
 
+/**
+ * Reset a user's password
+ */
 export const RESET_PASSWORD = gql`
   mutation Mutation($resetPasswordId: ID!) {
     resetPassword(id: $resetPasswordId) {
@@ -77,6 +95,9 @@ export const RESET_PASSWORD = gql`
   }
 `;
 
+/**
+ * Submit a survey (Not implemented?)
+ */
 export const SUBMIT_SURVEY = gql`
   mutation CreateTeachingPreference($peng: Boolean, $userId: ID, $courses: [CoursePreferenceInput]!) {
     createTeachingPreference(peng: $peng, userId: $userId, courses: $courses) {
@@ -87,6 +108,9 @@ export const SUBMIT_SURVEY = gql`
   }
 `;
 
+/**
+ * Generate a schedule
+ */
 export const GENERATE_SCHEDULE = gql`
   mutation Mutation($input: GenerateScheduleInput!) {
     generateSchedule(input: $input) {

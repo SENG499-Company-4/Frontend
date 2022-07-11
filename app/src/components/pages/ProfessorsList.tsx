@@ -1,32 +1,54 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { parseCalendarTeacher } from 'utils/utils';
-import classData from 'data/clean.json';
 import { Box, ButtonBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Search, SearchIconWrapper, StyledInputBase } from 'components/styles/styles';
 import { useState } from 'react';
-import { ICalendarItem_Teacher } from 'components/shared/interfaces/timetable.interfaces';
 import Link from '@mui/material/Link';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { LoadingContext } from 'contexts/LoadingContext';
+import { ErrorContext } from 'contexts/ErrorContext';
+import { useQuery } from '@apollo/client';
+import { GET_PROFESSORS } from 'api/Queries';
+import { User } from 'types/api.types';
 
 function ProfessorsList() {
-  const allData: ICalendarItem_Teacher[] = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
+  const loadingContext = useContext(LoadingContext);
+  const errorContext = useContext(ErrorContext);
+  const [professorsList, setProfessorsList] = useState<User[]>([]);
   const [search, setSearch] = useState<string>('');
-  const [rows, setRows] = useState<ICalendarItem_Teacher[]>(allData);
+  const [rows, setRows] = useState<User[]>([]);
   const navigate: NavigateFunction = useNavigate();
+
+  const {
+    data: professorsListData,
+    loading: professorsListLoading,
+    error: professorsListError
+  } = useQuery(GET_PROFESSORS);
+
+  useEffect(() => {
+    loadingContext.setLoading(professorsListLoading);
+    if (professorsListData) {
+      setProfessorsList(professorsListData.allUsers);
+      setRows(professorsListData.allUsers);
+    }
+    if (professorsListError) {
+      errorContext.setErrorDialog(professorsListError);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [professorsListData, professorsListLoading, professorsListError]);
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', width: 70 },
-    { field: 'teacherName', headerName: 'Username', width: 130 },
-    { field: 'faculty', headerName: 'Faculty', width: 100 },
+    { field: 'name', headerName: 'Name', width: 130 },
+    { field: 'username', headerName: 'Username', width: 100 },
+    { field: 'role', headerName: 'Role', width: 100 },
     {
       field: 'link',
       headerName: 'View Professor Profile',
       width: 200,
       renderCell: (params) => {
-        console.log('PARAMS: ', params);
-        return <Link href={'/professor-profile/' + params.id}> View profile </Link>;
+        return <Link href={'/professors/' + params.id}> View profile </Link>;
       }
     },
     {
@@ -34,13 +56,12 @@ function ProfessorsList() {
       headerName: 'Currently Teaching',
       width: 300,
       renderCell: (params) => {
-        console.log('params', params);
         return (
           <ButtonBase
             onClick={() => {
               navigate('/schedule/timetable', {
                 state: {
-                  professorId: params.row.id
+                  professorId: params.id
                 }
               });
             }}
@@ -52,19 +73,20 @@ function ProfessorsList() {
     }
   ];
 
-  function filter(data: ICalendarItem_Teacher[], search: string) {
-    var newData: ICalendarItem_Teacher[] = [];
-    data.forEach((item: ICalendarItem_Teacher) => {
-      if (item.teacherName.includes(search)) {
-        newData.push(item);
+  function filter(data: User[], search: string) {
+    var newData: User[] = [];
+    console.log('DATA: ', data);
+    for (const user of data) {
+      if (user?.name?.toLowerCase().includes(search.toLowerCase())) {
+        newData.push(user);
       }
-    });
+    }
     return newData;
   }
 
   function onSearchChange(search: string) {
     setSearch(search);
-    const filteredData = filter(allData, search);
+    const filteredData = filter(professorsList, search);
     setRows(filteredData);
   }
 

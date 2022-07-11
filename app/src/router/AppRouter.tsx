@@ -13,16 +13,11 @@ import ProfessorProfile from 'components/pages/ProfessorProfile';
 import ProfessorsList from 'components/pages/ProfessorsList';
 import ErrorPage from 'components/pages/ErrorPage';
 import PlugAndPlay from 'components/pages/PlugAndPlay';
-import {
-  PublicRouteMeta,
-  AdminRouteMeta,
-  ProfessorRouteMeta,
-  ProtectedRouteMeta
-} from 'components/shared/constants/route.constants';
+import { PublicRouteMeta, AdminRouteMeta, ProfessorRouteMeta, ProtectedRouteMeta } from 'constants/route.constants';
 import { PublicRoute } from 'router/routes/PublicRoute';
 import { ProtectedRoute } from 'router/routes/ProtectedRoute';
+import { IUser } from 'interfaces/user.interfaces';
 import Cookie from 'universal-cookie';
-import { IUser } from 'components/shared/interfaces/user.interfaces';
 
 function AppRouter() {
   const cookie = new Cookie();

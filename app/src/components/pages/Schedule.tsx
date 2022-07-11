@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client';
 import { GET_SCHEDULE } from 'api/Queries';
 import { Box, Button, Chip, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { IScheduleListItem } from 'components/shared/interfaces/timetable.interfaces';
+import { IScheduleListItem } from 'interfaces/timetable.interfaces';
 import classData from 'data/clean.json';
 import { parseScheduleListItems } from 'utils/utils';
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +26,7 @@ function Schedule() {
     if (data) {
       console.log('Got information from GQL: ', data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, data, error]);
 
   function parseDaysOfWeek(daysOfWeek: string[]): ReactNode {

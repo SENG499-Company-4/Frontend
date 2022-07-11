@@ -30,16 +30,17 @@ import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { GENERATE_SCHEDULE } from 'api/Mutations';
 import ClassData from 'data/clean.json';
-import { allTopics } from 'components/shared/constants/surveyForm.constants';
+import { allTopics } from 'constants/surveyForm.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { ISections } from 'components/shared/interfaces/ScheduleGenerate.interfaces';
+import { ISections } from 'interfaces/ScheduleGenerate.interfaces';
+import { CourseInput, Term } from 'types/api.types';
 
 function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
 
-  const [term, setTerm] = useState<string>('Spring');
+  const [term, setTerm] = useState<string>(Term.Summer);
   const [year, setYear] = useState<number>(2022);
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
@@ -59,7 +60,7 @@ function ScheduleGenerate() {
     (s) => JSON.parse(s)
   );
 
-  const [submitHandler, { data, loading, error }] = useMutation(GENERATE_SCHEDULE);
+  const [generateSchedule, { data, loading, error }] = useMutation(GENERATE_SCHEDULE);
 
   if (data) {
     console.log('DATA: ', data);
@@ -79,6 +80,7 @@ function ScheduleGenerate() {
         namespace: 'graphql'
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, loading, error]);
 
   function submit() {
@@ -90,13 +92,26 @@ function ScheduleGenerate() {
     };
     axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config).then((res) => {
       const configVars = res.data;
-      submitHandler({
-        variables: {
-          input: {
-            year: year
-          }
-        }
+      console.log('Config vars: ', configVars);
+      const courses: CourseInput[] = classes.map((classInfo) => {
+        return {
+          subject: classInfo.split(' ')[0],
+          code: classInfo.split(' ')[1],
+          section: 0
+        };
       });
+      const variables = {
+        input: {
+          year: year,
+          term: term,
+          courses: courses,
+          algorithm1: configVars.REACT_APP_ALGORITHM_1.toUpperCase(),
+          algorithm2: configVars.REACT_APP_ALGORITHM_2.toUpperCase()
+        }
+      };
+
+      console.log('SENDING VARIABLES: ', variables);
+      generateSchedule({ variables });
     });
   }
 
@@ -159,20 +174,20 @@ function ScheduleGenerate() {
                 <FormLabel sx={{ marginTop: '10px' }}>Select a semester:</FormLabel>
                 <RadioGroup row aria-labelledby="Term">
                   <FormControlLabel
-                    onChange={() => setTerm('Spring')}
-                    checked={term === 'Spring'}
+                    onChange={() => setTerm(Term.Spring)}
+                    checked={term === Term.Spring}
                     control={<Radio />}
                     label="Spring"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm('Summer')}
-                    checked={term === 'Summer'}
+                    onChange={() => setTerm(Term.Summer)}
+                    checked={term === Term.Summer}
                     control={<Radio />}
                     label="Summer"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm('Fall')}
-                    checked={term === 'Fall'}
+                    onChange={() => setTerm(Term.Fall)}
+                    checked={term === Term.Fall}
                     control={<Radio />}
                     label="Fall"
                   />

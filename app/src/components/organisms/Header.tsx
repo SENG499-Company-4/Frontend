@@ -4,8 +4,8 @@ import Box from '@mui/material/Box';
 import HeaderButton from 'components/molecules/HeaderButton';
 import { Typography } from '@mui/material';
 import HeaderMenu from 'components/molecules/HeaderMenu';
-import { Role } from 'components/shared/constants/timetable.constants';
-import { IUser } from 'components/shared/interfaces/user.interfaces';
+import { Role } from 'constants/timetable.constants';
+import { IUser } from 'interfaces/user.interfaces';
 import {
   CalendarMonth,
   Event,
@@ -18,8 +18,8 @@ import {
   School,
   Today,
   AddCircle,
-  AccountCircle,
-  Power
+  Power,
+  Person
 } from '@mui/icons-material';
 
 const appLogo = require('assets/app-logo.png');
@@ -76,6 +76,7 @@ function Header(props: { user: IUser }) {
             {role === Role.Admin ? (
               <HeaderButton key="plug-and-play" label="Plug and Play" url="/plug-and-play" icon={<Power />} />
             ) : null}
+            <HeaderButton key="profile" label="Profile" url={'/professors/' + props.user.userId} icon={<Person />} />
             <HeaderButton
               key="login"
               label={role ? 'Logout' : 'Login'}
