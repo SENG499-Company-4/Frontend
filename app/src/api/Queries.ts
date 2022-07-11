@@ -51,6 +51,32 @@ export const GET_USER_BY_ID = gql`
 `;
 
 /**
+ * Fetch complete list of users for professors list component
+ */
+export const GET_PROFESSORS = gql`
+  query AllUsers {
+    allUsers {
+      id
+      username
+      name
+      password
+      role
+      preferences {
+        id {
+          subject
+          title
+          code
+          term
+          year
+        }
+        preference
+      }
+      active
+    }
+  }
+`;
+
+/**
  * Gets the survey for the current user.
  */
 export const GET_SURVEY = gql`
