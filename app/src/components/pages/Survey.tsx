@@ -1,7 +1,7 @@
 import React from 'react';
 import SurveyForm from 'components/organisms/SurveyForm';
 import Typography from '@mui/material/Typography';
-import ClassData from 'data/clean.json';
+import { courseCodes } from 'constants/courses.constants';
 import { Box } from '@mui/system';
 
 function Survey() {
@@ -10,7 +10,7 @@ function Survey() {
       <Typography variant="h4" gutterBottom marginY={4}>
         Professor Survey Form
       </Typography>
-      <SurveyForm formData={ClassData} />
+      <SurveyForm formData={courseCodes} />
       {/* TODO: Change to a proper class list retrieval */}
     </Box>
   );

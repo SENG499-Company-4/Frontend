@@ -11,9 +11,10 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import { IClassData, IFormValues, ITermPrefs, ICourseAbility } from 'interfaces/surveyForm.interfaces';
-import { overallDefaults, departmentTopics, allTopics } from 'constants/surveyForm.constants';
+import { IFormValues, ITermPrefs, ICourseAbility } from 'interfaces/surveyForm.interfaces';
+import { overallDefaults, departmentTopics } from 'constants/surveyForm.constants';
 import TermOptions from 'components/molecules/TermOptions';
+import { externalCodes } from 'constants/courses.constants';
 import {
   FormGroup,
   FormControlLabel,
@@ -26,7 +27,7 @@ import {
 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-function SurveyForm(props: { formData: IClassData[] }) {
+function SurveyForm(props: { formData: string[] }) {
   const additionalQualifications: boolean = false; //TODO: temporary measure until backend implements qualifications to class info
 
   const [disable, setDisabled] = useState(true);
@@ -58,10 +59,10 @@ function SurveyForm(props: { formData: IClassData[] }) {
       courses: {}
     };
 
-    currentValues.courses = props.formData.reduce((obj: any, field) => {
-      const strippedLetters: string = field.CourseID.code.replace(/\D/g, ''); //removing letters from topics course for comparison
-      if (!allTopics[field.CourseID.subject].includes(strippedLetters)) {
-        obj[field.CourseID.subject + ' ' + field.CourseID.code] = {
+    currentValues.courses = props.formData.reduce((obj: any, code: string) => {
+      if (!externalCodes.includes(code)) {
+        const codeSplit = code.split(/([0-9]+)/);
+        obj[codeSplit[0] + ' ' + codeSplit[1]] = {
           ...overallDefaults
         };
       }
