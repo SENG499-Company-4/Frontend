@@ -29,8 +29,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useMutation } from '@apollo/client';
 import { GENERATE_SCHEDULE } from 'api/Mutations';
-import ClassData from 'data/clean.json';
-import { allTopics } from 'constants/surveyForm.constants';
+import { fallCodes, springCodes, summerCodes, courseCodes } from 'constants/courses.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { ISections } from 'interfaces/ScheduleGenerate.interfaces';
@@ -40,7 +39,7 @@ function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
 
-  const [term, setTerm] = useState<string>(Term.Summer);
+  const [term, setTerm] = useState<string>(Term.All);
   const [year, setYear] = useState<number>(2022);
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
@@ -49,15 +48,11 @@ function ScheduleGenerate() {
 
   const uniqueClassList = Array.from(
     new Set(
-      ClassData.map((course) => {
-        const trimmed = course.CourseID.code.replace(/\D/g, ''); //trim all non-numeric characters
-        const code = allTopics[course.CourseID.subject].includes(trimmed) //if course code is a topics course remove its letter
-          ? trimmed
-          : course.CourseID.code;
-        return JSON.stringify(course.CourseID.subject + ' ' + code);
+      courseCodes.map((course) => {
+        const courseSplit = course.split(/([0-9]+)/);
+        return courseSplit[0] + ' ' + courseSplit[1];
       })
-    ),
-    (s) => JSON.parse(s)
+    )
   );
 
   const [generateSchedule, { data, loading, error }] = useMutation(GENERATE_SCHEDULE);
@@ -83,6 +78,82 @@ function ScheduleGenerate() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, loading, error]);
 
+  function addAll() {
+    setClasses(uniqueClassList);
+    let tempSections: ISections = {};
+    for(const code of uniqueClassList) {
+      tempSections[code] = 0;
+    }
+    setSections(tempSections)
+  }
+
+  function removeAll() {
+    setClasses([]);
+    setSections({});
+  }
+
+  function splitYearly(variables: any) {
+    let fallCourses = [];
+    let springCourses = [];
+    let summerCourses = [];
+    for (const index in classes) {
+      const courseCode = classes[index];
+      let sectionCount = sections[courseCode];
+      const inFall = fallCodes.includes(courseCode.replace(/ /g,''));
+      const inSpring = springCodes.includes(courseCode.replace(/ /g,''));
+      const inSummer = summerCodes.includes(courseCode.replace(/ /g,''));
+      const totalSemesters = Number(inFall) + Number(inSpring) + Number(inSummer);
+      if (inFall) {
+        const fallSections = Math.ceil(sectionCount / totalSemesters);
+        sectionCount -= fallSections;
+        fallCourses.push({
+          subject: courseCode.split(' ')[0],
+          code: courseCode.split(' ')[1],
+          section: fallSections
+        })
+      }
+      if (inSpring) {
+        const springSections = Math.ceil(sectionCount / totalSemesters);
+        sectionCount -= springSections;
+        springCourses.push({
+          subject: courseCode.split(' ')[0],
+          code: courseCode.split(' ')[1],
+          section: springSections
+        })
+      }
+      if (inSummer) {
+        const summerSections = Math.ceil(sectionCount / totalSemesters);
+        sectionCount -= summerSections;
+        summerCourses.push({
+          subject: courseCode.split(' ')[0],
+          code: courseCode.split(' ')[1],
+          section: summerSections
+        })
+      }
+    }
+    variables.input['fallCourses'] = fallCourses;
+    variables.input['springCourses'] = springCourses;
+    variables.input['summerCourses'] = summerCourses;
+    return variables;
+  }
+
+  function splitCourses(variables: any) {
+    if (term === Term.All) {
+      return splitYearly(variables)
+    }
+    const courses: CourseInput[] = classes.map((classInfo) => {
+      return {
+        subject: classInfo.split(' ')[0],
+        code: classInfo.split(' ')[1],
+        section: sections[classInfo]
+      };
+    });
+    if (term === Term.Fall) variables.input['fallCourses'] = courses;
+    else if (term === Term.Spring) variables.input['springCourses'] = courses;
+    else variables.input['summerCourses'] = courses;
+    return variables;
+  }
+
   function submit() {
     const config = {
       headers: {
@@ -92,23 +163,14 @@ function ScheduleGenerate() {
     };
     axios.get(`https://api.heroku.com/apps/seng499company4frontend/config-vars`, config).then((res) => {
       const configVars = res.data;
-      console.log('Config vars: ', configVars);
-      const courses: CourseInput[] = classes.map((classInfo) => {
-        return {
-          subject: classInfo.split(' ')[0],
-          code: classInfo.split(' ')[1],
-          section: 0
-        };
-      });
-      const variables = {
+      let variables = {
         input: {
           year: year,
-          term: term,
-          courses: courses,
           algorithm1: configVars.REACT_APP_ALGORITHM_1.toUpperCase(),
           algorithm2: configVars.REACT_APP_ALGORITHM_2.toUpperCase()
         }
       };
+      variables = splitCourses(variables);
 
       console.log('SENDING VARIABLES: ', variables);
       generateSchedule({ variables });
@@ -166,6 +228,12 @@ function ScheduleGenerate() {
                     control={<Radio />}
                     label="2023"
                   />
+                  <FormControlLabel
+                    onChange={() => setYear(2024)}
+                    checked={year === 2024}
+                    control={<Radio />}
+                    label="2024"
+                  />
                 </RadioGroup>
               </FormControl>
             </Stack>
@@ -173,6 +241,12 @@ function ScheduleGenerate() {
               <FormControl>
                 <FormLabel sx={{ marginTop: '10px' }}>Select a semester:</FormLabel>
                 <RadioGroup row aria-labelledby="Term">
+                <FormControlLabel
+                    onChange={() => setTerm(Term.All)}
+                    checked={term === Term.All}
+                    control={<Radio />}
+                    label="All (entire year)"
+                  />
                   <FormControlLabel
                     onChange={() => setTerm(Term.Spring)}
                     checked={term === Term.Spring}
@@ -207,7 +281,8 @@ function ScheduleGenerate() {
                   event.preventDefault();
                   setClasses(value);
                   if (reason === 'selectOption') {
-                    setSections({ ...sections, [detail?.option]: 0 });
+                    const courseCode = detail?.option;
+                    if (courseCode) setSections({ ...sections, [courseCode]: 0});
                   } else if (reason === 'clear') {
                     setSections({});
                   }
@@ -215,6 +290,12 @@ function ScheduleGenerate() {
                 filterSelectedOptions
                 renderInput={(params) => <TextField {...params} label="Courses" placeholder="Courses to be offered" />}
               />
+              <Button variant="contained" color="primary" sx={{ width: '120px' }} onClick={() => addAll()}>
+                Add all
+              </Button>
+              <Button variant="contained" color="primary" sx={{ width: '150px' }} onClick={() => removeAll()}>
+                Clear all
+              </Button>
             </Stack>
 
             <Stack spacing={1} sx={{ marginBottom: '1%' }}>

@@ -58,15 +58,15 @@ function SurveyClassQuestion(props: {
             />
             <FormControlLabel
               onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
-              value={ability.can}
+              value={ability.effort}
               control={<Radio />}
-              label="Able To Teach"
+              label="With Effort"
             />
             <FormControlLabel
               onChange={(e) => handleDisabling(e as React.ChangeEvent<HTMLInputElement>)}
-              value={ability.effort}
+              value={ability.can}
               control={<Radio />}
-              label="Able to Teach with Effort"
+              label="Able"
             />
           </RadioGroup>
         </FormControl>

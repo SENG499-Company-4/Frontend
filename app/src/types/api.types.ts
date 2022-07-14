@@ -259,7 +259,8 @@ export type TeachingPreferenceSurvey = {
 export enum Term {
   Fall = 'FALL',
   Spring = 'SPRING',
-  Summer = 'SUMMER'
+  Summer = 'SUMMER',
+  All = 'ALL'
 }
 
 export type UpdateUserInput = {
