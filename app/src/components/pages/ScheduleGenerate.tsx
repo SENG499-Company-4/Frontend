@@ -81,10 +81,10 @@ function ScheduleGenerate() {
   function addAll() {
     setClasses(uniqueClassList);
     let tempSections: ISections = {};
-    for(const code of uniqueClassList) {
+    for (const code of uniqueClassList) {
       tempSections[code] = 0;
     }
-    setSections(tempSections)
+    setSections(tempSections);
   }
 
   function removeAll() {
@@ -99,9 +99,9 @@ function ScheduleGenerate() {
     for (const index in classes) {
       const courseCode = classes[index];
       let sectionCount = sections[courseCode];
-      const inFall = fallCodes.includes(courseCode.replace(/ /g,''));
-      const inSpring = springCodes.includes(courseCode.replace(/ /g,''));
-      const inSummer = summerCodes.includes(courseCode.replace(/ /g,''));
+      const inFall = fallCodes.includes(courseCode.replace(/ /g, ''));
+      const inSpring = springCodes.includes(courseCode.replace(/ /g, ''));
+      const inSummer = summerCodes.includes(courseCode.replace(/ /g, ''));
       const totalSemesters = Number(inFall) + Number(inSpring) + Number(inSummer);
       if (inFall) {
         const fallSections = Math.ceil(sectionCount / totalSemesters);
@@ -110,7 +110,7 @@ function ScheduleGenerate() {
           subject: courseCode.split(' ')[0],
           code: courseCode.split(' ')[1],
           section: fallSections
-        })
+        });
       }
       if (inSpring) {
         const springSections = Math.ceil(sectionCount / totalSemesters);
@@ -119,7 +119,7 @@ function ScheduleGenerate() {
           subject: courseCode.split(' ')[0],
           code: courseCode.split(' ')[1],
           section: springSections
-        })
+        });
       }
       if (inSummer) {
         const summerSections = Math.ceil(sectionCount / totalSemesters);
@@ -128,7 +128,7 @@ function ScheduleGenerate() {
           subject: courseCode.split(' ')[0],
           code: courseCode.split(' ')[1],
           section: summerSections
-        })
+        });
       }
     }
     variables.input['fallCourses'] = fallCourses;
@@ -139,7 +139,7 @@ function ScheduleGenerate() {
 
   function splitCourses(variables: any) {
     if (term === Term.All) {
-      return splitYearly(variables)
+      return splitYearly(variables);
     }
     const courses: CourseInput[] = classes.map((classInfo) => {
       return {
@@ -241,7 +241,7 @@ function ScheduleGenerate() {
               <FormControl>
                 <FormLabel sx={{ marginTop: '10px' }}>Select a semester:</FormLabel>
                 <RadioGroup row aria-labelledby="Term">
-                <FormControlLabel
+                  <FormControlLabel
                     onChange={() => setTerm(Term.All)}
                     checked={term === Term.All}
                     control={<Radio />}
@@ -282,7 +282,7 @@ function ScheduleGenerate() {
                   setClasses(value);
                   if (reason === 'selectOption') {
                     const courseCode = detail?.option;
-                    if (courseCode) setSections({ ...sections, [courseCode]: 0});
+                    if (courseCode) setSections({ ...sections, [courseCode]: 0 });
                   } else if (reason === 'clear') {
                     setSections({});
                   }
