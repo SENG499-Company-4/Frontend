@@ -34,13 +34,21 @@ import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { ISections } from 'interfaces/ScheduleGenerate.interfaces';
 import { CourseInput, Term } from 'types/api.types';
+import { useLocation } from 'react-router-dom';
+
+interface IStateProps {
+  semesterPassed: Term;
+  yearPassed: Date;
+}
 
 function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
 
-  const [term, setTerm] = useState<string>(Term.All);
-  const [year, setYear] = useState<number>(2022);
+  const { state } = useLocation();
+  const { semesterPassed, yearPassed } = state as IStateProps;
+  const [term, setTerm] = useState<string>(semesterPassed);
+  const [year, setYear] = useState<number>(parseInt(yearPassed.toISOString()));
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);

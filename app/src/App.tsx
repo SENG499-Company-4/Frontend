@@ -1,3 +1,5 @@
+import 'devextreme/dist/css/dx.common.css';
+import 'devextreme/dist/css/dx.light.css';
 import { ThemeProvider } from '@emotion/react';
 import appTheme from 'themes/appTheme';
 import React from 'react';
