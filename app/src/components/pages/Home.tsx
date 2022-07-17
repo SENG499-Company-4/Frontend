@@ -7,7 +7,7 @@ import ImageSlider from 'components/organisms/ImageSlider'
 
 const images = [{
   id: 1,
-  src: "https://iili.io/wOM3Cv.png",
+  src: "https://iili.io/wOh3Nt.png",
   alt: "Image 1"
 },
 {
