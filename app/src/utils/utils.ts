@@ -8,6 +8,25 @@ import colors from 'data/CourseColor.json';
 import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';
 
+function daytoInt(day: string) {
+  if (day === "SUNDAY") {
+    return 6;
+  } if (day === "MONDAY" || day === "SATURDAY") {
+    return 0;
+  } if (day === "TUESDAY") {
+    return 1;
+  } if (day === "WEDNESDAY") {
+    return 2;
+  } if (day === "THURSDAY") {
+    return 3;
+  } if (day === "FRIDAY") {
+    return 4;
+  } return 5;
+}
+
+
+
+
 /**
  * Grab data from python scraper and format it for DevExtreme Scheduler
  *  Reference: https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/CustomTemplates/React/Light/
@@ -36,12 +55,20 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
 
   data.forEach((course: ICourse) => {
     course.meetingTimes.forEach((element) => {
+
+      const dayshift = daytoInt(element.Day)
+
+
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
-      const courseStartDate = new Date(course.startDate);
-      const courseEndDate = new Date(course.startDate);
+      const courseStartDate = new Date(course.startDate + ' 00:00');
+      const courseEndDate = new Date(course.startDate + ' 00:00');
+
+      console.log(courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift));
+      console.log(courseEndDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift));
 
       courseStartDate.setHours(parseInt(element.StartTime.split(':')[0]));
       courseStartDate.setMinutes(parseInt(element.StartTime.split(':')[1]));
+
 
       courseEndDate.setHours(parseInt(element.EndTime.split(':')[0]));
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
@@ -55,7 +82,7 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
         // *****important: only repeat the current day. For exmaple, csc105 should repeat on Tus, Wed, Fri.
         // If you double click that course shown on Tuesday, and choose 'Edit series', it will show repate on Tus.
         // And if you click same course on Wednesday, it will show repeat on Wed.
-        recurrenceRule: 'FREQ=WEEKLY;BYDAY=' + element.Day.slice(0, 2) + ';UNTIL=' + course.endDate.replaceAll('-', '')
+        // recurrenceRule: 'FREQ=WEEKLY;BYDAY=' + element.Day.slice(0, 2) + ';UNTIL=' + course.endDate.replaceAll('-', '')
       };
 
       // Conditional return rules based on props

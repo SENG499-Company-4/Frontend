@@ -1,4 +1,6 @@
 import React from 'react';
+// import React, { useContext, useEffect, useState } from 'react';
+
 import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
@@ -10,6 +12,13 @@ import { Button, Box } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
 
+// import { GET_COURSES } from 'api/Queries';
+// import { useQuery } from '@apollo/client';
+
+// import { LoadingContext } from 'contexts/LoadingContext';
+// import { ErrorContext } from 'contexts/ErrorContext';
+
+
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 const currentDate = new Date(2021, 12, 10);
 
@@ -17,6 +26,9 @@ interface IStateProps {
   courseId?: string;
   professorId?: number;
 }
+
+
+
 
 function ScheduleTimetable() {
   const location: Location = useLocation();
@@ -28,9 +40,42 @@ function ScheduleTimetable() {
   let calendarCourseData = parseCalendarCourse(JSON.parse(JSON.stringify(classData)), courseId, professorId);
   let calendarTeacherData = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
 
+  // const loadingContext = useContext(LoadingContext);
+  // const errorContext = useContext(ErrorContext);
+  // const [CoursesList, setCoursesList] = useState([]);
+
+  // const {
+  //   data: CoursesListData,
+  //   loading: CoursesLoading,
+  //   error: CoursesError
+  // } = useQuery(GET_COURSES);
+
+  // useEffect(() => {
+  //   loadingContext.setLoading(CoursesLoading);
+  //   if (CoursesListData) {
+  //     setCoursesList(CoursesListData.courses)
+  //   }
+  //   if (CoursesError) {
+  //     errorContext.setErrorDialog(CoursesError);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [CoursesListData, CoursesLoading, CoursesError]);
+
+  // console.log("11111", CoursesListData);
+
+  // let calendarCourseData = parseCalendarCourse(CoursesList, courseId, professorId);
+
   function exportState() {
     console.log(calendarCourseData);
   }
+
+  // function onAppointmentFormOpening(e: any) {
+  //   const form = e.form;
+  //   let mainGroupItems = form.itemOption('mainGroup').items;
+  //   console.log("GroupItems", mainGroupItems);
+  // }
+
+
 
   return (
     <>
@@ -84,7 +129,7 @@ function ScheduleTimetable() {
         height={800}
         appointmentComponent={Appointment}
         showAllDayPanel={false}
-        editingAppointment={false}
+      // onAppointmentFormOpening={onAppointmentFormOpening}
       >
         <Editing allowAdding={false} allowDragging={true} />
         <Resource
