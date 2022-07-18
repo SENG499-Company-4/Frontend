@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { Day, MeetingTime, Schedule, Term, User } from 'types/api.types';
 import { ErrorContext } from 'contexts/ErrorContext';
+import { SemesterSelector } from 'components/molecules/SemesterSelector';
+import { useLazyQuery } from '@apollo/client';
 
 interface ITableRow {
   courseName: string;
@@ -25,16 +27,25 @@ function ScheduleList() {
   const errorContext = useContext(ErrorContext);
   const navigate = useNavigate();
 
-  const {
-    loading: scheduleLoading,
-    error: scheduleError,
-    data: scheduleData
-  } = useQuery(GET_SCHEDULE, {
-    variables: {
-      year: 2022,
-      term: Term.Fall
+  const [term, setTerm] = useState<Term | null>(null);
+  const [year, setYear] = useState<Date | null>(null);
+
+  useEffect(() => {
+    if (term && year) {
+      fetchSchedule();
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [year, term]);
+
+  const [fetchSchedule, { loading: scheduleLoading, error: scheduleError, data: scheduleData }] = useLazyQuery(
+    GET_SCHEDULE,
+    {
+      variables: {
+        year: year?.getFullYear(),
+        term: term
+      }
+    }
+  );
 
   useEffect(() => {
     loadingContext.setLoading(scheduleLoading);
@@ -70,7 +81,6 @@ function ScheduleList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [schedule, scheduleLoaded]);
 
-  //TODO: UPDATE THIS
   function parseDaysOfWeek(daysOfWeek: any): ReactNode {
     const daysAbbreviations = ['M', 'T', 'W', 'R', 'F'];
 
@@ -124,8 +134,22 @@ function ScheduleList() {
   return (
     <Box sx={{ width: '60%', margin: 'auto' }}>
       <Typography marginTop={5} marginBottom={2} variant="h4" sx={{ textAlign: 'center' }}>
-        Current Schedule
+        Schedule List
       </Typography>
+      <Box style={{ marginBottom: '15px', marginTop: '30px' }}>
+        <SemesterSelector
+          year={new Date()}
+          term={Term.Summer}
+          onTermChange={(term: Term) => {
+            console.log('TERM CHANGED: ', term);
+            setTerm(term);
+          }}
+          onYearChange={(year: Date) => {
+            console.log('YEAR CHANGED: ', year);
+            setYear(year);
+          }}
+        />
+      </Box>
       <DataGrid
         getRowId={(row: ITableRow) => {
           return row.courseName + row.capacity + row.startDate + row.endDate;

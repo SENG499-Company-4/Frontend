@@ -46,14 +46,6 @@ function Header(props: { user: IUser }) {
               <HeaderButton key="view-schedule" label="View Schedule" url="/schedule" icon={<Today />} />
               {role === Role.Admin ? (
                 <HeaderButton
-                  key="manage-schedule"
-                  label="Manage Schedule"
-                  url="/schedule/manage"
-                  icon={<ModeEdit />}
-                />
-              ) : null}
-              {role === Role.Admin ? (
-                <HeaderButton
                   key="generate-schedule"
                   label="Generate Schedule"
                   url="/schedule/generate"
