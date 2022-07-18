@@ -41,14 +41,14 @@ export function SemesterSelector(props: SemesterSelectorProps): React.ReactEleme
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DatePicker
             views={['year']}
-            label="Year"
+            label="Select Year"
             value={year}
             minDate={new Date(2020, 0, 1)}
             maxDate={new Date()}
             onChange={(e) => {
               console.log('e: ', e);
               setYear(e);
-              props.onYearChange(e);
+              props.onYearChange(e as Date);
             }}
             renderInput={(params) => <TextField {...params} helperText={null} />}
           />

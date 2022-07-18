@@ -5,7 +5,6 @@ import Home from 'components/pages/Home';
 import Login from 'components/pages/Login';
 import Register from 'components/pages/Register';
 import Survey from 'components/pages/Survey';
-import ScheduleManage from 'components/pages/ScheduleManage';
 import ScheduleGenerate from 'components/pages/ScheduleGenerate';
 import ScheduleTimetable from 'components/pages/ScheduleTimetable';
 import ProfessorProfile from 'components/pages/ProfessorProfile';
@@ -64,14 +63,6 @@ function AppRouter() {
           element={[
             <ProtectedRoute user={user} meta={ProtectedRouteMeta}>
               <ScheduleList />
-            </ProtectedRoute>
-          ]}
-        />
-        <Route
-          path="/schedule/manage"
-          element={[
-            <ProtectedRoute user={user} meta={AdminRouteMeta}>
-              <ScheduleManage />
             </ProtectedRoute>
           ]}
         />

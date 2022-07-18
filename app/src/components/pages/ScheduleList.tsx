@@ -138,8 +138,8 @@ function ScheduleList() {
       </Typography>
       <Box style={{ marginBottom: '15px', marginTop: '30px' }}>
         <SemesterSelector
-          year={new Date()}
-          term={Term.Summer}
+          year={undefined}
+          term={undefined}
           onTermChange={(term: Term) => {
             console.log('TERM CHANGED: ', term);
             setTerm(term);
