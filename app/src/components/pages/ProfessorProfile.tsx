@@ -8,6 +8,8 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  Skeleton,
+  Stack,
   Typography
 } from '@mui/material';
 import { Faculty } from 'constants/timetable.constants';
@@ -88,8 +90,14 @@ function ProfessorProfile() {
     <Grid display="flex" marginTop={4} justifyContent="center" sx={{ width: '100%' }}>
       <Card elevation={10} sx={{ width: '70%', minHeight: '400px' }}>
         {userLoading ? (
-          <Grid display={'flex'} justifyContent={'center'} alignContent={'center'}>
-            <CircularProgress />
+          <Grid display={'flex'} flexDirection={'row'} margin={4} width={'100%'}>
+            <Stack spacing={1}>
+              <Skeleton variant="circular" width={100} height={100} />
+              <Skeleton variant="text" width={800} />
+              <Skeleton variant="text" width={800} />
+              <Skeleton variant="text" width={800} />
+              <Skeleton variant="rectangular" width={800} height={150} />
+            </Stack>
           </Grid>
         ) : (
           <>
