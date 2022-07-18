@@ -42,7 +42,7 @@ export interface ICalendarCourseItem {
   teacherId: number;
   startDate: Date;
   endDate: Date;
-  recurrenceRule: string;
+  // recurrenceRule: string;
 }
 
 export interface IScheduleListItem {
