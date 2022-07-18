@@ -1,0 +1,30 @@
+.slick-slide {
+  margin-top: 2vh;
+  height: 65vh;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.slick-slide img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.slick-next,
+.slick-prev {
+  top: 50%;
+  z-index: 1;
+  width: 10%;
+}
+
+.slick-next::before,
+.slick-prev::before {
+  font-size: 40px;
+  color: #328cc8;
+  line-height: 1;
+  opacity: 0.75;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 900;
+}
