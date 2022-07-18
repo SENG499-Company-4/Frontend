@@ -81,6 +81,8 @@ export type CourseSection = {
   meetingTimes: Array<MeetingTime>;
   /** Professor's info, if any professors are assigned */
   professors?: Maybe<Array<User>>;
+  /** Section number for courses, eg: A01, A02 */
+  sectionNumber?: Maybe<Scalars['String']>;
   /** The start date of the course */
   startDate: Scalars['Date'];
 };
@@ -120,8 +122,9 @@ export type Error = {
 export type GenerateScheduleInput = {
   algorithm1: Company;
   algorithm2: Company;
-  courses?: InputMaybe<Array<CourseInput>>;
-  term: Term;
+  fallCourses?: InputMaybe<Array<CourseInput>>;
+  springCourses?: InputMaybe<Array<CourseInput>>;
+  summerCourses?: InputMaybe<Array<CourseInput>>;
   year: Scalars['Int'];
 };
 
@@ -259,8 +262,7 @@ export type TeachingPreferenceSurvey = {
 export enum Term {
   Fall = 'FALL',
   Spring = 'SPRING',
-  Summer = 'SUMMER',
-  All = 'ALL'
+  Summer = 'SUMMER'
 }
 
 export type UpdateUserInput = {
