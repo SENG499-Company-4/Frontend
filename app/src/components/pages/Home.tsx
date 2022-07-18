@@ -1,11 +1,15 @@
 import React from 'react';
-//import Grid from '@mui/material/Grid';
-//import { Typography } from '@mui/material';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import ImageSlider from 'components/organisms/ImageSlider';
 
-const images = [
+export interface IImage {
+  id: number;
+  src: string;
+  alt: string;
+}
+
+const images: IImage[] = [
   {
     id: 1,
     src: 'https://iili.io/wOh3Nt.png',

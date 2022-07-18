@@ -3,8 +3,13 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
 import 'components/styles/slideStyles.css';
+import { IImage } from 'components/pages/Home';
 
-function ImageSlider(props: any) {
+interface ImageSliderProps {
+  images: IImage[];
+}
+
+function ImageSlider(props: ImageSliderProps) {
   const settings: Settings = {
     infinite: true,
     dots: true,
@@ -17,7 +22,7 @@ function ImageSlider(props: any) {
     <>
       <div className="imgslider">
         <Slider {...settings}>
-          {props.images.map((item: any) => (
+          {props.images.map((item: IImage) => (
             <div key={item.id}>
               <img src={item.src} alt={item.alt} />
             </div>
