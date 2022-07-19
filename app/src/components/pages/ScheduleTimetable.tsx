@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
@@ -10,6 +10,10 @@ import { Button, Box } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
 
+import SearchIcon from '@mui/icons-material/Search';
+import { Search, SearchIconWrapper, StyledInputBase } from 'components/styles/styles';
+import { ICalendarCourseItem } from 'interfaces/timetable.interfaces'
+
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 const currentDate = new Date(2021, 12, 10);
 
@@ -17,6 +21,8 @@ interface IStateProps {
   courseId?: string;
   professorId?: number;
 }
+
+
 
 function ScheduleTimetable() {
   const location: Location = useLocation();
@@ -28,13 +34,66 @@ function ScheduleTimetable() {
   let calendarCourseData = parseCalendarCourse(JSON.parse(JSON.stringify(classData)), courseId, professorId);
   let calendarTeacherData = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
 
+  const [search, setSearch] = useState<string>('');
+  const [filteredData, setFilteredData] = useState<any>([]);
   function exportState() {
     console.log(calendarCourseData);
+  }
+
+  function filter(data: ICalendarCourseItem[], search: string) {
+    var newData: ICalendarCourseItem[] = [];
+    // console.log('DATA: ', data);
+    console.log("teacher", calendarTeacherData)
+    console.log("data", data)
+
+
+    var teacherId = 0;
+    for (const teacher of calendarTeacherData) {
+      if (teacher?.teacherName?.toLowerCase().includes(search.toLowerCase())) {
+        teacherId = teacher?.id
+        for (const course of data) {
+          if (course?.teacherId === teacherId) {
+            newData.push(course);
+          }
+        }
+        return newData;
+      }
+    }
+
+    for (const course of data) {
+      if (course?.courseId?.toLowerCase().includes(search.toLowerCase())) {
+        newData.push(course);
+      }
+    }
+    return newData;
+  }
+
+  function onSearchChange(search: string) {
+    setSearch(search);
+    const newdata = filter(calendarCourseData, search);
+    setFilteredData(newdata);
   }
 
   return (
     <>
       <Box display="flex" justifyContent="space-between" margin="5px">
+
+        {!professorId && !courseId && (
+          <div>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Search by courseId/username"
+                inputProps={{ 'aria-label': 'search' }}
+                value={search}
+                onChange={(e) => onSearchChange(e.target.value)}
+              ></StyledInputBase>
+            </Search>
+          </div>
+        )}
+
         <div>
           {professorId && (
             <Chip
@@ -64,7 +123,7 @@ function ScheduleTimetable() {
       {/*@ts-ignore*/}
       <Scheduler
         timeZone="Canada/Pacific"
-        dataSource={calendarCourseData}
+        dataSource={search ? filteredData : calendarCourseData}
         textExpr="courseId"
         views={[
           {
