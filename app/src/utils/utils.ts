@@ -9,23 +9,26 @@ import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';
 
 function daytoInt(day: string) {
-  if (day === "MONDAY") {
+  if (day === 'MONDAY') {
     return 1;
-  } if (day === "TUESDAY") {
+  }
+  if (day === 'TUESDAY') {
     return 2;
-  } if (day === "WEDNESDAY") {
+  }
+  if (day === 'WEDNESDAY') {
     return 3;
-  } if (day === "THURSDAY") {
+  }
+  if (day === 'THURSDAY') {
     return 4;
-  } if (day === "FRIDAY") {
+  }
+  if (day === 'FRIDAY') {
     return 5;
-  } if (day === "SATURDAY") {
+  }
+  if (day === 'SATURDAY') {
     return 6;
   }
   return 0;
 }
-
-
 
 /**
  * Grab data from python scraper and format it for DevExtreme Scheduler
@@ -55,8 +58,7 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
 
   data.forEach((course: ICourse) => {
     course.meetingTimes.forEach((element) => {
-
-      const dayshift = daytoInt(element.Day)
+      const dayshift = daytoInt(element.Day);
 
       const courseStartDate = new Date(course.startDate + ' 00:00');
       const courseEndDate = new Date(course.startDate + ' 00:00');
@@ -74,7 +76,7 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
       courseEndDate.setHours(parseInt(element.EndTime.split(':')[0]));
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
-      console.log(courseStartDate)
+      console.log(courseStartDate);
       const lastDay = new Date(course.endDate + ' 00:00');
 
       if (lastDay.getDay() >= dayshift) {

@@ -33,49 +33,55 @@ function ScheduleTimetable() {
 
   function onAppointmentFormOpening(e: any) {
     const form = e.form;
-    form.option('items', [{
-      label: { text: 'Course Name' },
-      editorType: 'dxTextBox',
-      dataField: 'courseId',
-    }, {
-      label: { text: 'Professor' },
-      editorType: 'dxTagBox',
-      dataField: "teacherId",
-      editorOptions: { items: calendarTeacherData, displayExpr: "teacherName", valueExpr: 'id' }
-    }, {
-      label: { text: 'Course Start Time' },
-      dataField: 'startDate',
-      editorType: 'dxDateBox',
-      editorOptions: {
-        width: '100%',
-        type: 'time',
+    form.option('items', [
+      {
+        label: { text: 'Course Name' },
+        editorType: 'dxTextBox',
+        dataField: 'courseId'
       },
-    }, {
-      label: { text: 'Course End Time' },
-      dataField: 'endDate',
-      editorType: 'dxDateBox',
-      editorOptions: {
-        width: '100%',
-        type: 'time',
+      {
+        label: { text: 'Professor' },
+        editorType: 'dxTagBox',
+        dataField: 'teacherId',
+        editorOptions: { items: calendarTeacherData, displayExpr: 'teacherName', valueExpr: 'id' }
       },
-    }, {
-      label: { text: 'Course Start Date' },
-      dataField: 'startDate',
-      editorType: 'dxDateBox',
-      editorOptions: {
-        width: '100%',
-        type: 'date',
+      {
+        label: { text: 'Course Start Time' },
+        dataField: 'startDate',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'time'
+        }
+      },
+      {
+        label: { text: 'Course End Time' },
+        dataField: 'endDate',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'time'
+        }
+      },
+      {
+        label: { text: 'Course Start Date' },
+        dataField: 'startDate',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'date'
+        }
+      },
+      {
+        label: { text: 'Course End Date' },
+        dataField: 'lastDay',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'date'
+        }
       }
-    }, {
-      label: { text: 'Course End Date' },
-      dataField: 'lastDay',
-      editorType: 'dxDateBox',
-      editorOptions: {
-        width: '100%',
-        type: 'date',
-      }
-    }]);
-
+    ]);
   }
 
   return (
