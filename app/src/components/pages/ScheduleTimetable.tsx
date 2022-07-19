@@ -11,6 +11,7 @@ import { parseCalendarCourse, parseCalendarTeacher } from 'utils/utils';
 import { Button, Box } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
+import { Form } from 'devextreme-react/data-grid';
 
 // import { GET_COURSES } from 'api/Queries';
 // import { useQuery } from '@apollo/client';
@@ -39,6 +40,7 @@ function ScheduleTimetable() {
 
   let calendarCourseData = parseCalendarCourse(JSON.parse(JSON.stringify(classData)), courseId, professorId);
   let calendarTeacherData = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
+
 
   // const loadingContext = useContext(LoadingContext);
   // const errorContext = useContext(ErrorContext);
@@ -69,11 +71,62 @@ function ScheduleTimetable() {
     console.log(calendarCourseData);
   }
 
-  // function onAppointmentFormOpening(e: any) {
-  //   const form = e.form;
-  //   let mainGroupItems = form.itemOption('mainGroup').items;
-  //   console.log("GroupItems", mainGroupItems);
-  // }
+  function onAppointmentFormOpening(e: any) {
+    const form = e.form;
+    // let mainGroupItems = form.itemOption('mainGroup').items;
+    // if (!mainGroupItems.find(function (i: any) { return i.dataField === "lastCourseStart" })) {
+    //   mainGroupItems.push({
+    //     colSpan: 2,
+    //     label: { text: "Last Day of Course" },
+    //     editorType: "dxDateBox",
+    //     dataField: "lastCourseStart",
+    //     editorOptions: {
+    //       width: '100%',
+    //       type: 'datetime',
+    //       onValueChanged(args) {
+    //         startDate = args.value;
+    //         form.updateData('endDate', new Date(startDate.getTime() + 60 * 1000 * movieInfo.duration));
+    //       },
+    //     },
+    //   });
+
+    //   mainGroupItems.splice(4, 1);
+    //   form.itemOption('mainGroup', 'items', mainGroupItems);
+    // }
+    // console.log("GroupItems", mainGroupItems);
+
+
+    // form.option('items', [{
+    //   label: {
+    //     text: 'Course Name',
+    //   },
+    //   editorType: 'dxTextBox',
+    //   dataField: 'courseId',
+    // }, {
+    //   label: {
+    //     text: 'Professor',
+    //   },
+    //   editorType: 'dxSelectBox',
+    //   dataField: 'teacherId'
+    // }, {
+    //   dataField: 'startDate',
+    //   editorType: 'dxDateBox',
+    //   editorOptions: {
+    //     width: '100%',
+    //     type: 'datetime',
+    //   },
+    // }, {
+    //   name: 'endDate',
+    //   dataField: 'endDate',
+    //   editorType: 'dxDateBox',
+    //   editorOptions: {
+    //     width: '100%',
+    //     type: 'datetime',
+    //   },
+    // }
+    // ]);
+
+  }
 
 
 
@@ -120,7 +173,7 @@ function ScheduleTimetable() {
           {
             type: 'week',
             name: 'Week',
-            maxAppointmentsPerCell: 2
+            maxAppointmentsPerCell: 1
           }
         ]}
         defaultCurrentView="week"
@@ -129,7 +182,7 @@ function ScheduleTimetable() {
         height={800}
         appointmentComponent={Appointment}
         showAllDayPanel={false}
-      // onAppointmentFormOpening={onAppointmentFormOpening}
+        onAppointmentFormOpening={onAppointmentFormOpening}
       >
         <Editing allowAdding={false} allowDragging={true} />
         <Resource

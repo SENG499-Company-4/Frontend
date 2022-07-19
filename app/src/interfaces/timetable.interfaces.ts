@@ -42,6 +42,8 @@ export interface ICalendarCourseItem {
   teacherId: number;
   startDate: Date;
   endDate: Date;
+  lastCourseStart: Date;
+  lastCourseEnd: Date;
   // recurrenceRule: string;
 }
 
