@@ -2,7 +2,9 @@ import {
   ICalendarCourseItem,
   ICourse,
   ICalendarItem_Teacher,
-  IScheduleListItem
+  IScheduleListItem,
+  IProfessor,
+  IProfessorIndex
 } from 'interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import Query from 'devextreme/data/query';
@@ -27,6 +29,34 @@ export function parseCalendarTeacher(data: ICourse[]): ICalendarItem_Teacher[] {
     calendarTeacherData.push(calendarItem);
   });
   return calendarTeacherData;
+}
+
+export function sortByProf(data: ICourse[]): IProfessorIndex {
+
+  // Extract all professors from data and create a list of unique professors with class data
+  const profList: IProfessorIndex = {};
+
+  data.forEach((course: ICourse) => {
+    course.professors.forEach((prof: IProfessor) => {
+
+      // If professor is not in list, add them
+      if (!profList[prof.id]) {
+        profList[prof.id] = {
+          id: prof.id,
+          username: prof.username,
+          faculty: prof.faculty,
+          role: prof.role,
+          active: prof.active,
+          classes: []
+        };
+      }
+
+      // Add course to professor's list of classes
+      profList[prof.id].classes.push(course);
+    });
+  });
+
+  return profList;
 }
 
 export function parseCalendarCourse(data: ICourse[], courseId?: string, professorId?: number): ICalendarCourseItem[] {

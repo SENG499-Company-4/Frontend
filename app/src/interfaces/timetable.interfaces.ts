@@ -65,3 +65,17 @@ export interface ICalendarItem_Teacher {
   color: string;
   link: string;
 }
+
+
+export interface IProfessorIndex {
+  [key: number]: IProfessorClasses;
+};
+
+export interface IProfessorClasses {
+  id: number;
+  username: string;
+  faculty?: Faculty;
+  role: Role;
+  active: boolean;
+  classes: ICourse[];
+}
