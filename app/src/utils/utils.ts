@@ -61,15 +61,20 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
       const courseStartDate = new Date(course.startDate + ' 00:00');
       const courseEndDate = new Date(course.startDate + ' 00:00');
 
-      courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift - 1);
-      courseEndDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift - 1);
-
+      if (courseStartDate.getDay() > dayshift) {
+        courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseStartDate.getDay() + 1);
+        courseEndDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseEndDate.getDay() + 1);
+      } else {
+        courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift - courseStartDate.getDay());
+        courseEndDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift - courseEndDate.getDay());
+      }
       courseStartDate.setHours(parseInt(element.StartTime.split(':')[0]));
       courseStartDate.setMinutes(parseInt(element.StartTime.split(':')[1]));
 
       courseEndDate.setHours(parseInt(element.EndTime.split(':')[0]));
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
+      console.log(courseStartDate)
       const lastDay = new Date(course.endDate + ' 00:00');
 
       if (lastDay.getDay() >= dayshift) {
