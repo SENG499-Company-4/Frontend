@@ -9,7 +9,7 @@ import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';
 
 function daytoInt(day: string) {
-  if (day === "MONDAY" || day === "SATURDAY" || day === "SUNDAY") { //in case, any courses (ex. ECE592A) start on Sat/Sun
+  if (day === "MONDAY") {
     return 1;
   } if (day === "TUESDAY") {
     return 2;
@@ -19,6 +19,8 @@ function daytoInt(day: string) {
     return 4;
   } if (day === "FRIDAY") {
     return 5;
+  } if (day === "SATURDAY") {
+    return 6;
   }
   return 0;
 }
@@ -68,40 +70,18 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
       courseEndDate.setHours(parseInt(element.EndTime.split(':')[0]));
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
+      const lastDay = new Date(course.endDate + ' 00:00');
 
-      const lastCourseStart = new Date(course.endDate + ' 00:00');
-      const lastCourseEnd = new Date(course.endDate + ' 00:00');
-
-      if (lastCourseStart.getDay() >= dayshift) {
-        lastCourseStart.setDate(parseInt(course.endDate.split('-')[2]) - (lastCourseStart.getDay() - dayshift));
-        lastCourseEnd.setDate(parseInt(course.endDate.split('-')[2]) - (lastCourseStart.getDay() - dayshift));
-
-        lastCourseStart.setHours(parseInt(element.StartTime.split(':')[0]));
-        lastCourseEnd.setMinutes(parseInt(element.StartTime.split(':')[1]));
-
-        lastCourseStart.setHours(parseInt(element.EndTime.split(':')[0]));
-        lastCourseEnd.setMinutes(parseInt(element.EndTime.split(':')[1]));
-
+      if (lastDay.getDay() >= dayshift) {
+        lastDay.setDate(parseInt(course.endDate.split('-')[2]) - (lastDay.getDay() - dayshift));
       }
-      console.log("last", lastCourseStart);
-
-      // lastCourseStart.setDate(parseInt(course.startDate.split('-')[2]) + dayshift);
-      // lastCourseEnd.setDate(parseInt(course.startDate.split('-')[2]) + dayshift);
-
-      // lastCourseStart.setHours(parseInt(element.StartTime.split(':')[0]));
-      // lastCourseStart.setMinutes(parseInt(element.StartTime.split(':')[1]));
-
-
-      // lastCourseEnd.setHours(parseInt(element.EndTime.split(':')[0]));
-      // lastCourseEnd.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
       const calendarItem: ICalendarCourseItem = {
         courseId: course.CourseID.subject + course.CourseID.code,
         teacherId: course.professors[0].id,
         startDate: courseStartDate,
         endDate: courseEndDate,
-        lastCourseStart: lastCourseStart,
-        lastCourseEnd: lastCourseEnd
+        lastDay: lastDay
       };
 
       // Conditional return rules based on props
