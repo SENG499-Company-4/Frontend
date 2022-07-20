@@ -12,8 +12,6 @@ function daytoInt(day: string) {
   return ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"].indexOf(day);
 }
 
-
-
 /**
  * Grab data from python scraper and format it for DevExtreme Scheduler
  *  Reference: https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/CustomTemplates/React/Light/
@@ -42,8 +40,7 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
 
   data.forEach((course: ICourse) => {
     course.meetingTimes.forEach((element) => {
-
-      const dayshift = daytoInt(element.Day)
+      const dayshift = daytoInt(element.Day);
 
       const courseStartDate = new Date(course.startDate + ' 00:00');
       const courseEndDate = new Date(course.startDate + ' 00:00');
@@ -61,7 +58,7 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
       courseEndDate.setHours(parseInt(element.EndTime.split(':')[0]));
       courseEndDate.setMinutes(parseInt(element.EndTime.split(':')[1]));
 
-      console.log(courseStartDate)
+      console.log(courseStartDate);
       const lastDay = new Date(course.endDate + ' 00:00');
 
       if (lastDay.getDay() >= dayshift) {
