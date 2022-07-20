@@ -137,7 +137,6 @@ export function getCoursesForProfessor(id?: number, data?: ICourse[]): ICourse[]
 }
 
 export function sortByProf(data: ICalendarCourseItem[]): IProfessorIndex {
-
   // Extract all professors from data and create a list of unique professors with class data
   const profList: IProfessorIndex = {};
 
