@@ -4,15 +4,16 @@ import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
 import classData from 'data/clean.json';
 import { parseCalendarCourse, parseCalendarTeacher } from 'utils/utils';
-// import { ICourse } from 'interfaces/timetable.interfaces';
-// import { useLocation } from 'react-router-dom';
 import { Button, Box } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
-
 import SearchIcon from '@mui/icons-material/Search';
 import { Search, SearchIconWrapper, StyledInputBase } from 'components/styles/styles';
 import { ICalendarCourseItem } from 'interfaces/timetable.interfaces'
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from "@mui/material/FormControl";
+import InputLabel from '@mui/material/InputLabel';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 const currentDate = new Date(2021, 12, 10);
@@ -21,7 +22,6 @@ interface IStateProps {
   courseId?: string;
   professorId?: number;
 }
-
 
 
 function ScheduleTimetable() {
@@ -35,18 +35,31 @@ function ScheduleTimetable() {
   let calendarTeacherData = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
 
   const [search, setSearch] = useState<string>('');
-  const [filteredData, setFilteredData] = useState<any>([]);
+  const [filteredData, setFilteredData] = useState<any>(calendarCourseData);
+  const [year, setYear] = useState<string>('0');
+
+  const onYearChange = (event: SelectChangeEvent) => {
+    setYear(event.target.value);
+
+    if (event.target.value === '0') {
+      setFilteredData(calendarCourseData);
+    } else {
+      var newData: ICalendarCourseItem[] = [];
+      for (const course of calendarCourseData) {
+        if (course?.courseId[3] === event.target.value) {
+          newData.push(course)
+        }
+      }
+      setFilteredData(newData);
+    }
+  };
+
   function exportState() {
     console.log(calendarCourseData);
   }
 
   function filter(data: ICalendarCourseItem[], search: string) {
     var newData: ICalendarCourseItem[] = [];
-    // console.log('DATA: ', data);
-    console.log("teacher", calendarTeacherData)
-    console.log("data", data)
-
-
     var teacherId = 0;
     for (const teacher of calendarTeacherData) {
       if (teacher?.teacherName?.toLowerCase().includes(search.toLowerCase())) {
@@ -69,9 +82,11 @@ function ScheduleTimetable() {
   }
 
   function onSearchChange(search: string) {
+    setYear('0');
     setSearch(search);
     const newdata = filter(calendarCourseData, search);
     setFilteredData(newdata);
+
   }
 
   return (
@@ -79,19 +94,34 @@ function ScheduleTimetable() {
       <Box display="flex" justifyContent="space-between" margin="5px">
 
         {!professorId && !courseId && (
-          <div>
+          <Box display="flex">
+            <FormControl sx={{ minWidth: '20ch', marginTop: 2 }} size="small">
+              <InputLabel>Year</InputLabel>
+              <Select
+                id="year-select"
+                value={year}
+                label="Year"
+                onChange={onYearChange}
+              >
+                <MenuItem value="0">All Year</MenuItem>
+                <MenuItem value="1">Year 1</MenuItem>
+                <MenuItem value="2">Year 2</MenuItem>
+                <MenuItem value="3">Year 3</MenuItem>
+                <MenuItem value="4">Year 4</MenuItem>
+              </Select>
+            </FormControl>
             <Search>
               <SearchIconWrapper>
                 <SearchIcon />
               </SearchIconWrapper>
               <StyledInputBase
-                placeholder="Search by courseId/username"
+                placeholder="Search by courseId/username FROM ALL YEAR"
                 inputProps={{ 'aria-label': 'search' }}
                 value={search}
                 onChange={(e) => onSearchChange(e.target.value)}
               ></StyledInputBase>
             </Search>
-          </div>
+          </Box>
         )}
 
         <div>
@@ -115,7 +145,7 @@ function ScheduleTimetable() {
           )}
         </div>
 
-        <Button variant="contained" size="large" color="secondary" onClick={exportState}>
+        <Button variant="contained" size="large" color="secondary" onClick={exportState} sx={{ marginTop: 1, marginBottom: 1 }}>
           Save Schedule
         </Button>
       </Box>
@@ -123,7 +153,7 @@ function ScheduleTimetable() {
       {/*@ts-ignore*/}
       <Scheduler
         timeZone="Canada/Pacific"
-        dataSource={search ? filteredData : calendarCourseData}
+        dataSource={(year || search) ? filteredData : calendarCourseData}
         textExpr="courseId"
         views={[
           {
@@ -134,7 +164,7 @@ function ScheduleTimetable() {
           {
             type: 'week',
             name: 'Week',
-            maxAppointmentsPerCell: 2
+            maxAppointmentsPerCell: 1
           }
         ]}
         defaultCurrentView="week"
