@@ -40,6 +40,7 @@ export interface ICourse {
 export interface ICalendarCourseItem {
   courseId: string;
   teacherId: number;
+  capacity: number; //TODO replace with section number later
   startDate: Date;
   endDate: Date;
   recurrenceRule: string;
@@ -68,22 +69,32 @@ export interface ICalendarItem_Teacher {
 
 
 export interface IProfessorIndex {
-  [key: number]: IProfessorClasses;
+  [key: number]: IProfessorIndexEntry;
 };
 
-export interface IProfessorClasses {
+export interface IProfessorIndexEntry {
   id: number;
   username: string;
   faculty?: Faculty;
   role: Role;
   active: boolean;
-  classes: ICourse[];
+  classes: IProfessorCourse[];
+}
+
+export interface IProfessorCourse {
+  courseId: string;
+  capacity: number;
+  startDate: string;
+  endDate: string;
+  meetingTimes: IMeetingTime[];
 }
 
 export interface ICalendarError {
-  courseId: string,
-  message: string,
-  startDate: Date,
-  endDate: Date,
+  courseId: string;
+  capacity: number; //TODO replace with section number later
+  type: string;
+  message: string;
+  startDate: Date;
+  endDate: Date;
   professorId: number
 }

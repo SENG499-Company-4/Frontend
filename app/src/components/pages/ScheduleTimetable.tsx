@@ -11,7 +11,7 @@ import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
 import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
 import { common } from '@mui/material/colors';
-import { ICalendarError, IProfessorIndex } from 'interfaces/timetable.interfaces';
+import { ICalendarError, IProfessorCourse, IProfessorIndex } from 'interfaces/timetable.interfaces';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 const currentDate = new Date(2021, 12, 10);
@@ -54,47 +54,7 @@ function ScheduleTimetable() {
 
     console.log("errors")
     console.log(errors);
-
-
-    return (
-      <Dialog
-        fullWidth={true}
-        maxWidth={'sm'}
-        open={dialogOpen}
-        onClose={() => {
-          setDialogOpen(false);
-        }}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{errors.length > 0 ? 'Errors persist' : 'Submission Successful'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description">
-            {
-              errors.length > 0
-                ? errors.map((error) => {
-                  return (
-
-                    <Typography>{error.courseId + ": " + error.message}</Typography>
-                  )
-                })
-
-                : 'Your generation request was submitted successfully. When the scheduling algorithm completes, you\'ll be able to view the schedule on the management page.'
-            }
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => {
-              setDialogOpen(false);
-              window.location.reload();
-            }}
-          >
-            Ok
-          </Button>
-        </DialogActions>
-      </Dialog>
-    )
-
+    setDialogOpen(true);
 
   }
 
@@ -124,6 +84,8 @@ function ScheduleTimetable() {
       console.log("adding " + courseId + " to errors");
       setErrors([...errors, {
         courseId: courseId,
+        capacity: toAdd.capacity,
+        type: "time",
         message: 'Classes must be between 8:30 AM and 9:00 PM',
         startDate: toAdd.startDate,
         endDate: toAdd.endDate,
@@ -141,11 +103,12 @@ function ScheduleTimetable() {
     // with another class the associated professor teaches
 
     console.log("looking at toAdd", toAdd);
+    console.log("profClasses", profClasses);
 
     profClasses.classes.forEach(course => {
 
 
-      if (errorFound || course.CourseID.subject + course.CourseID.code !== "CSC349A") {
+      if (errorFound || course.courseId !== "CSC349A") {
         console.log("skipping")
         return;
       }
@@ -177,7 +140,9 @@ function ScheduleTimetable() {
             console.log("adding " + courseId + " to errors");
             setErrors([...errors, {
               courseId: toAdd.courseId,
-              message: 'Classes overlap with assigned proffessor\'s other classes',
+              capacity: toAdd.capacity,
+              type: 'overlap',
+              message: 'Classes overlap with other classes assigned to proffessor',
               startDate: toAdd.startDate,
               endDate: toAdd.endDate,
               professorId: toAdd.teacherId,
@@ -200,10 +165,17 @@ function ScheduleTimetable() {
 
 
       setProfIndex((currentProfIndex) => {
-        currentProfIndex[appointment.newData.teacherId].classes.push(appointment.newData);
+        const newCourse: IProfessorCourse = {
+          courseId: courseId,
+          capacity: toAdd.capacity,
+          startDate: toAdd.startDate,
+          endDate: toAdd.endDate,
+          meetingTimes: toAdd.meetingTimes,
+        }
+        currentProfIndex[appointment.newData.teacherId].classes.push(newCourse);
 
 
-        currentProfIndex[appointment.oldData.teacherId].classes = currentProfIndex[appointment.oldData.teacherId].classes.filter(x => x.CourseID !== courseId);
+        currentProfIndex[appointment.oldData.teacherId].classes = currentProfIndex[appointment.oldData.teacherId].classes.filter(x => x.courseId !== courseId && x.capacity !== appointment.newData.capacity);
 
         return currentProfIndex;
       })
@@ -214,6 +186,57 @@ function ScheduleTimetable() {
 
   return (
     <>
+      <Dialog
+        fullWidth={true}
+        maxWidth={'sm'}
+        open={dialogOpen}
+        onClose={() => {
+          setDialogOpen(false);
+        }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{errors.length > 0 ? 'Errors persist' : 'Submission Successful'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            {
+              errors.length > 0
+                ? errors.map((error) => {
+                  return (
+                    <>
+                      <Typography>{error.courseId + ": " + error.message + " " + profIndex[error.professorId].username}</Typography>
+                      {error.type === "overlap"
+                        ? profIndex[error.professorId].classes.map(course => {
+                          return (
+                            <Typography>
+                              {course.courseId}
+                              {course.meetingTimes.map(meetingTime => {
+                                return (
+                                  <Typography>
+                                    {meetingTime.Day + " " + meetingTime.StartTime + "-" + meetingTime.EndTime}
+                                  </Typography>
+                                )
+                              })}
+                            </Typography>
+                          )
+                        })
+                        : null
+                      }
+                    </>
+                  )
+                })
+
+                : 'Your generation request was submitted successfully. When the scheduling algorithm completes, you\'ll be able to view the schedule on the management page.'
+            }
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => { setDialogOpen(false) }}
+          >
+            Ok
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Box display="flex" justifyContent="space-between" margin="5px">
         <div>
           {professorId && (

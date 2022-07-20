@@ -4,7 +4,8 @@ import {
   ICalendarItem_Teacher,
   IScheduleListItem,
   IProfessor,
-  IProfessorIndex
+  IProfessorIndex,
+  IProfessorCourse
 } from 'interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import Query from 'devextreme/data/query';
@@ -51,8 +52,10 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
       const calendarItem: ICalendarCourseItem = {
         courseId: course.CourseID.subject + course.CourseID.code,
         teacherId: course.professors[0].id,
+        capacity: course.capacity,
         startDate: courseStartDate,
         endDate: courseEndDate,
+
 
         // *****important: only repeat the current day. For exmaple, csc105 should repeat on Tus, Wed, Fri.
         // If you double click that course shown on Tuesday, and choose 'Edit series', it will show repate on Tus.
@@ -153,7 +156,15 @@ export function sortByProf(data: ICourse[]): IProfessorIndex {
 
       // Add course to professor's list of classes
 
-      profList[prof.id].classes.push(course);
+      const modifiedCourse: IProfessorCourse = {
+        courseId: course.CourseID.subject + course.CourseID.code,
+        capacity: course.capacity,
+        startDate: course.startDate,
+        endDate: course.endDate,
+        meetingTimes: course.meetingTimes
+      }
+
+      profList[prof.id].classes.push(modifiedCourse);
     });
   });
 
