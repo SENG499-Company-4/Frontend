@@ -3,7 +3,7 @@ import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
 import classData from 'data/clean.json';
-import { checkCollision, compareTime, parseCalendarCourse, parseCalendarTeacher, sortByProfSecond } from 'utils/utils';
+import { checkCollision, parseCalendarCourse, parseCalendarTeacher, sortByProf } from 'utils/utils';
 // import { ICourse } from 'interfaces/timetable.interfaces';
 // import { useLocation } from 'react-router-dom';
 import {
@@ -38,25 +38,11 @@ function ScheduleTimetable() {
   const professorId = state?.professorId ? state.professorId : undefined;
 
   const [errors, setErrors] = useState<ICalendarError[]>([]);
-  const [valid, setValid] = useState<boolean>(true);
-  //const [profIndex, setProfIndex] = useState<IProfessorIndex>(sortByProf(JSON.parse(JSON.stringify(classData))));
-
   const [profErrorIndex, setProfErrorIndex] = useState<IProfessorIndex>({});
-
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   let calendarCourseData = parseCalendarCourse(JSON.parse(JSON.stringify(classData)), courseId, professorId);
   let calendarTeacherData = parseCalendarTeacher(JSON.parse(JSON.stringify(classData)));
-
-  const dayConvert = {
-    0: 'SUNDAY',
-    1: 'MONDAY',
-    2: 'TUESDAY',
-    3: 'WEDNESDAY',
-    4: 'THURSDAY',
-    5: 'FRIDAY',
-    6: 'SATURDAY'
-  };
 
   function exportState() {
     console.log(calendarTeacherData);
@@ -66,7 +52,7 @@ function ScheduleTimetable() {
     console.log(errors);
     setDialogOpen(true);
 
-    const profIndex = sortByProfSecond(calendarCourseData);
+    const profIndex = sortByProf(calendarCourseData);
     const profErrors: IProfessorIndex = {};
 
     console.log('profIndex');
@@ -127,7 +113,6 @@ function ScheduleTimetable() {
     // check if the time is valid and if it is, remove from the errors array
     // (will happen whether it was in the array or not)
     if ((startHour <= 8 && startMinute < 30) || (endHour >= 21 && endMinute > 0)) {
-      setValid(false);
       console.log('adding ' + courseId + ' to errors');
       setErrors([
         ...errors,
@@ -163,29 +148,28 @@ function ScheduleTimetable() {
           <DialogContentText id="alert-dialog-slide-description">
             {Object.keys(profErrorIndex).length > 0
               ? Object.values(profErrorIndex).map((prof: IProfessorIndexEntry) => {
-                  console.log('TESTING PROF IS ', prof);
-                  return (
-                    <>
-                      <Typography>{prof.username + ' has course overlaps'}</Typography>
-                      {prof.classes.map((course) => {
-                        return (
+                return (
+                  <>
+                    <Typography>{prof.username + ' has course overlaps'}</Typography>
+                    {prof.classes.map((course) => {
+                      return (
+                        <Typography>
+                          {/* this line is and the one below is is purely for adding a new line for readability and it doesnt seem to process a "\n" */}
+                          <Typography>{'-'}</Typography>
+                          {course.courseId + ' Section ' + course.capacity}
                           <Typography>
-                            {/* this line is and the one below is is purely for adding a new line for readability and it doesnt seem to process a "\n" */}
-                            <Typography>{'-'}</Typography>
-                            {course.courseId + ' Section ' + course.capacity}
-                            <Typography>
-                              {course.meetingTime.Day +
-                                ' ' +
-                                course.meetingTime.StartTime +
-                                '-' +
-                                course.meetingTime.EndTime}
-                            </Typography>
+                            {course.meetingTime.Day +
+                              ' ' +
+                              course.meetingTime.StartTime +
+                              '-' +
+                              course.meetingTime.EndTime}
                           </Typography>
-                        );
-                      })}
-                    </>
-                  );
-                })
+                        </Typography>
+                      );
+                    })}
+                  </>
+                );
+              })
               : "Your generation request was submitted successfully. When the scheduling algorithm completes, you'll be able to view the schedule on the management page."}
           </DialogContentText>
         </DialogContent>
@@ -251,7 +235,7 @@ function ScheduleTimetable() {
         showAllDayPanel={false}
         editingAppointment={false}
         onAppointmentUpdating={(e) => validateAppointment(e)}
-        // onAppointmentUpdated={(e) => { console.log('updated', e); }}
+      // onAppointmentUpdated={(e) => { console.log('updated', e); }}
       >
         <Editing allowAdding={false} allowDragging={true} />
         <Resource

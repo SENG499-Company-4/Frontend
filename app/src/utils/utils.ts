@@ -3,7 +3,6 @@ import {
   ICourse,
   ICalendarItem_Teacher,
   IScheduleListItem,
-  IProfessor,
   IProfessorIndex,
   IProfessorCourse,
   IMeetingTime,
@@ -137,53 +136,7 @@ export function getCoursesForProfessor(id?: number, data?: ICourse[]): ICourse[]
   return courses;
 }
 
-// export function sortByProf(data: ICourse[]): IProfessorIndex {
-
-//   // Extract all professors from data and create a list of unique professors with class data
-//   const profList: IProfessorIndex = {};
-
-//   data.forEach((course: ICourse) => {
-//     course.professors.forEach((prof: IProfessor) => {
-
-//       // If professor is not in list, add them
-//       if (!profList[prof.id]) {
-//         profList[prof.id] = {
-//           id: prof.id,
-//           username: prof.username,
-//           faculty: prof.faculty,
-//           role: prof.role,
-//           active: prof.active,
-//           classes: []
-//         };
-//       }
-
-//       // Add course to professor's list of classes
-
-//       const modifiedCourse: IProfessorCourse = {
-//         courseId: course.CourseID.subject + course.CourseID.code,
-//         term: course.CourseID.term,
-//         capacity: course.capacity,
-//         startDate: course.startDate,
-//         endDate: course.endDate,
-//         meetingTimes: course.meetingTimes
-//       }
-
-//       profList[prof.id].classes.push(modifiedCourse);
-//     });
-//   });
-
-//   return profList;
-// }
-
-export function sortByProfSecond(data: ICalendarCourseItem[]): IProfessorIndex {
-  // courseId: string;
-  // term: Term;
-  // meetingTime: IMeetingTime;
-  // teacherId: number;
-  // capacity: number; //TODO replace with section number later
-  // startDate: Date;
-  // endDate: Date;
-  // recurrenceRule: string;
+export function sortByProf(data: ICalendarCourseItem[]): IProfessorIndex {
 
   // Extract all professors from data and create a list of unique professors with class data
   const profList: IProfessorIndex = {};
@@ -217,24 +170,7 @@ export function sortByProfSecond(data: ICalendarCourseItem[]): IProfessorIndex {
   return profList;
 }
 
-export function compareTime(a: Date, b: Date) {
-  if (a.getHours() > b.getHours()) {
-    return 1;
-  } else if (a.getHours() < b.getHours()) {
-    return -1;
-  } else {
-    //hours are equal
-    if (a.getMinutes() > b.getMinutes()) {
-      return 1;
-    } else if (a.getMinutes() < b.getMinutes()) {
-      return -1;
-    } else {
-      return 0;
-    }
-  }
-}
-
-function compareTimeHM(a: IHourMinute, b: IHourMinute) {
+function compareTime(a: IHourMinute, b: IHourMinute) {
   if (a.hour > b.hour) {
     return 1;
   } else if (a.hour < b.hour) {
@@ -274,5 +210,5 @@ export function checkCollision(a: IMeetingTime, b: IMeetingTime) {
     minute: parseInt(b.EndTime.split(':')[1])
   };
 
-  if (compareTimeHM(aEnd, bStart) > 0 && compareTimeHM(aStart, bEnd) < 0) return true;
+  if (compareTime(aEnd, bStart) > 0 && compareTime(aStart, bEnd) < 0) return true;
 }
