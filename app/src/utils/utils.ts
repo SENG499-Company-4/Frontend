@@ -60,7 +60,6 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
         startDate: courseStartDate,
         endDate: courseEndDate,
 
-
         // *****important: only repeat the current day. For exmaple, csc105 should repeat on Tus, Wed, Fri.
         // If you double click that course shown on Tuesday, and choose 'Edit series', it will show repate on Tus.
         // And if you click same course on Wednesday, it will show repeat on Wed.
@@ -177,7 +176,6 @@ export function getCoursesForProfessor(id?: number, data?: ICourse[]): ICourse[]
 // }
 
 export function sortByProfSecond(data: ICalendarCourseItem[]): IProfessorIndex {
-
   // courseId: string;
   // term: Term;
   // meetingTime: IMeetingTime;
@@ -211,10 +209,9 @@ export function sortByProfSecond(data: ICalendarCourseItem[]): IProfessorIndex {
       startDate: course.startDate,
       endDate: course.endDate,
       meetingTime: course.meetingTime
-    }
+    };
 
     profList[prof.id].classes.push(modifiedCourse);
-
   });
 
   return profList;
@@ -255,34 +252,27 @@ function compareTimeHM(a: IHourMinute, b: IHourMinute) {
 }
 
 export function checkCollision(a: IMeetingTime, b: IMeetingTime) {
-
-  if (a.Day !== b.Day)
-    return false;
+  if (a.Day !== b.Day) return false;
 
   const aStart: IHourMinute = {
     hour: parseInt(a.StartTime.split(':')[0]),
     minute: parseInt(a.StartTime.split(':')[1])
-  }
+  };
 
   const aEnd: IHourMinute = {
     hour: parseInt(a.EndTime.split(':')[0]),
     minute: parseInt(a.EndTime.split(':')[1])
-  }
+  };
 
   const bStart: IHourMinute = {
     hour: parseInt(b.StartTime.split(':')[0]),
     minute: parseInt(b.StartTime.split(':')[1])
-  }
+  };
 
   const bEnd: IHourMinute = {
     hour: parseInt(b.EndTime.split(':')[0]),
     minute: parseInt(b.EndTime.split(':')[1])
-  }
+  };
 
-  if (compareTimeHM(aEnd, bStart) > 0 && compareTimeHM(aStart, bEnd) < 0)
-    return true;
+  if (compareTimeHM(aEnd, bStart) > 0 && compareTimeHM(aStart, bEnd) < 0) return true;
 }
-
-
-
-

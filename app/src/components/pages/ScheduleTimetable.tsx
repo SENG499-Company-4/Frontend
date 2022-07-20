@@ -6,7 +6,16 @@ import classData from 'data/clean.json';
 import { checkCollision, compareTime, parseCalendarCourse, parseCalendarTeacher, sortByProfSecond } from 'utils/utils';
 // import { ICourse } from 'interfaces/timetable.interfaces';
 // import { useLocation } from 'react-router-dom';
-import { Button, Box, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography } from '@mui/material';
+import {
+  Button,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography
+} from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
 import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
@@ -46,26 +55,24 @@ function ScheduleTimetable() {
     3: 'WEDNESDAY',
     4: 'THURSDAY',
     5: 'FRIDAY',
-    6: 'SATURDAY',
+    6: 'SATURDAY'
   };
 
-
   function exportState() {
-    console.log(calendarTeacherData)
+    console.log(calendarTeacherData);
     console.log(calendarCourseData);
 
-    console.log("errors")
+    console.log('errors');
     console.log(errors);
     setDialogOpen(true);
 
     const profIndex = sortByProfSecond(calendarCourseData);
     const profErrors: IProfessorIndex = {};
 
-    console.log("profIndex")
+    console.log('profIndex');
     console.log(profIndex);
 
     Object.keys(profIndex).map((key) => {
-
       const prof = profIndex[parseInt(key)];
       const added: number[] = [];
 
@@ -92,22 +99,20 @@ function ScheduleTimetable() {
               }
             }
           }
-        })
-      }
-      );
-    })
+        });
+      });
+    });
 
     setProfErrorIndex(profErrors);
-    console.log("profErrors")
+    console.log('profErrors');
     console.log(profErrors);
   }
 
   function validateAppointment(appointment: AppointmentUpdatingEvent) {
-
     console.log('updating', appointment);
     console.log(appointment.newData.startDate.getHours());
 
-    const toAdd = appointment.newData
+    const toAdd = appointment.newData;
 
     const startHour = toAdd.startDate.getHours();
     const startMinute = toAdd.startDate.getMinutes();
@@ -117,30 +122,30 @@ function ScheduleTimetable() {
 
     const courseId = toAdd.courseId;
 
-    console.log(courseId + " start " + startHour + ":" + startMinute + " end " + endHour + ":" + endMinute);
+    console.log(courseId + ' start ' + startHour + ':' + startMinute + ' end ' + endHour + ':' + endMinute);
 
     // check if the time is valid and if it is, remove from the errors array
     // (will happen whether it was in the array or not)
     if ((startHour <= 8 && startMinute < 30) || (endHour >= 21 && endMinute > 0)) {
       setValid(false);
-      console.log("adding " + courseId + " to errors");
-      setErrors([...errors, {
-        courseId: courseId,
-        capacity: toAdd.capacity,
-        type: "time",
-        message: 'Classes must be between 8:30 AM and 9:00 PM',
-        startDate: toAdd.startDate,
-        endDate: toAdd.endDate,
-        professorId: toAdd.teacherId
-      }]);
+      console.log('adding ' + courseId + ' to errors');
+      setErrors([
+        ...errors,
+        {
+          courseId: courseId,
+          capacity: toAdd.capacity,
+          type: 'time',
+          message: 'Classes must be between 8:30 AM and 9:00 PM',
+          startDate: toAdd.startDate,
+          endDate: toAdd.endDate,
+          professorId: toAdd.teacherId
+        }
+      ]);
     } else {
-      console.log("removing" + courseId + " from errors");
-      setErrors(errors.filter(x => x.courseId !== courseId));
+      console.log('removing' + courseId + ' from errors');
+      setErrors(errors.filter((x) => x.courseId !== courseId));
     }
-
-
   }
-
 
   return (
     <>
@@ -156,38 +161,39 @@ function ScheduleTimetable() {
         <DialogTitle>{Object.keys(profErrorIndex).length > 0 ? 'Errors persist' : 'Submission Successful'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {
-              Object.keys(profErrorIndex).length > 0
-                ? Object.values(profErrorIndex).map((prof: IProfessorIndexEntry) => {
-                  console.log("TESTING PROF IS ", prof);
+            {Object.keys(profErrorIndex).length > 0
+              ? Object.values(profErrorIndex).map((prof: IProfessorIndexEntry) => {
+                  console.log('TESTING PROF IS ', prof);
                   return (
                     <>
-                      <Typography>{prof.username + " has course overlaps"}</Typography>
-                      {prof.classes.map(course => {
+                      <Typography>{prof.username + ' has course overlaps'}</Typography>
+                      {prof.classes.map((course) => {
                         return (
                           <Typography>
                             {/* this line is and the one below is is purely for adding a new line for readability and it doesnt seem to process a "\n" */}
-                            <Typography>{"-"}</Typography>
-                            {course.courseId + " Section " + course.capacity}
+                            <Typography>{'-'}</Typography>
+                            {course.courseId + ' Section ' + course.capacity}
                             <Typography>
-                              {course.meetingTime.Day + " " + course.meetingTime.StartTime + "-" + course.meetingTime.EndTime}
+                              {course.meetingTime.Day +
+                                ' ' +
+                                course.meetingTime.StartTime +
+                                '-' +
+                                course.meetingTime.EndTime}
                             </Typography>
                           </Typography>
-                        )
-                      })
-
-                      }
+                        );
+                      })}
                     </>
-                  )
+                  );
                 })
-
-                : 'Your generation request was submitted successfully. When the scheduling algorithm completes, you\'ll be able to view the schedule on the management page.'
-            }
+              : "Your generation request was submitted successfully. When the scheduling algorithm completes, you'll be able to view the schedule on the management page."}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => { setDialogOpen(false) }}
+            onClick={() => {
+              setDialogOpen(false);
+            }}
           >
             Ok
           </Button>
@@ -245,7 +251,7 @@ function ScheduleTimetable() {
         showAllDayPanel={false}
         editingAppointment={false}
         onAppointmentUpdating={(e) => validateAppointment(e)}
-      // onAppointmentUpdated={(e) => { console.log('updated', e); }}
+        // onAppointmentUpdated={(e) => { console.log('updated', e); }}
       >
         <Editing allowAdding={false} allowDragging={true} />
         <Resource

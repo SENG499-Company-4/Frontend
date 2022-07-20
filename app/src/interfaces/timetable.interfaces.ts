@@ -69,17 +69,15 @@ export interface ICalendarItem_Teacher {
   link: string;
 }
 
-
 export interface IProfessorIndex {
   [key: number]: IProfessorIndexEntry;
-};
+}
 
 export interface IProfessorIndexEntry {
   id: number;
   username: string;
   classes: IProfessorCourse[];
 }
-
 
 export interface IProfessorCourse {
   courseId: string;
@@ -97,7 +95,7 @@ export interface ICalendarError {
   message: string;
   startDate: Date;
   endDate: Date;
-  professorId: number
+  professorId: number;
 }
 
 export interface IHourMinute {
