@@ -5,7 +5,9 @@ import {
   IScheduleListItem,
   IProfessor,
   IProfessorIndex,
-  IProfessorCourse
+  IProfessorCourse,
+  IMeetingTime,
+  IHourMinute
 } from 'interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import Query from 'devextreme/data/query';
@@ -51,6 +53,8 @@ export function parseCalendarCourse(data: ICourse[], courseId?: string, professo
 
       const calendarItem: ICalendarCourseItem = {
         courseId: course.CourseID.subject + course.CourseID.code,
+        term: course.CourseID.term,
+        meetingTime: element,
         teacherId: course.professors[0].id,
         capacity: course.capacity,
         startDate: courseStartDate,
@@ -134,38 +138,83 @@ export function getCoursesForProfessor(id?: number, data?: ICourse[]): ICourse[]
   return courses;
 }
 
-export function sortByProf(data: ICourse[]): IProfessorIndex {
+// export function sortByProf(data: ICourse[]): IProfessorIndex {
+
+//   // Extract all professors from data and create a list of unique professors with class data
+//   const profList: IProfessorIndex = {};
+
+//   data.forEach((course: ICourse) => {
+//     course.professors.forEach((prof: IProfessor) => {
+
+//       // If professor is not in list, add them
+//       if (!profList[prof.id]) {
+//         profList[prof.id] = {
+//           id: prof.id,
+//           username: prof.username,
+//           faculty: prof.faculty,
+//           role: prof.role,
+//           active: prof.active,
+//           classes: []
+//         };
+//       }
+
+//       // Add course to professor's list of classes
+
+//       const modifiedCourse: IProfessorCourse = {
+//         courseId: course.CourseID.subject + course.CourseID.code,
+//         term: course.CourseID.term,
+//         capacity: course.capacity,
+//         startDate: course.startDate,
+//         endDate: course.endDate,
+//         meetingTimes: course.meetingTimes
+//       }
+
+//       profList[prof.id].classes.push(modifiedCourse);
+//     });
+//   });
+
+//   return profList;
+// }
+
+export function sortByProfSecond(data: ICalendarCourseItem[]): IProfessorIndex {
+
+  // courseId: string;
+  // term: Term;
+  // meetingTime: IMeetingTime;
+  // teacherId: number;
+  // capacity: number; //TODO replace with section number later
+  // startDate: Date;
+  // endDate: Date;
+  // recurrenceRule: string;
 
   // Extract all professors from data and create a list of unique professors with class data
   const profList: IProfessorIndex = {};
 
-  data.forEach((course: ICourse) => {
-    course.professors.forEach((prof: IProfessor) => {
+  data.forEach((course: ICalendarCourseItem) => {
+    const prof = getTeacherById(course.teacherId);
 
-      // If professor is not in list, add them
-      if (!profList[prof.id]) {
-        profList[prof.id] = {
-          id: prof.id,
-          username: prof.username,
-          faculty: prof.faculty,
-          role: prof.role,
-          active: prof.active,
-          classes: []
-        };
-      }
+    // If professor is not in list, add them
+    if (!profList[prof.id]) {
+      profList[prof.id] = {
+        id: prof.id,
+        username: prof.teacherName,
+        classes: []
+      };
+    }
 
-      // Add course to professor's list of classes
+    // Add course to professor's list of classes
 
-      const modifiedCourse: IProfessorCourse = {
-        courseId: course.CourseID.subject + course.CourseID.code,
-        capacity: course.capacity,
-        startDate: course.startDate,
-        endDate: course.endDate,
-        meetingTimes: course.meetingTimes
-      }
+    const modifiedCourse: IProfessorCourse = {
+      courseId: course.courseId,
+      term: course.term,
+      capacity: course.capacity,
+      startDate: course.startDate,
+      endDate: course.endDate,
+      meetingTime: course.meetingTime
+    }
 
-      profList[prof.id].classes.push(modifiedCourse);
-    });
+    profList[prof.id].classes.push(modifiedCourse);
+
   });
 
   return profList;
@@ -187,3 +236,53 @@ export function compareTime(a: Date, b: Date) {
     }
   }
 }
+
+function compareTimeHM(a: IHourMinute, b: IHourMinute) {
+  if (a.hour > b.hour) {
+    return 1;
+  } else if (a.hour < b.hour) {
+    return -1;
+  } else {
+    //hours are equal
+    if (a.minute > b.minute) {
+      return 1;
+    } else if (a.minute < b.minute) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+}
+
+export function checkCollision(a: IMeetingTime, b: IMeetingTime) {
+
+  if (a.Day !== b.Day)
+    return false;
+
+  const aStart: IHourMinute = {
+    hour: parseInt(a.StartTime.split(':')[0]),
+    minute: parseInt(a.StartTime.split(':')[1])
+  }
+
+  const aEnd: IHourMinute = {
+    hour: parseInt(a.EndTime.split(':')[0]),
+    minute: parseInt(a.EndTime.split(':')[1])
+  }
+
+  const bStart: IHourMinute = {
+    hour: parseInt(b.StartTime.split(':')[0]),
+    minute: parseInt(b.StartTime.split(':')[1])
+  }
+
+  const bEnd: IHourMinute = {
+    hour: parseInt(b.EndTime.split(':')[0]),
+    minute: parseInt(b.EndTime.split(':')[1])
+  }
+
+  if (compareTimeHM(aEnd, bStart) > 0 && compareTimeHM(aStart, bEnd) < 0)
+    return true;
+}
+
+
+
+

@@ -39,6 +39,8 @@ export interface ICourse {
 
 export interface ICalendarCourseItem {
   courseId: string;
+  term: Term;
+  meetingTime: IMeetingTime;
   teacherId: number;
   capacity: number; //TODO replace with section number later
   startDate: Date;
@@ -75,18 +77,17 @@ export interface IProfessorIndex {
 export interface IProfessorIndexEntry {
   id: number;
   username: string;
-  faculty?: Faculty;
-  role: Role;
-  active: boolean;
   classes: IProfessorCourse[];
 }
 
+
 export interface IProfessorCourse {
   courseId: string;
+  term: Term;
   capacity: number;
-  startDate: string;
-  endDate: string;
-  meetingTimes: IMeetingTime[];
+  startDate: Date;
+  endDate: Date;
+  meetingTime: IMeetingTime;
 }
 
 export interface ICalendarError {
@@ -97,4 +98,9 @@ export interface ICalendarError {
   startDate: Date;
   endDate: Date;
   professorId: number
+}
+
+export interface IHourMinute {
+  hour: number;
+  minute: number;
 }
