@@ -13,8 +13,8 @@ interface SemesterSelectorProps {
 
 export function SemesterSelector(props: SemesterSelectorProps): React.ReactElement {
   const termOptions = [Term.Fall, Term.Summer, Term.Spring];
-  const [term, setTerm] = useState<Term | null>(props.term || null);
-  const [year, setYear] = useState<Date | null>(props.year || null);
+  const [term, setTerm] = useState<Term | undefined>(props.term || undefined);
+  const [year, setYear] = useState<Date | undefined>(props.year || undefined);
 
   return (
     <Grid container spacing={2} alignItems={'center'}>
@@ -44,13 +44,13 @@ export function SemesterSelector(props: SemesterSelectorProps): React.ReactEleme
             label="Select Year"
             value={year}
             minDate={new Date(2020, 0, 1)}
-            maxDate={new Date()}
+            maxDate={new Date(2024, 0, 1)}
             onChange={(e) => {
               console.log('e: ', e);
               setYear(e);
               props.onYearChange(e as Date);
             }}
-            renderInput={(params) => <TextField {...params} helperText={null} />}
+            renderInput={(params) => <TextField {...params} helperText={undefined} />}
           />
         </LocalizationProvider>
       </Grid>
