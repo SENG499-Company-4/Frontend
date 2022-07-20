@@ -31,34 +31,6 @@ export function parseCalendarTeacher(data: ICourse[]): ICalendarItem_Teacher[] {
   return calendarTeacherData;
 }
 
-export function sortByProf(data: ICourse[]): IProfessorIndex {
-
-  // Extract all professors from data and create a list of unique professors with class data
-  const profList: IProfessorIndex = {};
-
-  data.forEach((course: ICourse) => {
-    course.professors.forEach((prof: IProfessor) => {
-
-      // If professor is not in list, add them
-      if (!profList[prof.id]) {
-        profList[prof.id] = {
-          id: prof.id,
-          username: prof.username,
-          faculty: prof.faculty,
-          role: prof.role,
-          active: prof.active,
-          classes: []
-        };
-      }
-
-      // Add course to professor's list of classes
-      profList[prof.id].classes.push(course);
-    });
-  });
-
-  return profList;
-}
-
 export function parseCalendarCourse(data: ICourse[], courseId?: string, professorId?: number): ICalendarCourseItem[] {
   const calendarCourseData: ICalendarCourseItem[] = [];
   let courseProp = courseId ? courseId : undefined;
@@ -157,4 +129,50 @@ export function getCoursesForProfessor(id?: number, data?: ICourse[]): ICourse[]
     });
   });
   return courses;
+}
+
+export function sortByProf(data: ICourse[]): IProfessorIndex {
+
+  // Extract all professors from data and create a list of unique professors with class data
+  const profList: IProfessorIndex = {};
+
+  data.forEach((course: ICourse) => {
+    course.professors.forEach((prof: IProfessor) => {
+
+      // If professor is not in list, add them
+      if (!profList[prof.id]) {
+        profList[prof.id] = {
+          id: prof.id,
+          username: prof.username,
+          faculty: prof.faculty,
+          role: prof.role,
+          active: prof.active,
+          classes: []
+        };
+      }
+
+      // Add course to professor's list of classes
+
+      profList[prof.id].classes.push(course);
+    });
+  });
+
+  return profList;
+}
+
+export function compareTime(a: Date, b: Date) {
+  if (a.getHours() > b.getHours()) {
+    return 1;
+  } else if (a.getHours() < b.getHours()) {
+    return -1;
+  } else {
+    //hours are equal
+    if (a.getMinutes() > b.getMinutes()) {
+      return 1;
+    } else if (a.getMinutes() < b.getMinutes()) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
 }

@@ -79,3 +79,11 @@ export interface IProfessorClasses {
   active: boolean;
   classes: ICourse[];
 }
+
+export interface ICalendarError {
+  courseId: string,
+  message: string,
+  startDate: Date,
+  endDate: Date,
+  professorId: number
+}
