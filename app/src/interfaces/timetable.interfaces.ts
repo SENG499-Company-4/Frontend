@@ -84,7 +84,7 @@ export interface IProfessorIndexEntry {
 export interface IProfessorCourse {
   courseId: string;
   term: Term;
-  capacity: number;
+  capacity: number; //TODO refactor to section number later
   startDate: Date;
   endDate: Date;
   meetingTime: IMeetingTime;
@@ -92,7 +92,7 @@ export interface IProfessorCourse {
 
 export interface ICalendarError {
   courseId: string;
-  capacity: number; //TODO replace with section number later
+  capacity: number; //TODO refactor to section number later
   type: string;
   message: string;
   startDate: Date;

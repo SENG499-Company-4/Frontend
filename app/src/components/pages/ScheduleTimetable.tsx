@@ -166,7 +166,9 @@ function ScheduleTimetable() {
                       {prof.classes.map(course => {
                         return (
                           <Typography>
-                            {course.courseId}
+                            {/* this line is and the one below is is purely for adding a new line for readability and it doesnt seem to process a "\n" */}
+                            <Typography>{"-"}</Typography>
+                            {course.courseId + " Section " + course.capacity}
                             <Typography>
                               {course.meetingTime.Day + " " + course.meetingTime.StartTime + "-" + course.meetingTime.EndTime}
                             </Typography>
