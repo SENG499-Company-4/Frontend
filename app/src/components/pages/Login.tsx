@@ -25,6 +25,7 @@ const Login = () => {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
   const [hasErrors, setHasErrors] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const [userId, setUserId] = useState<number>(0);
   const [tokenLoaded, setTokenLoaded] = useState<boolean>(false);
 
@@ -45,7 +46,13 @@ const Login = () => {
         const userInfo: JWTResponse = jwt_decode(loginResponse.token);
         setUserId(userInfo.userId);
         setTokenLoaded(true);
+      } else {
+        setHasErrors(true);
+        setErrorMessage(loginResponse.message);
       }
+    }
+    if (loginError) {
+      errorContext.setErrorDialog(loginError);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loginData, loginLoading, loginError]);
@@ -74,6 +81,11 @@ const Login = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tokenLoaded]);
 
+  useEffect(() => {
+    setHasErrors(false);
+    setErrorMessage('');
+  }, [formState]);
+
   return (
     <Box component="form" sx={{ width: 300 }} mx="auto" justifyContent="center" noValidate autoComplete="off">
       <Grid container spacing={2} className="login">
@@ -91,7 +103,7 @@ const Login = () => {
         {hasErrors && (
           <Grid item>
             <Typography variant="body1" color="error">
-              Username or password is incorrect.
+              {errorMessage}
             </Typography>
           </Grid>
         )}
