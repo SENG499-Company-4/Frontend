@@ -9,10 +9,10 @@ import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { Search, SearchIconWrapper, StyledInputBase } from 'components/styles/styles';
-import { ICalendarCourseItem } from 'interfaces/timetable.interfaces'
+import { ICalendarCourseItem } from 'interfaces/timetable.interfaces';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import FormControl from "@mui/material/FormControl";
+import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
@@ -22,7 +22,6 @@ interface IStateProps {
   courseId?: string;
   professorId?: number;
 }
-
 
 function ScheduleTimetable() {
   const location: Location = useLocation();
@@ -47,7 +46,7 @@ function ScheduleTimetable() {
       var newData: ICalendarCourseItem[] = [];
       for (const course of calendarCourseData) {
         if (course?.courseId[3] === event.target.value) {
-          newData.push(course)
+          newData.push(course);
         }
       }
       setFilteredData(newData);
@@ -63,7 +62,7 @@ function ScheduleTimetable() {
     var teacherId = 0;
     for (const teacher of calendarTeacherData) {
       if (teacher?.teacherName?.toLowerCase().includes(search.toLowerCase())) {
-        teacherId = teacher?.id
+        teacherId = teacher?.id;
         for (const course of data) {
           if (course?.teacherId === teacherId) {
             newData.push(course);
@@ -86,23 +85,16 @@ function ScheduleTimetable() {
     setSearch(search);
     const newdata = filter(calendarCourseData, search);
     setFilteredData(newdata);
-
   }
 
   return (
     <>
       <Box display="flex" justifyContent="space-between" margin="5px">
-
         {!professorId && !courseId && (
           <Box display="flex">
             <FormControl sx={{ minWidth: '20ch', marginTop: 2 }} size="small">
               <InputLabel>Year</InputLabel>
-              <Select
-                id="year-select"
-                value={year}
-                label="Year"
-                onChange={onYearChange}
-              >
+              <Select id="year-select" value={year} label="Year" onChange={onYearChange}>
                 <MenuItem value="0">All Year</MenuItem>
                 <MenuItem value="1">Year 1</MenuItem>
                 <MenuItem value="2">Year 2</MenuItem>
@@ -145,7 +137,13 @@ function ScheduleTimetable() {
           )}
         </div>
 
-        <Button variant="contained" size="large" color="secondary" onClick={exportState} sx={{ marginTop: 1, marginBottom: 1 }}>
+        <Button
+          variant="contained"
+          size="large"
+          color="secondary"
+          onClick={exportState}
+          sx={{ marginTop: 1, marginBottom: 1 }}
+        >
           Save Schedule
         </Button>
       </Box>
@@ -153,7 +151,7 @@ function ScheduleTimetable() {
       {/*@ts-ignore*/}
       <Scheduler
         timeZone="Canada/Pacific"
-        dataSource={(year || search) ? filteredData : calendarCourseData}
+        dataSource={year || search ? filteredData : calendarCourseData}
         textExpr="courseId"
         views={[
           {
