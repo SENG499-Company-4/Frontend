@@ -7,6 +7,7 @@ import {
 import colors from 'data/CourseColor.json';
 import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';
+import { ability, willing } from 'constants/surveyForm.constants';
 
 /**
  * Grab data from python scraper and format it for DevExtreme Scheduler
@@ -127,4 +128,22 @@ export function getCoursesForProfessor(id?: number, data?: ICourse[]): ICourse[]
     });
   });
   return courses;
+}
+
+export function calculateCourseRating(able: string, willingness: string): number {
+  if (able === ability.effort && willingness === willing.notWilling) {
+    return 1;
+  } else if (able === ability.can && willingness === willing.notWilling) {
+    return 2;
+  } else if (able === ability.effort && willingness === willing.willing) {
+    return 3;
+  } else if (able === ability.can && willingness === willing.willing) {
+    return 4;
+  } else if (able === ability.effort && willingness === willing.veryWilling) {
+    return 5;
+  } else if (able === ability.can && willingness === willing.veryWilling) {
+    return 6;
+  } else {
+    return 0;
+  }
 }

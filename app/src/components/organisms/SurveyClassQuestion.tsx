@@ -45,8 +45,12 @@ function SurveyClassQuestion(props: {
   return (
     <>
       <Stack key={props.name} direction="row" spacing={5}>
-        <FormLabel required={props.additionalQualifications} id="CanTeach" sx={{ marginTop: '10px' }}>
-          {props.name}
+        <FormLabel
+          required={props.additionalQualifications}
+          id="CanTeach"
+          sx={{ marginTop: '10px', marginLeft: '25px', marginBottom: '25px' }}
+        >
+          <strong> {props.name}</strong>
         </FormLabel>
         <FormControl>
           <RadioGroup row aria-labelledby="CanTeach" name="row-radio-buttons-group" defaultValue="cannot">

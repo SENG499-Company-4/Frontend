@@ -66,6 +66,16 @@ export type CoursePreference = {
   preference: Scalars['Int'];
 };
 
+export type CoursePreferenceInput = {
+  /** Course code, e.g. 499, 310 */
+  code: Scalars['String'];
+  preference: Scalars['Int'];
+  /** Course subject, e.g. SENG, CSC */
+  subject: Scalars['String'];
+  /** Term course is offered in */
+  term: Term;
+};
+
 /** A set of CourseSections with matching CourseID represent a course offering */
 export type CourseSection = {
   __typename?: 'CourseSection';
@@ -85,6 +95,20 @@ export type CourseSection = {
   sectionNumber?: Maybe<Scalars['String']>;
   /** The start date of the course */
   startDate: Scalars['Date'];
+};
+
+export type CreateTeachingPreferenceInput = {
+  courses: Array<CoursePreferenceInput>;
+  fallTermCourses?: InputMaybe<Scalars['Int']>;
+  hasRelief: Scalars['Boolean'];
+  hasTopic: Scalars['Boolean'];
+  nonTeachingTerm?: InputMaybe<Term>;
+  peng: Scalars['Boolean'];
+  reliefReason?: InputMaybe<Scalars['String']>;
+  springTermCourses?: InputMaybe<Scalars['Int']>;
+  summerTermCourses?: InputMaybe<Scalars['Int']>;
+  topicDescription?: InputMaybe<Scalars['String']>;
+  userId: Scalars['ID'];
 };
 
 export type CreateUserInput = {
@@ -143,6 +167,8 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** Change the password of the currently logged in user */
   changeUserPassword: Response;
+  /** Teaching preferences */
+  createTeachingPreference: Response;
   /** Register a new user account */
   createUser: CreateUserMutationResult;
   /** Generate schedule */
@@ -159,6 +185,10 @@ export type Mutation = {
 
 export type MutationChangeUserPasswordArgs = {
   input: ChangeUserPasswordInput;
+};
+
+export type MutationCreateTeachingPreferenceArgs = {
+  input: CreateTeachingPreferenceInput;
 };
 
 export type MutationCreateUserArgs = {
@@ -186,6 +216,8 @@ export type Query = {
   __typename?: 'Query';
   /** Get all users */
   allUsers?: Maybe<Array<User>>;
+  /** Get all courses preferences */
+  coursePreferences?: Maybe<Array<CoursePreference>>;
   /** Get a list of courses for a given term and/or year */
   courses?: Maybe<Array<CourseSection>>;
   /** Find a user by their id */
