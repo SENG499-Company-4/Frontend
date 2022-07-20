@@ -3,7 +3,7 @@ import {
   Avatar,
   ButtonBase,
   Card,
-  CircularProgress,
+  Divider,
   Grid,
   ListItem,
   ListItemAvatar,
@@ -13,15 +13,16 @@ import {
   Typography
 } from '@mui/material';
 import { Faculty } from 'constants/timetable.constants';
-import { ICourse, IProfessorPreference } from 'interfaces/timetable.interfaces';
+import { ICourse } from 'interfaces/timetable.interfaces';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getCoursesForProfessor } from 'utils/utils';
 import { useQuery } from '@apollo/client';
 import { GET_USER_BY_ID } from 'api/Queries';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { CoursePreference, User } from 'types/api.types';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { getCoursesForProfessor } from 'utils/utils';
 
 function ProfessorProfile() {
   const navigate = useNavigate();
@@ -71,24 +72,33 @@ function ProfessorProfile() {
     ECE: '#2196f3'
   };
 
-  function getWilling(willingness: number) {
-    if (willingness < 120) {
-      return 'Not willing to teach';
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'Course',
+      flex: 1,
+      renderCell: (params) => {
+        return <strong>{params.row.id.subject + ' ' + params.row.id.code}</strong>;
+      }
+    },
+    {
+      field: 'term',
+      headerName: 'Term',
+      flex: 1,
+      renderCell: (params) => {
+        return params.row.id.term + ' ' + params.row.id.year;
+      }
+    },
+    {
+      field: 'preference',
+      headerName: 'Preference',
+      flex: 1
     }
-    if (willingness < 150) {
-      return 'Somewhat willing to teach';
-    }
-    if (willingness < 170) {
-      return 'Willing to teach';
-    }
-    if (willingness < 200) {
-      return 'Very willing to teach';
-    }
-  }
+  ];
 
   return (
-    <Grid display="flex" marginTop={4} justifyContent="center" sx={{ width: '100%' }}>
-      <Card elevation={10} sx={{ width: '70%', minHeight: '400px' }}>
+    <Grid display="flex" marginTop={4} justifyContent="center" padding={2} sx={{ width: '100%' }}>
+      <Card elevation={10} sx={{ minHeight: '400px', maxWidth: '1200px', width: '100%' }}>
         {userLoading ? (
           <Grid display={'flex'} flexDirection={'row'} margin={4} width={'100%'}>
             <Stack spacing={1}>
@@ -111,82 +121,126 @@ function ProfessorProfile() {
                 </Typography>
               </Grid>
             </Grid>
-            <Grid display={'flex'} flexDirection={'row'} margin={4}>
+            <Grid display={'flex'} flexDirection={'row'} marginX={4} marginTop={4}>
               <Grid item>
                 <Typography variant="body1" color={professor?.active ? 'green' : 'red'}>
                   <b>{professor?.active ? 'Active' : 'Inactive'}</b>
                 </Typography>
                 <Typography variant="body1">
+                  <b>User ID: </b> {professor?.id}
+                </Typography>
+                <Typography variant="body1">
                   <b>Username: </b> {professor?.username}
                 </Typography>
-                {/* 
-            TODO: Implement this later when backend returns it
-            <Typography variant="body1">
-              <b>Faculty: </b> {professor?.faculty}
-            </Typography> */}
                 <Typography variant="body1">
                   <b>Role: </b> {professor?.role}
                 </Typography>
+                {/* 
+                  TODO: Implement this later when backend returns it
+                  <Typography variant="body1">
+                    <b>Faculty: </b> {professor?.faculty}
+                  </Typography> 
+                </Typography>
+                  </Typography> 
+                */}
               </Grid>
             </Grid>
-            <Grid display={'flex'} flexDirection={'column'} margin={4}>
-              <Grid item>
-                <Typography variant="h5" marginBottom={2}>
-                  <b>Preferences</b>
-                </Typography>
-              </Grid>
-              {professor && professor?.preferences && professor?.preferences?.length > 0 ? (
-                professor.preferences?.map((preference: CoursePreference) => (
-                  <Grid item>
-                    <Typography variant="body1">
-                      <b>{preference.id.subject + ' ' + preference.id.code}</b>: {getWilling(preference.preference)}
-                    </Typography>
-                  </Grid>
-                ))
-              ) : (
-                <Typography variant="body1">No preferences recorded.</Typography>
-              )}
-            </Grid>
-            <Grid display={'flex'} flexDirection={'column'} margin={4}>
-              <Grid item>
-                <Typography variant="h5">
-                  <b>Currently Teaching</b>
-                </Typography>
-              </Grid>
-              {currentlyTeaching.length > 0 ? (
-                <Grid container spacing={2}>
-                  {currentlyTeaching.map((course: ICourse) => (
-                    <Grid item marginY={1}>
-                      <ButtonBase
-                        onClick={() => {
-                          navigate('/schedule/timetable', {
-                            state: {
-                              courseId: course.CourseID.subject + course.CourseID.code
-                            }
-                          });
-                        }}
-                        sx={{ display: 'block', textAlign: 'initial' }}
-                      >
-                        <Card elevation={3} sx={{ width: '300px' }}>
-                          <ListItem>
-                            <ListItemAvatar>
-                              <Avatar sx={{ bgcolor: facultyColors[course.CourseID.subject as Faculty] }}>
-                                {facultyIcons[course.CourseID.subject as Faculty]}
-                              </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={course.CourseID.subject + ' ' + course.CourseID.code}
-                              secondary={course.startDate + ' - ' + course.endDate}
-                            />
-                          </ListItem>
-                        </Card>
-                      </ButtonBase>
-                    </Grid>
-                  ))}
+            <Divider variant="middle" sx={{ marginTop: '20px' }} />
+            <Grid container display={'flex'} flexDirection={'row'}>
+              <Grid
+                display={'flex'}
+                flexDirection={'column'}
+                alignItems={'center'}
+                xs={12}
+                sm={12}
+                md={6}
+                lg={6}
+                xl={6}
+                padding={2}
+              >
+                <Grid item>
+                  <Typography variant="h5" marginBottom={2}>
+                    <b>Preferences</b>
+                  </Typography>
                 </Grid>
-              ) : (
-                <Typography variant="body1">This professor is currently not teaching a course.</Typography>
-              )}
+                <Grid item width={'100%'}>
+                  {professor && professor?.preferences && professor?.preferences?.length > 0 ? (
+                    <DataGrid
+                      getRowId={(row) => {
+                        return row.id.subject + row.id.code + row.id.term + row.id.year;
+                      }}
+                      loading={userLoading}
+                      autoHeight
+                      rows={professor?.preferences.filter((preference: CoursePreference) => {
+                        return preference.preference > 0;
+                      })}
+                      style={{ width: '100%' }}
+                      columns={columns}
+                      rowsPerPageOptions={[5]}
+                      pageSize={7}
+                      disableSelectionOnClick
+                      initialState={{
+                        sorting: {
+                          sortModel: [{ field: 'preference', sort: 'desc' }]
+                        }
+                      }}
+                    />
+                  ) : (
+                    <Typography variant="body1">No preferences recorded.</Typography>
+                  )}
+                </Grid>
+              </Grid>
+              <Grid
+                display={'flex'}
+                flexDirection={'column'}
+                alignItems={'center'}
+                xs={12}
+                sm={12}
+                md={6}
+                lg={6}
+                xl={6}
+                padding={2}
+              >
+                <Grid item>
+                  <Typography variant="h5" marginBottom={1}>
+                    <b>Currently Teaching</b>
+                  </Typography>
+                </Grid>
+                {currentlyTeaching.length > 0 ? (
+                  <Grid container spacing={2}>
+                    {currentlyTeaching.map((course: ICourse) => (
+                      <Grid item marginY={1} xs={12} sm={6} md={12} lg={6}>
+                        <ButtonBase
+                          onClick={() => {
+                            navigate('/schedule/timetable', {
+                              state: {
+                                courseId: course.CourseID.subject + course.CourseID.code
+                              }
+                            });
+                          }}
+                          sx={{ display: 'block', textAlign: 'initial', width: '100%' }}
+                        >
+                          <Card elevation={5} sx={{ width: '100%' }}>
+                            <ListItem>
+                              <ListItemAvatar>
+                                <Avatar sx={{ bgcolor: facultyColors[course.CourseID.subject as Faculty] }}>
+                                  {facultyIcons[course.CourseID.subject as Faculty]}
+                                </Avatar>
+                              </ListItemAvatar>
+                              <ListItemText
+                                primary={course.CourseID.subject + ' ' + course.CourseID.code}
+                                secondary={course.startDate + ' - ' + course.endDate}
+                              />
+                            </ListItem>
+                          </Card>
+                        </ButtonBase>
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <Typography variant="body1">This professor is currently not teaching a course.</Typography>
+                )}
+              </Grid>
             </Grid>
           </>
         )}
