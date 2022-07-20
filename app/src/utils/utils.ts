@@ -9,20 +9,7 @@ import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';
 
 function daytoInt(day: string) {
-  if (day === "MONDAY") {
-    return 1;
-  } if (day === "TUESDAY") {
-    return 2;
-  } if (day === "WEDNESDAY") {
-    return 3;
-  } if (day === "THURSDAY") {
-    return 4;
-  } if (day === "FRIDAY") {
-    return 5;
-  } if (day === "SATURDAY") {
-    return 6;
-  }
-  return 0;
+  return ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"].indexOf(day);
 }
 
 
