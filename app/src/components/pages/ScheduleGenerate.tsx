@@ -22,9 +22,8 @@ import {
   MenuItem,
   Select,
   Grid,
-  IconButton
+  Chip
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useMutation } from '@apollo/client';
@@ -32,19 +31,20 @@ import { GENERATE_SCHEDULE } from 'api/Mutations';
 import { fallCodes, springCodes, summerCodes, courseCodes } from 'constants/courses.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { ISections } from 'interfaces/ScheduleGenerate.interfaces';
-import { CourseInput, Term } from 'types/api.types';
+import { ISections, ITermSelection } from 'interfaces/scheduleGenerate.interfaces';
+import { CourseInput } from 'types/api.types';
 
 function ScheduleGenerate() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
 
-  const [term, setTerm] = useState<string>(Term.All);
+  const [term, setTerm] = useState<string>(ITermSelection.All);
   const [year, setYear] = useState<number>(2022);
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
   const [sections, setSections] = useState<ISections>({});
+  const [values, setValues] = React.useState<string[]>([]);
 
   const uniqueClassList = Array.from(
     new Set(
@@ -90,6 +90,7 @@ function ScheduleGenerate() {
   function removeAll() {
     setClasses([]);
     setSections({});
+    setValues([]);
   }
 
   function splitYearly(variables: any) {
@@ -138,7 +139,7 @@ function ScheduleGenerate() {
   }
 
   function splitCourses(variables: any) {
-    if (term === Term.All) {
+    if (term === ITermSelection.All) {
       return splitYearly(variables);
     }
     const courses: CourseInput[] = classes.map((classInfo) => {
@@ -148,8 +149,8 @@ function ScheduleGenerate() {
         section: sections[classInfo]
       };
     });
-    if (term === Term.Fall) variables.input['fallCourses'] = courses;
-    else if (term === Term.Spring) variables.input['springCourses'] = courses;
+    if (term === ITermSelection.Fall) variables.input['fallCourses'] = courses;
+    else if (term === ITermSelection.Spring) variables.input['springCourses'] = courses;
     else variables.input['summerCourses'] = courses;
     return variables;
   }
@@ -242,26 +243,26 @@ function ScheduleGenerate() {
                 <FormLabel sx={{ marginTop: '10px' }}>Select a semester:</FormLabel>
                 <RadioGroup row aria-labelledby="Term">
                   <FormControlLabel
-                    onChange={() => setTerm(Term.All)}
-                    checked={term === Term.All}
+                    onChange={() => setTerm(ITermSelection.All)}
+                    checked={term === ITermSelection.All}
                     control={<Radio />}
                     label="All (entire year)"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm(Term.Spring)}
-                    checked={term === Term.Spring}
+                    onChange={() => setTerm(ITermSelection.Spring)}
+                    checked={term === ITermSelection.Spring}
                     control={<Radio />}
                     label="Spring"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm(Term.Summer)}
-                    checked={term === Term.Summer}
+                    onChange={() => setTerm(ITermSelection.Summer)}
+                    checked={term === ITermSelection.Summer}
                     control={<Radio />}
                     label="Summer"
                   />
                   <FormControlLabel
-                    onChange={() => setTerm(Term.Fall)}
-                    checked={term === Term.Fall}
+                    onChange={() => setTerm(ITermSelection.Fall)}
+                    checked={term === ITermSelection.Fall}
                     control={<Radio />}
                     label="Fall"
                   />
@@ -272,14 +273,21 @@ function ScheduleGenerate() {
               <Autocomplete
                 multiple
                 disableCloseOnSelect
+                value={values}
                 id="tags-outlined"
                 options={uniqueClassList}
                 getOptionLabel={(option) => option}
                 sx={{ width: '100%' }}
-                renderTags={() => null}
+                renderTags={(value: readonly string[], getTagProps) =>
+                  value.map((option: string, index: number) => (
+                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
+                  ))
+                }
                 onChange={(event, value, reason, detail) => {
                   event.preventDefault();
+                  console.log('classes: ', value);
                   setClasses(value);
+                  setValues(value);
                   if (reason === 'selectOption') {
                     const courseCode = detail?.option;
                     if (courseCode) setSections({ ...sections, [courseCode]: 0 });
@@ -304,57 +312,39 @@ function ScheduleGenerate() {
                   <Paper key={className} sx={{ p: '1%' }} elevation={3}>
                     <Grid
                       alignItems="center"
-                      justifyContent={'flex-start'}
+                      justifyContent={'space-between'}
                       container
-                      columnSpacing={1}
-                      columns={{ xs: 12 }}
+                      padding={'5px'}
+                      paddingLeft={'10px'}
                     >
-                      <Grid item xs={3}>
+                      <Grid item>
                         <Typography variant="h6">{className}</Typography>
                       </Grid>
 
-                      <Grid item xs={4}>
-                        <Typography align="right">Sections to be offered</Typography>
-                      </Grid>
-
-                      <Grid item xs={2}>
-                        <FormControl size="small" sx={{ width: '100%' }}>
-                          <InputLabel id={className + '-sections-select-label'}>Sections</InputLabel>
-                          <Select
-                            sx={{ width: '300px' }}
-                            labelId={className + '-sections-select-label'}
-                            id={className + '-sections-select'}
-                            defaultValue={0}
-                            label="Sections to be offered: "
-                            onChange={(event) => {
-                              setSections({ ...sections, [className]: event.target.value as number });
-                            }}
-                          >
-                            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => (
-                              <MenuItem key={amount} value={amount}>
-                                {amount !== 0 ? amount : 'Algorithm Determined'}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-
-                      <Grid item xs={3}>
-                        <Box display="flex" justifyContent="flex-end">
-                          <IconButton
-                            aria-label="delete"
-                            onClick={() => {
-                              console.log(sections);
-                              setSections((currentSections) => {
-                                delete currentSections[className];
-                                return currentSections;
-                              });
-                              setClasses(classes.filter((remove) => remove !== className));
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Box>
+                      <Grid item>
+                        <Grid container alignItems="center" justifyContent={'flex-start'} columnSpacing={1}>
+                          <Grid item>
+                            <FormControl size="small" sx={{ width: '100%' }}>
+                              <InputLabel id={className + '-sections-select-label'}>Sections to be Offered</InputLabel>
+                              <Select
+                                sx={{ width: 'auto', minWidth: '250px' }}
+                                labelId={className + '-sections-select-label'}
+                                id={className + '-sections-select'}
+                                defaultValue={0}
+                                label="Sections to be offered: "
+                                onChange={(event) => {
+                                  setSections({ ...sections, [className]: event.target.value as number });
+                                }}
+                              >
+                                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((amount) => (
+                                  <MenuItem key={amount} value={amount}>
+                                    {amount !== 0 ? amount : 'Algorithm Determined'}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                        </Grid>
                       </Grid>
                     </Grid>
                   </Paper>

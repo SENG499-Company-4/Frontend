@@ -1,5 +1,4 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
 import { GET_SCHEDULE } from 'api/Queries';
 import { Box, Button, Chip, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
