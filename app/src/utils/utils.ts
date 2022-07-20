@@ -9,7 +9,7 @@ import Query from 'devextreme/data/query';
 import classData from 'data/clean.json';
 
 function daytoInt(day: string) {
-  return ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"].indexOf(day);
+  return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].indexOf(day);
 }
 
 /**
