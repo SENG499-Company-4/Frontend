@@ -22,6 +22,7 @@ function Survey() {
     if (courseData) {
       console.log('Got data!', courseData);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseData, courseLoading, courseError]);
 
   return (
@@ -30,7 +31,6 @@ function Survey() {
         Professor Survey Form
       </Typography>
       <SurveyForm formData={courseCodes} />
-      {/* TODO: Change to a proper class list retrieval */}
     </Box>
   );
 }

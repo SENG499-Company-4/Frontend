@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import { CourseSection } from 'types/api.types';
@@ -7,8 +7,7 @@ import { Grid, TextField } from '@mui/material';
 interface TimetableFilterProps {
   courseData: CourseSection[];
   disabled: boolean;
-  onSearchChange: (search: string) => void;
-  onStreamChange: (stream: string) => void;
+  onFilterChange: (courseData: CourseSection[]) => void;
 }
 
 interface StreamItem {
@@ -43,6 +42,12 @@ export function TimetableFilter(props: TimetableFilterProps): React.ReactElement
     }
   ];
 
+  useEffect(() => {
+    // Send back to schedule component when filter changes
+    props.onFilterChange(filteredData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filteredData]);
+
   const onStreamYearChange = (streamYear: string) => {
     setStreamYear(streamYear);
     if (streamYear === '0') {
@@ -65,7 +70,8 @@ export function TimetableFilter(props: TimetableFilterProps): React.ReactElement
   function filter(data: CourseSection[], search: string) {
     console.log('Filtering data with search query: ', search);
     var newData: CourseSection[] = [];
-    var teacherId = 0;
+    // TODO: Filter by teacher
+    // var teacherId = 0;
     // for (const teacher of calendarTeacherData) {
     //   if (teacher?.teacherName?.toLowerCase().includes(search.toLowerCase())) {
     //     teacherId = teacher?.id;
@@ -138,7 +144,7 @@ export function TimetableFilter(props: TimetableFilterProps): React.ReactElement
           InputProps={{
             startAdornment: <SearchIcon sx={{ marginRight: '5px' }} />
           }}
-          style={{ width: '400px' }}
+          style={{ width: '300px' }}
         ></TextField>
       </Grid>
     </Grid>

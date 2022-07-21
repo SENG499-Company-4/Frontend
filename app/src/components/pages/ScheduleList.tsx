@@ -4,7 +4,7 @@ import { Box, Button, Chip, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { LoadingContext } from 'contexts/LoadingContext';
-import { Day, MeetingTime, Schedule, Term, User } from 'types/api.types';
+import { CourseSection, Day, MeetingTime, Schedule, Term, User } from 'types/api.types';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { SemesterSelector } from 'components/molecules/SemesterSelector';
 import { useLazyQuery } from '@apollo/client';
@@ -62,7 +62,8 @@ function ScheduleList() {
   useEffect(() => {
     if (scheduleLoaded && schedule?.courses) {
       const tableRows: ITableRow[] = [];
-      for (const course of schedule.courses) {
+      for (const scheduleCourse of schedule.courses) {
+        const course: CourseSection = scheduleCourse;
         console.log('Parsing course: ', course);
         const row: ITableRow = {
           courseName: course.CourseID.subject + ' ' + course.CourseID.code,

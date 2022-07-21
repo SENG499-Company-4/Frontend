@@ -9,7 +9,6 @@ import { CourseSection, MeetingTime, User } from 'types/api.types';
  */
 
 export function parseCalendarTeacher(data: CourseSection[]): ICalendarItem_Teacher[] {
-  console.log('DATA for parseCalendarTeacher: ', data);
   const calendarTeacherData: ICalendarItem_Teacher[] = [];
   data.forEach((course: CourseSection) => {
     if (course.professors && course.professors.length > 0) {
@@ -32,7 +31,6 @@ export function parseCalendarCourse(
   courseId?: string,
   professorId?: number
 ): ICalendarCourseItem[] {
-  console.log('DATA for parseCalendarCourse: ', data);
   const calendarCourseData: ICalendarCourseItem[] = [];
   let courseProp = courseId ? courseId : undefined;
   let professorProp = professorId ? professorId : undefined;
@@ -84,7 +82,6 @@ export function parseCalendarCourse(
 }
 
 export function parseScheduleListItems(data: CourseSection[]): IScheduleListItem[] {
-  console.log('DATA for parseScheduleListItems: ', data);
   const scheduleListItemData: IScheduleListItem[] = [];
   data.forEach((course: CourseSection) => {
     const daysOfWeek: string[] = [];
@@ -112,8 +109,6 @@ export function parseScheduleListItems(data: CourseSection[]): IScheduleListItem
 
 // Given a data source and a professor username, return courses that professor is teaching or has taught.
 export function getCoursesForProfessor(id?: number, data?: CourseSection[]): CourseSection[] {
-  console.log('DATA for getCoursesForProfessor: ', data);
-  console.log('ID for getCoursesForProfessor: ', id);
   if (!id || !data) {
     return [];
   }
