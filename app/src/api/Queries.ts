@@ -99,10 +99,11 @@ export const GET_SURVEY = gql`
  * Fetch a list of courses for a given term and year
  */
 export const GET_COURSES = gql`
-  query Courses($term: Term, $year: Int) {
-    courses(term: $term, year: $year) {
+  query Courses {
+    courses {
       CourseID {
         subject
+        title
         code
         term
         year
@@ -118,6 +119,7 @@ export const GET_COURSES = gql`
         preferences {
           id {
             subject
+            title
             code
             term
             year
@@ -133,6 +135,7 @@ export const GET_COURSES = gql`
         startTime
         endTime
       }
+      sectionNumber
     }
   }
 `;
