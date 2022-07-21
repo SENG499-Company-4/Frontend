@@ -39,7 +39,7 @@ function ScheduleGenerate() {
   const errorContext = useContext(ErrorContext);
 
   const [term, setTerm] = useState<string>(ITermSelection.All);
-  const [year, setYear] = useState<number>(2022);
+  const [year, setYear] = useState<number>(2021);
   const [classes, setClasses] = useState<string[]>([]);
   const [riskAck, setRiskAck] = useState<boolean>(false);
   const [successDialogOpen, setSuccessDialogOpen] = useState<boolean>(false);
@@ -214,6 +214,12 @@ function ScheduleGenerate() {
               <FormControl>
                 <FormLabel sx={{ marginTop: '10px' }}>Select a year:</FormLabel>
                 <RadioGroup row aria-labelledby="Year">
+                  <FormControlLabel
+                    onChange={() => setYear(2021)}
+                    checked={year === 2021}
+                    control={<Radio />}
+                    label="2021"
+                  />
                   <FormControlLabel
                     onChange={() => setYear(2022)}
                     checked={year === 2022}
