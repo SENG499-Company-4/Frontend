@@ -1,13 +1,13 @@
 import React, { ReactNode, useContext, useEffect, useState } from 'react';
 import { GET_SCHEDULE } from 'api/Queries';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { CourseSection, Day, MeetingTime, Schedule, Term, User } from 'types/api.types';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { SemesterSelector } from 'components/molecules/SemesterSelector';
 import { useLazyQuery } from '@apollo/client';
+import { ScheduleControl } from 'components/organisms/ScheduleControl';
 
 interface ITableRow {
   courseName: string;
@@ -100,6 +100,10 @@ function ScheduleList() {
     });
   }
 
+  function editSchedule() {
+    navigate('/schedule/timetable');
+  }
+
   const columns: GridColDef[] = [
     { field: 'courseName', headerName: 'Course Title', width: 130 },
     { field: 'startDate', headerName: 'Start Date', width: 140 },
@@ -131,24 +135,32 @@ function ScheduleList() {
     }
   ];
 
+  function onCourseDataChange(courseData: CourseSection[]) {
+    console.log('Course data changed!: ', courseData);
+  }
+
   return (
-    <Box sx={{ width: '60%', margin: 'auto' }}>
+    <Box sx={{ width: '70%', margin: 'auto' }}>
       <Typography marginTop={5} marginBottom={2} variant="h4" sx={{ textAlign: 'center' }}>
         Schedule List
       </Typography>
-      <Box style={{ marginBottom: '15px', marginTop: '30px' }}>
-        <SemesterSelector
-          year={undefined}
-          term={undefined}
-          onTermChange={(term: Term) => {
-            console.log('TERM CHANGED: ', term);
-            setTerm(term);
-          }}
-          onYearChange={(year: Date) => {
-            console.log('YEAR CHANGED: ', year);
-            setYear(year);
-          }}
-        />
+      <Box display="flex" justifyContent="space-between" margin="5px">
+        <Grid container display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
+          <Grid item>
+            <ScheduleControl courseDataChanged={onCourseDataChange} filter />
+          </Grid>
+          <Grid item alignContent={'flex-end'}>
+            <Button
+              sx={{ height: '56px', marginTop: '62px' }}
+              variant="contained"
+              size="large"
+              color="primary"
+              onClick={editSchedule}
+            >
+              Edit Schedule
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
       <DataGrid
         getRowId={(row: ITableRow) => {

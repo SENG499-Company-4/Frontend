@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
@@ -45,8 +45,8 @@ function ScheduleTimetable() {
   return (
     <>
       <Box display="flex" justifyContent="space-between" margin="5px">
-        <Grid container display={'flex'} flexDirection={'column'}>
-          <ScheduleControl courseDataChanged={onCourseDataChange} />
+        <Grid container display={'flex'} flexDirection={'column'} paddingLeft={'15px'}>
+          <ScheduleControl courseDataChanged={onCourseDataChange} filter save />
           <Grid item marginLeft={'20px'} marginBottom={'10px'}>
             {professorId && <Chip color="primary" label={'Filtered by Professor ID: ' + professorId} />}
             {courseId && <Chip color="primary" label={'Filtered by Course: ' + courseId} />}
@@ -68,7 +68,7 @@ function ScheduleTimetable() {
           {
             type: 'week',
             name: 'Week',
-            maxAppointmentsPerCell: 2
+            maxAppointmentsPerCell: 1
           }
         ]}
         defaultCurrentView="week"
