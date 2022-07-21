@@ -13,7 +13,7 @@ interface SemesterSelectorProps {
 
 export function SemesterSelector(props: SemesterSelectorProps): React.ReactElement {
   const termOptions = [Term.Fall, Term.Summer, Term.Spring];
-  const [term, setTerm] = useState<Term | undefined>(props.term || undefined);
+  const [term, setTerm] = useState<Term | undefined>((props.term as Term) || undefined);
   const [year, setYear] = useState<Date | undefined>(props.year || undefined);
 
   return (
@@ -28,7 +28,7 @@ export function SemesterSelector(props: SemesterSelectorProps): React.ReactEleme
             setTerm(e.target.value as Term);
             props.onTermChange(e.target.value as Term);
           }}
-          style={{ width: '300px' }}
+          style={{ width: '200px' }}
         >
           {termOptions.map((termItem: Term) => (
             <MenuItem key={termItem} value={termItem}>
@@ -50,7 +50,7 @@ export function SemesterSelector(props: SemesterSelectorProps): React.ReactEleme
               setYear(e);
               props.onYearChange(e as Date);
             }}
-            renderInput={(params) => <TextField {...params} helperText={undefined} />}
+            renderInput={(params) => <TextField {...params} helperText={undefined} sx={{ width: '200px' }} />}
           />
         </LocalizationProvider>
       </Grid>
