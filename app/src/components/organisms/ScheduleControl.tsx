@@ -23,6 +23,8 @@ export function getCurrentTerm(): Term {
 
 interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
+  filter?: boolean;
+  save?: boolean;
 }
 
 export function ScheduleControl(props: ScheduleControlProps) {
@@ -43,7 +45,6 @@ export function ScheduleControl(props: ScheduleControlProps) {
   }
 
   useEffect(() => {
-    console.log('year / term updated.', year, term);
     if (term && year) {
       fetchSchedule();
     }
@@ -80,7 +81,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
   }, [scheduleLoading, scheduleData, scheduleError]);
 
   return (
-    <Grid item paddingLeft={'15px'}>
+    <Grid item>
       <Grid container display={'flex'} flexDirection={'row'} marginTop={'5px'} marginBottom={'15px'} spacing={2}>
         <Grid item>
           <Stack>
@@ -99,26 +100,52 @@ export function ScheduleControl(props: ScheduleControlProps) {
             />
           </Stack>
         </Grid>
-        <Divider orientation="vertical" flexItem sx={{ marginLeft: '20px', marginRight: '5px', marginTop: '20px' }} />
-        <Grid item>
-          <Stack>
-            <Grid item marginBottom={'10px'}>
-              <Typography variant="h6">2. Filter</Typography>
+        {props.filter && (
+          <>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ marginLeft: '20px', marginRight: '5px', marginTop: '20px' }}
+            />
+            <Grid item>
+              <Stack>
+                <Grid item marginBottom={'10px'}>
+                  <Typography variant="h6">2. Filter</Typography>
+                </Grid>
+                <TimetableFilter
+                  courseData={TEMP_COURSE_DATA}
+                  disabled={!year || !term}
+                  onFilterChange={onFilterChange}
+                />
+              </Stack>
             </Grid>
-            <TimetableFilter courseData={TEMP_COURSE_DATA} disabled={!year || !term} onFilterChange={onFilterChange} />
-          </Stack>
-        </Grid>
-        <Divider orientation="vertical" flexItem sx={{ marginLeft: '20px', marginRight: '5px', marginTop: '20px' }} />
-        <Grid item>
-          <Stack>
-            <Grid item marginBottom={'10px'}>
-              <Typography variant="h6">3. Save</Typography>
+          </>
+        )}
+        {props.save && (
+          <>
+            <Divider
+              orientation="vertical"
+              flexItem
+              sx={{ marginLeft: '20px', marginRight: '5px', marginTop: '20px' }}
+            />
+            <Grid item>
+              <Stack>
+                <Grid item marginBottom={'10px'}>
+                  <Typography variant="h6">3. Save</Typography>
+                </Grid>
+                <Button
+                  sx={{ height: '56px' }}
+                  variant="contained"
+                  size="large"
+                  color="secondary"
+                  onClick={exportState}
+                >
+                  Save Schedule
+                </Button>
+              </Stack>
             </Grid>
-            <Button sx={{ height: '56px' }} variant="contained" size="large" color="secondary" onClick={exportState}>
-              Save Schedule
-            </Button>
-          </Stack>
-        </Grid>
+          </>
+        )}
       </Grid>
     </Grid>
   );

@@ -209,7 +209,15 @@ function ProfessorProfile() {
                 {currentlyTeaching.length > 0 ? (
                   <Grid container spacing={2}>
                     {currentlyTeaching.map((course: ICourse) => (
-                      <Grid item marginY={1} xs={12} sm={6} md={12} lg={6}>
+                      <Grid
+                        item
+                        key={course.CourseID.subject + course.CourseID.code}
+                        marginY={1}
+                        xs={12}
+                        sm={6}
+                        md={12}
+                        lg={6}
+                      >
                         <ButtonBase
                           onClick={() => {
                             navigate('/schedule/timetable', {

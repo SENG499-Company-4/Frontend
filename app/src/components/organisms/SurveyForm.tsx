@@ -238,7 +238,7 @@ function SurveyForm(props: { formData: string[] }) {
         >
           {Object.keys(courseAbilities).map((field) => {
             return (
-              <Box>
+              <Box key={field}>
                 <SurveyClassQuestion
                   additionalQualifications={false}
                   key={field}

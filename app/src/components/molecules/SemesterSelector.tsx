@@ -46,8 +46,7 @@ export function SemesterSelector(props: SemesterSelectorProps): React.ReactEleme
             minDate={new Date(2020, 0, 1)}
             maxDate={new Date(2024, 0, 1)}
             onChange={(e) => {
-              console.log('e: ', e);
-              setYear(e);
+              setYear(e as Date);
               props.onYearChange(e as Date);
             }}
             renderInput={(params) => <TextField {...params} helperText={undefined} sx={{ width: '200px' }} />}

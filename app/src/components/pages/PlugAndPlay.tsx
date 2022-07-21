@@ -106,7 +106,11 @@ function PlugAndPlay() {
           </DialogContentText>
           <Divider />
           {getChanges().map((string) => {
-            return <DialogContentText id="alert-dialog-slide-description">- {string}</DialogContentText>;
+            return (
+              <DialogContentText key={string} id="alert-dialog-slide-description">
+                - {string}
+              </DialogContentText>
+            );
           })}
           <Divider />
           <DialogContentText id="alert-dialog-slide-description" marginTop={'10px'}>
