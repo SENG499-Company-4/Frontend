@@ -5,7 +5,7 @@ export interface ICalendarCourseItem {
   teacherId: number;
   startDate: Date;
   endDate: Date;
-  recurrenceRule: string;
+  lastDay: Date;
 }
 
 export interface IScheduleListItem {

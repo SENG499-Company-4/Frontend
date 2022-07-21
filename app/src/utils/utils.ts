@@ -3,11 +3,6 @@ import colors from 'data/CourseColor.json';
 import { ability, willing } from 'constants/surveyForm.constants';
 import { CourseSection, MeetingTime, User } from 'types/api.types';
 
-/**
- * Grab data from python scraper and format it for DevExtreme Scheduler
- *  Reference: https://js.devexpress.com/Demos/WidgetsGallery/Demo/Scheduler/CustomTemplates/React/Light/
- */
-
 export function parseCalendarTeacher(data: CourseSection[]): ICalendarItem_Teacher[] {
   const calendarTeacherData: ICalendarItem_Teacher[] = [];
   data.forEach((course: CourseSection) => {
@@ -26,6 +21,10 @@ export function parseCalendarTeacher(data: CourseSection[]): ICalendarItem_Teach
   return calendarTeacherData;
 }
 
+function daytoInt(day: string) {
+  return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].indexOf(day);
+}
+
 export function parseCalendarCourse(
   data: CourseSection[],
   courseId?: string,
@@ -38,8 +37,19 @@ export function parseCalendarCourse(
   data.forEach((course: CourseSection) => {
     course.meetingTimes.forEach((meetingTime: MeetingTime) => {
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
+      const dayshift = daytoInt(meetingTime.day);
+      console.log('Start date: ', course.startDate);
+      console.log('End date: ', course.endDate);
       const courseStartDate = new Date(course.startDate);
       const courseEndDate = new Date(course.startDate);
+
+      if (courseStartDate.getDay() > dayshift) {
+        courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseStartDate.getDay() + 1);
+        courseEndDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseEndDate.getDay() + 1);
+      } else {
+        courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift - courseStartDate.getDay());
+        courseEndDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift - courseEndDate.getDay());
+      }
 
       courseStartDate.setHours(parseInt(meetingTime.startTime.split(':')[0]));
       courseStartDate.setMinutes(parseInt(meetingTime.startTime.split(':')[1]));
@@ -47,17 +57,19 @@ export function parseCalendarCourse(
       courseEndDate.setHours(parseInt(meetingTime.endTime.split(':')[0]));
       courseEndDate.setMinutes(parseInt(meetingTime.endTime.split(':')[1]));
 
+      console.log(courseStartDate);
+      const lastDay = new Date(course.endDate);
+
+      if (lastDay.getDay() >= dayshift) {
+        lastDay.setDate(parseInt(course.endDate.split('-')[2]) - (lastDay.getDay() - dayshift));
+      }
+
       const calendarItem: ICalendarCourseItem = {
         courseId: course.CourseID.subject + course.CourseID.code,
         teacherId: course?.professors[0].id,
         startDate: courseStartDate,
         endDate: courseEndDate,
-
-        // *****important: only repeat the current day. For exmaple, csc105 should repeat on Tus, Wed, Fri.
-        // If you double click that course shown on Tuesday, and choose 'Edit series', it will show repate on Tus.
-        // And if you click same course on Wednesday, it will show repeat on Wed.
-        recurrenceRule:
-          'FREQ=WEEKLY;BYDAY=' + meetingTime.day.slice(0, 2) + ';UNTIL=' + course.endDate.replaceAll('-', '')
+        lastDay: lastDay
       };
 
       // Conditional return rules based on props

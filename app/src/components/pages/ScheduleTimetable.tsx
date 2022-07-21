@@ -7,12 +7,13 @@ import { Box, Grid } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
 import { CourseSection } from 'types/api.types';
+import 'components/styles/scheduler.css';
 
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
 import { ICalendarCourseItem, ICalendarItem_Teacher } from 'interfaces/timetable.interfaces';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
-const currentDate = new Date();
+const currentDate = new Date(2021, 12, 10);
 
 interface IStateProps {
   courseId?: string;
@@ -43,8 +44,66 @@ function ScheduleTimetable() {
     setCalendarTeacherData(parseCalendarTeacher(courseData));
   }
 
+  useEffect(() => {
+    console.log('Calendar course data: ', calendarCourseData);
+    console.log('Calendar teacher data: ', calendarTeacherData);
+  }, [calendarCourseData, calendarTeacherData]);
+
   function onLoadingChange(loading: boolean) {
     setScheduleLoading(loading);
+  }
+
+  function onAppointmentFormOpening(e: any) {
+    const form = e.form;
+    form.option('items', [
+      {
+        label: { text: 'Course Name' },
+        editorType: 'dxTextBox',
+        dataField: 'courseId'
+      },
+      {
+        label: { text: 'Professor' },
+        editorType: 'dxTagBox',
+        dataField: 'teacherId',
+        editorOptions: { items: calendarTeacherData, displayExpr: 'teacherName', valueExpr: 'id' }
+      },
+      {
+        label: { text: 'Course Start Time' },
+        dataField: 'startDate',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'time'
+        }
+      },
+      {
+        label: { text: 'Course End Time' },
+        dataField: 'endDate',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'time'
+        }
+      },
+      {
+        label: { text: 'Course Start Date' },
+        dataField: 'startDate',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'date'
+        }
+      },
+      {
+        label: { text: 'Course End Date' },
+        dataField: 'lastDay',
+        editorType: 'dxDateBox',
+        editorOptions: {
+          width: '100%',
+          type: 'date'
+        }
+      }
+    ]);
   }
 
   return (
@@ -84,7 +143,7 @@ function ScheduleTimetable() {
         width={'100%'}
         appointmentComponent={Appointment}
         showAllDayPanel={false}
-        editingAppointment={false}
+        onAppointmentFormOpening={onAppointmentFormOpening}
       >
         <Editing allowAdding={false} allowDragging={true} />
         <Resource
