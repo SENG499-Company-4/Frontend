@@ -7,7 +7,6 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { LoadingContext } from 'contexts/LoadingContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { CourseSection, Term } from 'types/api.types';
-import { TEMP_COURSE_DATA } from 'constants/timetable.constants';
 
 export function getCurrentTerm(): Term {
   const date = new Date();
@@ -23,13 +22,14 @@ export function getCurrentTerm(): Term {
 
 interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
+  loadingCallback: (loading: boolean) => void;
   filter?: boolean;
   save?: boolean;
 }
 
 export function ScheduleControl(props: ScheduleControlProps) {
-  const [term, setTerm] = useState<Term | undefined>(getCurrentTerm());
-  const [year, setYear] = useState<Date | undefined>(new Date());
+  const [term, setTerm] = useState<Term | undefined>(Term.Fall); // TODO: UPDATE THIS
+  const [year, setYear] = useState<Date | undefined>(new Date(2021, 0, 1)); // TODO: UPDATE THIS
 
   const [calendarData, setCalendarData] = useState<CourseSection[]>([]);
 
@@ -66,12 +66,15 @@ export function ScheduleControl(props: ScheduleControlProps) {
 
   useEffect(() => {
     loadingContext.setLoading(scheduleLoading);
+    props.loadingCallback(scheduleLoading);
     if (scheduleData) {
       console.log('Got information from GQL: ', scheduleData);
       if (scheduleData.schedule) {
         setCalendarData(scheduleData.schedule.courses);
+        props.courseDataChanged(scheduleData.schedule.courses);
       } else {
         setCalendarData([]);
+        props.courseDataChanged([]);
       }
     }
     if (scheduleError) {
@@ -112,11 +115,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
                 <Grid item marginBottom={'10px'}>
                   <Typography variant="h6">2. Filter</Typography>
                 </Grid>
-                <TimetableFilter
-                  courseData={TEMP_COURSE_DATA}
-                  disabled={!year || !term}
-                  onFilterChange={onFilterChange}
-                />
+                <TimetableFilter courseData={calendarData} disabled={!year || !term} onFilterChange={onFilterChange} />
               </Stack>
             </Grid>
           </>

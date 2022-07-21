@@ -24,6 +24,7 @@ function ScheduleTimetable() {
   const state: IStateProps = location.state as IStateProps;
   const courseId = state?.courseId ? state.courseId : undefined;
   const professorId = state?.professorId ? state.professorId : undefined;
+  const [scheduleLoading, setScheduleLoading] = useState(false);
 
   const [calendarTeacherData, setCalendarTeacherData] = useState<ICalendarItem_Teacher[]>([]);
   const [calendarCourseData, setCalendarCourseData] = useState<ICalendarCourseItem[]>([]);
@@ -42,11 +43,15 @@ function ScheduleTimetable() {
     setCalendarTeacherData(parseCalendarTeacher(courseData));
   }
 
+  function onLoadingChange(loading: boolean) {
+    setScheduleLoading(loading);
+  }
+
   return (
     <>
       <Box display="flex" justifyContent="space-between" margin="5px">
         <Grid container display={'flex'} flexDirection={'column'} paddingLeft={'15px'}>
-          <ScheduleControl courseDataChanged={onCourseDataChange} filter save />
+          <ScheduleControl courseDataChanged={onCourseDataChange} filter save loadingCallback={onLoadingChange} />
           <Grid item marginLeft={'20px'} marginBottom={'10px'}>
             {professorId && <Chip color="primary" label={'Filtered by Professor ID: ' + professorId} />}
             {courseId && <Chip color="primary" label={'Filtered by Course: ' + courseId} />}

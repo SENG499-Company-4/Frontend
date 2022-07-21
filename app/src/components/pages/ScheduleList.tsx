@@ -1,88 +1,27 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { GET_SCHEDULE } from 'api/Queries';
+import React, { ReactNode, useState } from 'react';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import { LoadingContext } from 'contexts/LoadingContext';
-import { CourseSection, Day, MeetingTime, Schedule, Term, User } from 'types/api.types';
-import { ErrorContext } from 'contexts/ErrorContext';
-import { useLazyQuery } from '@apollo/client';
+import { CourseSection, Day, MeetingTime, User } from 'types/api.types';
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
-
-interface ITableRow {
+interface TableRow {
   courseName: string;
   capacity: number;
   professors: User[];
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
+  meetingDays: MeetingTime[];
   meetingTimes: MeetingTime[];
 }
 
 function ScheduleList() {
-  const [schedule, setSchedule] = useState<Schedule>();
-  const [scheduleLoaded, setScheduleLoaded] = useState<boolean>(false);
-  const [rows, setRows] = useState<ITableRow[]>([]);
-  const loadingContext = useContext(LoadingContext);
-  const errorContext = useContext(ErrorContext);
+  const [rows, setRows] = useState<TableRow[]>([]);
+  const [scheduleLoading, setScheduleLoading] = useState(false);
   const navigate = useNavigate();
 
-  const [term, setTerm] = useState<Term | null>(null);
-  const [year, setYear] = useState<Date | null>(null);
-
-  useEffect(() => {
-    if (term && year) {
-      fetchSchedule();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [year, term]);
-
-  const [fetchSchedule, { loading: scheduleLoading, error: scheduleError, data: scheduleData }] = useLazyQuery(
-    GET_SCHEDULE,
-    {
-      variables: {
-        year: year?.getFullYear(),
-        term: term
-      }
-    }
-  );
-
-  useEffect(() => {
-    loadingContext.setLoading(scheduleLoading);
-    if (scheduleData) {
-      console.log('Got information from GQL: ', scheduleData);
-      setSchedule(scheduleData.schedule);
-      setScheduleLoaded(true);
-    }
-    if (scheduleError) {
-      errorContext.setErrorDialog(scheduleError);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduleLoading, scheduleData, scheduleError]);
-
-  useEffect(() => {
-    if (scheduleLoaded && schedule?.courses) {
-      const tableRows: ITableRow[] = [];
-      for (const scheduleCourse of schedule.courses) {
-        const course: CourseSection = scheduleCourse;
-        const row: ITableRow = {
-          courseName: course.CourseID.subject + ' ' + course.CourseID.code,
-          capacity: course.capacity,
-          professors: course.professors ? course.professors : [],
-          startDate: course.startDate,
-          endDate: course.endDate,
-          meetingTimes: course.meetingTimes
-        };
-        tableRows.push(row);
-      }
-      setRows(tableRows);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schedule, scheduleLoaded]);
-
-  function parseDaysOfWeek(daysOfWeek: any): ReactNode {
+  function parseDaysOfWeek(daysOfWeek: MeetingTime[]): ReactNode {
     const daysAbbreviations = ['M', 'T', 'W', 'R', 'F'];
-
-    const meetingDays = daysOfWeek.value.map((meetingTime: MeetingTime) => {
+    const meetingDays = daysOfWeek.map((meetingTime: MeetingTime) => {
       if (meetingTime.day === Day.Thursday) {
         return 'R';
       } else {
@@ -98,21 +37,72 @@ function ScheduleList() {
     });
   }
 
+  function parseMeetingTimes(meetingTimes: MeetingTime[]): ReactNode {
+    return meetingTimes.map((meetingTime: MeetingTime, index: number) => {
+      const startTime = new Date(meetingTime.startTime).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: false
+      });
+      const endTime = new Date(meetingTime.endTime).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: false
+      });
+      if (index === 0) {
+        return <Chip sx={{ marginX: '2px' }} key={index} label={`${startTime} - ${endTime}`} />;
+      }
+    });
+  }
+
   function editSchedule() {
     navigate('/schedule/timetable');
   }
 
   const columns: GridColDef[] = [
-    { field: 'courseName', headerName: 'Course Title', width: 130 },
-    { field: 'startDate', headerName: 'Start Date', width: 140 },
-    { field: 'endDate', headerName: 'End Date', width: 140 },
+    {
+      field: 'courseName',
+      headerName: 'Course Title',
+      width: 130,
+      renderCell: (params) => {
+        return (
+          <Typography variant="body1" ml={1}>
+            {params.value}
+          </Typography>
+        );
+      }
+    },
+    {
+      field: 'startDate',
+      headerName: 'Start Date',
+      width: 140,
+      renderCell: (params) => {
+        return params.value.split('T')[0];
+      }
+    },
+    {
+      field: 'endDate',
+      headerName: 'End Date',
+      width: 140,
+      renderCell: (params) => {
+        return params.value.split('T')[0];
+      }
+    },
     { field: 'capacity', headerName: 'Capacity', width: 80 },
     {
-      field: 'meetingTimes',
+      field: 'meetingDays',
       headerName: 'Days of Week',
       width: 240,
       renderCell: (params) => {
-        return parseDaysOfWeek(params);
+        return parseDaysOfWeek(params.value as MeetingTime[]);
+      }
+    },
+    {
+      field: 'meetingTimes',
+      headerName: 'Meeting Time',
+      width: 160,
+      renderCell: (params) => {
+        return parseMeetingTimes(params.value as MeetingTime[]);
       }
     },
     {
@@ -135,6 +125,26 @@ function ScheduleList() {
 
   function onCourseDataChange(courseData: CourseSection[]) {
     console.log('Course data changed!: ', courseData);
+    if (courseData) {
+      const tableRows: TableRow[] = [];
+      for (const course of courseData) {
+        const row: TableRow = {
+          courseName: course.CourseID.subject + ' ' + course.CourseID.code,
+          capacity: course.capacity,
+          professors: course.professors ? course.professors : [],
+          startDate: course.startDate,
+          endDate: course.endDate,
+          meetingDays: course.meetingTimes,
+          meetingTimes: course.meetingTimes
+        };
+        tableRows.push(row);
+      }
+      setRows(tableRows);
+    }
+  }
+
+  function onLoadingChange(loading: boolean) {
+    setScheduleLoading(loading);
   }
 
   return (
@@ -145,7 +155,7 @@ function ScheduleList() {
       <Box display="flex" justifyContent="space-between" margin="5px">
         <Grid container display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
           <Grid item>
-            <ScheduleControl courseDataChanged={onCourseDataChange} filter />
+            <ScheduleControl courseDataChanged={onCourseDataChange} loadingCallback={onLoadingChange} filter />
           </Grid>
           <Grid item alignContent={'flex-end'}>
             <Button
@@ -161,11 +171,24 @@ function ScheduleList() {
         </Grid>
       </Box>
       <DataGrid
-        getRowId={(row: ITableRow) => {
+        getRowId={(row: TableRow) => {
           return row.courseName + row.capacity + row.startDate + row.endDate;
         }}
+        components={{
+          NoRowsOverlay: () => (
+            <Box display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+              <Typography variant="h6" mt={2}>
+                <strong> No records matching your searh settings.</strong>
+              </Typography>
+              <Typography variant="body1" mb={2}>
+                Try changing your search settings or the selected term.
+              </Typography>
+            </Box>
+          )
+        }}
         loading={scheduleLoading}
-        autoHeight
+        disableSelectionOnClick
+        autoHeight={true}
         rows={rows}
         columns={columns}
         rowsPerPageOptions={[5]}
