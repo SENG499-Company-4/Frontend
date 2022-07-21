@@ -1,5 +1,10 @@
-import { MeetingTime, Term, User } from 'types/api.types';
+import { Day, MeetingTime, Term, User } from 'types/api.types';
 
+export interface ICalendarMeetingTime {
+  Day: Day;
+  StartTime: string;
+  EndTime: string;
+}
 export interface ICalendarCourseItem {
   courseId: string;
   teacherId: number;
@@ -7,7 +12,6 @@ export interface ICalendarCourseItem {
   endDate: Date;
   lastDay: Date;
   capacity: number; //TODO replace with section number later
-  meetingTime: MeetingTime;
   term: Term;
 }
 

@@ -2,7 +2,6 @@ import {
   ICalendarCourseItem,
   ICalendarItem_Teacher,
   IHourMinute,
-  IProfessorCourse,
   IProfessorIndex,
   IScheduleListItem
 } from 'interfaces/timetable.interfaces';
@@ -42,42 +41,82 @@ export function parseCalendarCourse(
   let professorProp = professorId ? professorId : undefined;
 
   data.forEach((course: CourseSection) => {
+    console.log('==========================================================');
     course.meetingTimes.forEach((meetingTime: MeetingTime) => {
+      console.log('############################################################');
+
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
       const dayshift = daytoInt(meetingTime.day);
+      console.log('dayshift: ', dayshift);
+
       const courseStartDate = new Date(course.startDate);
-      const courseEndDate = new Date(course.startDate);
+      console.log('courseStartDate init: ', courseStartDate);
+
+      const courseEndDate = new Date(course.endDate);
+      console.log('courseEndDate init: ', courseEndDate);
 
       if (courseStartDate.getDay() > dayshift) {
+        console.log('courseStartDate.getDay() > dayshift: ', courseStartDate.getDay());
         courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseStartDate.getDay() + 1);
-        courseEndDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseEndDate.getDay() + 1);
+        courseEndDate.setDate(parseInt(course.endDate.split('-')[2]) + dayshift + courseEndDate.getDay() + 1);
+        console.log('if block | courseStartDate: ', courseStartDate);
+        console.log('if block | courseEndDate: ', courseEndDate);
       } else {
-        courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift - courseStartDate.getDay());
-        courseEndDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift - courseEndDate.getDay());
+        console.log('courseStartDate.getDay() <= dayshift', courseStartDate.getDay());
+        courseStartDate.setDate(
+          parseInt(course.startDate.split('-')[2].split('T')[0]) + dayshift - courseStartDate.getDay()
+        );
+        courseEndDate.setDate(parseInt(course.endDate.split('-')[2].split('T')[0]) + dayshift - courseEndDate.getDay());
+        console.log('else block | courseEndDate: ', courseEndDate);
+        console.log('else block | courseStartDate: ', courseStartDate);
       }
 
-      courseStartDate.setHours(parseInt(meetingTime.startTime.split(':')[0]));
-      courseStartDate.setMinutes(parseInt(meetingTime.startTime.split(':')[1]));
+      const startHour = meetingTime.startTime.substring(0, 2);
+      const startMinute = meetingTime.startTime.substring(2, 4);
+      const endHour = meetingTime.endTime.substring(0, 2);
+      const endMinute = meetingTime.endTime.substring(2, 4);
 
-      courseEndDate.setHours(parseInt(meetingTime.endTime.split(':')[0]));
-      courseEndDate.setMinutes(parseInt(meetingTime.endTime.split(':')[1]));
+      courseStartDate.setHours(parseInt(startHour));
+      courseStartDate.setMinutes(parseInt(startMinute));
+      console.log('courseStartDate updated: ', courseStartDate);
+
+      courseEndDate.setHours(parseInt(endHour));
+      courseEndDate.setMinutes(parseInt(endMinute));
+      console.log('courseEndDate updated: ', courseEndDate);
 
       // console.log(courseStartDate);
       const lastDay = new Date(course.endDate);
-
+      console.log('set lastDay: ', lastDay);
       if (lastDay.getDay() >= dayshift) {
-        lastDay.setDate(parseInt(course.endDate.split('-')[2]) - (lastDay.getDay() - dayshift));
+        lastDay.setDate(parseInt(course.endDate.split('-')[2].split('T')[0]) - (lastDay.getDay() - dayshift));
+        console.log('updated lastDay to: ', lastDay);
       }
 
+      // console.log('Attempting to get appointment meeting times...');
+      // for (const meetingTime of course.meetingTimes) {
+      //   console.log('meeting time: ', meetingTime);
+      //   const startHour = meetingTime.startTime.substring(0, 2);
+      //   const startMinute = meetingTime.startTime.substring(2, 4);
+      //   const endHour = meetingTime.endTime.substring(0, 2);
+      //   const endMinute = meetingTime.endTime.substring(2, 4);
+      //   const appointmentMeetingTime: ICalendarMeetingTime = {
+      //     StartTime: startHour + ':' + startMinute + ':00',
+      //     EndTime: endHour + ':' + endMinute + ':00',
+      //     Day: meetingTime.day
+      //   };
+      //   appointmentMeetingTimes.push(appointmentMeetingTime);
+      // }
+
+      console.log('returning course start/end date: ', courseStartDate, courseEndDate);
+
       const calendarItem: ICalendarCourseItem = {
-        courseId: course.CourseID.subject + course.CourseID.code,
-        teacherId: course?.professors[0].id,
-        startDate: courseStartDate,
-        endDate: courseEndDate,
-        lastDay: lastDay,
-        capacity: course.capacity,
-        term: course.CourseID.term,
-        meetingTime: course.meetingTimes[0]
+        courseId: course.CourseID.subject + course.CourseID.code, // GOOD
+        teacherId: course?.professors[0].id, // GOOD
+        startDate: courseStartDate, // Should be: date obj based on date string starting at first start time
+        endDate: courseEndDate, // Should be: date obj based on date string ending at last end time
+        lastDay: lastDay, // Might need some work
+        capacity: course.capacity, // GOOD
+        term: course.CourseID.term // GOOD
       };
 
       // Conditional return rules based on props
@@ -96,8 +135,18 @@ export function parseCalendarCourse(
       } else {
         calendarCourseData.push(calendarItem);
       }
+      console.log('############################################################');
     });
+    console.log('==========================================================');
   });
+  console.log('$$$$$$$$$$$$$$$$$$$$$');
+  console.log('$$$$$$$$$$$$$$$$$$$$$');
+  console.log('$$$$$$$$$$$$$$$$$$$$$');
+  console.log('CALENDAR COURSE DATA: ', calendarCourseData);
+  console.log('$$$$$$$$$$$$$$$$$$$$$');
+  console.log('$$$$$$$$$$$$$$$$$$$$$');
+  console.log('$$$$$$$$$$$$$$$$$$$$$');
+
   return calendarCourseData;
 }
 
