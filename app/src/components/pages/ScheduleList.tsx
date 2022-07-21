@@ -64,7 +64,6 @@ function ScheduleList() {
       const tableRows: ITableRow[] = [];
       for (const scheduleCourse of schedule.courses) {
         const course: CourseSection = scheduleCourse;
-        console.log('Parsing course: ', course);
         const row: ITableRow = {
           courseName: course.CourseID.subject + ' ' + course.CourseID.code,
           capacity: course.capacity,
@@ -75,7 +74,6 @@ function ScheduleList() {
         };
         tableRows.push(row);
       }
-      console.log('SETTING ROWS: ', tableRows);
       setRows(tableRows);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

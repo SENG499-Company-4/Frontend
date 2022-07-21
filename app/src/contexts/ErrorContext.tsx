@@ -38,7 +38,6 @@ export const ErrorContextProvider: React.FC<any> = (props: any) => {
   };
 
   const closeErrorDialog = () => {
-    console.log('Close hit');
     setError({
       namespace: '',
       message: ''

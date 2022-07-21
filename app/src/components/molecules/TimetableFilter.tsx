@@ -51,7 +51,6 @@ export function TimetableFilter(props: TimetableFilterProps): React.ReactElement
   const onStreamYearChange = (streamYear: string) => {
     setStreamYear(streamYear);
     if (streamYear === '0') {
-      console.log('Stream year changed... Setting filtered data to: ', props.courseData);
       setFilteredData(props.courseData);
     } else {
       var newData: CourseSection[] = [];
@@ -62,7 +61,6 @@ export function TimetableFilter(props: TimetableFilterProps): React.ReactElement
           }
         }
       }
-      console.log('Stream year changed... Setting filtered data to: ', newData);
       setFilteredData(newData);
     }
   };
@@ -111,7 +109,6 @@ export function TimetableFilter(props: TimetableFilterProps): React.ReactElement
     setStreamYear('0');
     setSearch(search);
     const newdata = filter(props.courseData, search);
-    console.log('Search query changed... Setting filtered data to: ', newdata);
     setFilteredData(newdata);
   }
 

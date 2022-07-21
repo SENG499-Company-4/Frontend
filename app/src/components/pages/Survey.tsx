@@ -20,7 +20,7 @@ function Survey() {
       errorContext.setErrorDialog(courseError);
     }
     if (courseData) {
-      console.log('Got data!', courseData);
+      console.log('Got course data!', courseData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseData, courseLoading, courseError]);

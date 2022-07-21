@@ -33,7 +33,7 @@ function Appointment(model: any) {
 
   useEffect(() => {
     if (getUserData) {
-      console.log('Got user!', getUserData);
+      console.log('Got user: ', getUserData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getUserData, getUserLoading, getUserError]);

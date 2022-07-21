@@ -57,14 +57,11 @@ function ScheduleGenerate() {
 
   const [generateSchedule, { data, loading, error }] = useMutation(GENERATE_SCHEDULE);
 
-  if (data) {
-    console.log('DATA: ', data);
-  }
-
   useEffect(() => {
     loadingContext.setLoading(loading);
     if (data) {
       setSuccessDialogOpen(true);
+      console.log('Schedule generate data: ', data);
     }
     if (error) {
       const errorCode = error.graphQLErrors.length > 0 ? error.graphQLErrors[0].extensions.code : 400;
@@ -173,7 +170,7 @@ function ScheduleGenerate() {
       };
       variables = splitCourses(variables);
 
-      console.log('SENDING VARIABLES: ', variables);
+      console.log('Sending request to schedule generate... ', variables);
       generateSchedule({ variables });
     });
   }
@@ -285,7 +282,6 @@ function ScheduleGenerate() {
                 }
                 onChange={(event, value, reason, detail) => {
                   event.preventDefault();
-                  console.log('classes: ', value);
                   setClasses(value);
                   setValues(value);
                   if (reason === 'selectOption') {

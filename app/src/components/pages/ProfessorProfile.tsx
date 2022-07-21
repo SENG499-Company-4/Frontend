@@ -13,14 +13,13 @@ import {
   Typography
 } from '@mui/material';
 import { Faculty } from 'constants/timetable.constants';
-import { ICourse } from 'interfaces/timetable.interfaces';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { GET_USER_BY_ID } from 'api/Queries';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { CoursePreference, User } from 'types/api.types';
+import { CoursePreference, CourseSection, User } from 'types/api.types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { getCoursesForProfessor } from 'utils/utils';
 
@@ -57,7 +56,7 @@ function ProfessorProfile() {
   }, [userData, userError, userLoading]);
 
   // TODO: Could implement this later when we get courses
-  const currentlyTeaching: ICourse[] = getCoursesForProfessor(professor?.id);
+  const currentlyTeaching: CourseSection[] = getCoursesForProfessor(professor?.id);
 
   const facultyIcons = {
     SENG: <Code />,
@@ -208,7 +207,7 @@ function ProfessorProfile() {
                 </Grid>
                 {currentlyTeaching.length > 0 ? (
                   <Grid container spacing={2}>
-                    {currentlyTeaching.map((course: ICourse) => (
+                    {currentlyTeaching.map((course: CourseSection) => (
                       <Grid
                         item
                         key={course.CourseID.subject + course.CourseID.code}

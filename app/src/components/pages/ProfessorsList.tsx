@@ -75,7 +75,6 @@ function ProfessorsList() {
 
   function filter(data: User[], search: string) {
     var newData: User[] = [];
-    console.log('DATA: ', data);
     for (const user of data) {
       if (user?.name?.toLowerCase().includes(search.toLowerCase())) {
         newData.push(user);

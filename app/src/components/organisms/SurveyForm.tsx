@@ -9,10 +9,8 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { ICourseAbility } from 'interfaces/surveyForm.interfaces';
-import { overallDefaults, departmentTopics, ability, willing } from 'constants/surveyForm.constants';
+import { overallDefaults, ability, willing } from 'constants/surveyForm.constants';
 import { externalCodes } from 'constants/courses.constants';
 import {
   FormGroup,
@@ -64,16 +62,11 @@ function SurveyForm(props: { formData: string[] }) {
 
   const parseAbilities = (): CoursePreferenceInput[] => {
     const coursePreferences: CoursePreferenceInput[] = [];
-    console.log(Object.entries(courseAbilities));
     const entries = Object.entries(courseAbilities);
-    console.log('COURSE ABILITIES: ', courseAbilities);
     entries.forEach((entry) => {
-      console.log('ENTRY: ', entry);
       const courseCode: string = entry[0];
       const courseAbility: ICourseAbility = entry[1] as ICourseAbility;
-      console.log('Calculating rating for: ', courseAbility);
       const rating = calculateCourseRating(courseAbility.ability as ability, courseAbility.willing as willing);
-      console.log('Got rating: ', rating);
       const coursePreference: CoursePreferenceInput = {
         subject: courseCode.split(' ')[0],
         code: courseCode.split(' ')[1],
@@ -82,7 +75,6 @@ function SurveyForm(props: { formData: string[] }) {
       };
       coursePreferences.push(coursePreference);
     });
-    console.log('Returning...');
     return coursePreferences;
   };
 
@@ -100,7 +92,6 @@ function SurveyForm(props: { formData: string[] }) {
       topicDescription: '',
       userId: cookie.get('user').userId
     };
-    console.log('Current values: ', currentValues);
     return currentValues;
   });
 
@@ -123,7 +114,6 @@ function SurveyForm(props: { formData: string[] }) {
     });
     e.preventDefault();
     const variables = { input: values };
-    console.log('Variables: ', variables);
     submitSurvey({ variables });
   };
 
