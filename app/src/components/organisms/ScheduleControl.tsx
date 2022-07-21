@@ -68,7 +68,6 @@ export function ScheduleControl(props: ScheduleControlProps) {
     loadingContext.setLoading(scheduleLoading);
     props.loadingCallback(scheduleLoading);
     if (scheduleData) {
-      console.log('Got information from GQL: ', scheduleData);
       if (scheduleData.schedule) {
         setCalendarData(scheduleData.schedule.courses);
         props.courseDataChanged(scheduleData.schedule.courses);
