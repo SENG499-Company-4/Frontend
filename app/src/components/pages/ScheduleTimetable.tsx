@@ -111,7 +111,7 @@ function ScheduleTimetable() {
       <Box display="flex" justifyContent="space-between" margin="5px">
         <Grid container display={'flex'} flexDirection={'column'} paddingLeft={'15px'}>
           <ScheduleControl courseDataChanged={onCourseDataChange} filter save loadingCallback={onLoadingChange} />
-          <Grid item marginLeft={'20px'} marginBottom={'10px'}>
+          <Grid item marginBottom={'10px'}>
             {professorId && <Chip color="primary" label={'Filtered by Professor ID: ' + professorId} />}
             {courseId && <Chip color="primary" label={'Filtered by Course: ' + courseId} />}
           </Grid>
