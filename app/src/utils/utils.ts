@@ -109,20 +109,19 @@ export function parseScheduleListItems(data: CourseSection[]): IScheduleListItem
 
 // Given a data source and a professor username, return courses that professor is teaching or has taught.
 export function getCoursesForProfessor(id?: number, data?: CourseSection[]): CourseSection[] {
+  console.log('ID: ', id);
+  console.log('DATA: ', data);
   if (!id || !data) {
     return [];
   }
-  const today = new Date();
   const courses: CourseSection[] = [];
-  data.forEach((course: CourseSection) => {
+  for (const course of data) {
     course?.professors?.forEach((professor: User) => {
       if (professor.id === id) {
-        if (new Date(course.startDate) <= today && new Date(course.endDate) >= today) {
-          courses.push(course);
-        }
+        courses.push(course);
       }
     });
-  });
+  }
   return courses;
 }
 

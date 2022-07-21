@@ -1,4 +1,4 @@
-import { BubbleChart, Code, DeveloperBoard } from '@mui/icons-material';
+import { BubbleChart, Code, DeveloperBoard, Engineering, Paid, Public, Science } from '@mui/icons-material';
 import {
   Avatar,
   ButtonBase,
@@ -16,10 +16,10 @@ import { Faculty } from 'constants/timetable.constants';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
-import { GET_USER_BY_ID } from 'api/Queries';
+import { GET_SCHEDULE, GET_USER_BY_ID } from 'api/Queries';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { CoursePreference, CourseSection, User } from 'types/api.types';
+import { CoursePreference, CourseSection, Term, User } from 'types/api.types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { getCoursesForProfessor } from 'utils/utils';
 
@@ -29,6 +29,7 @@ function ProfessorProfile() {
   const errorContext = useContext(ErrorContext);
 
   const [professor, setProfessor] = useState<User>();
+  const [currentlyTeaching, setCurrentlyTeaching] = useState<CourseSection[]>([]);
   const { id } = useParams();
   const paramId = id ? id : '-1';
 
@@ -42,12 +43,21 @@ function ProfessorProfile() {
     }
   });
 
+  const {
+    loading: scheduleLoading,
+    error: scheduleError,
+    data: scheduleData
+  } = useQuery(GET_SCHEDULE, {
+    variables: {
+      year: 2021, // TODO: UPDATE THIS TO GRAB CURRENT SCHEDULE
+      term: Term.Fall // TODO: UPDATE THIS TO GRAB CURRENT SCHEDULE
+    }
+  });
+
   useEffect(() => {
     loadingContext.setLoading(userLoading);
     if (userData) {
-      console.log('User data: ', userData);
       setProfessor(userData.findUserById);
-      // setUserData(userData.findUserById);
     }
     if (userError) {
       errorContext.setErrorDialog(userError);
@@ -55,20 +65,38 @@ function ProfessorProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userData, userError, userLoading]);
 
-  // TODO: Could implement this later when we get courses
-  const currentlyTeaching: CourseSection[] = getCoursesForProfessor(professor?.id);
+  useEffect(() => {
+    loadingContext.setLoading(scheduleLoading);
+    if (scheduleData && userData) {
+      if (scheduleData.schedule) {
+        setCurrentlyTeaching(getCoursesForProfessor(userData.findUserById.id, scheduleData.schedule.courses));
+      }
+    }
+    if (scheduleError) {
+      errorContext.setErrorDialog(scheduleError);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scheduleLoading, scheduleData, scheduleError, userData, userError, userLoading]);
 
   const facultyIcons = {
     SENG: <Code />,
     CSC: <BubbleChart />,
-    ECE: <DeveloperBoard />
+    ECE: <DeveloperBoard />,
+    ECON: <Paid />,
+    ENGR: <Engineering />,
+    PHYS: <Public />,
+    CHEM: <Science />
   };
 
   // Dictionary to store background color given faculty
   const facultyColors = {
     SENG: '#ffc107',
     CSC: '#4caf50',
-    ECE: '#2196f3'
+    ECE: '#2196f3',
+    ECON: '#75B9BE',
+    ENGR: '#F9B5AC',
+    PHYS: '#EE7674',
+    CHEM: '#987284'
   };
 
   const columns: GridColDef[] = [
@@ -98,7 +126,7 @@ function ProfessorProfile() {
   return (
     <Grid display="flex" marginTop={4} justifyContent="center" padding={2} sx={{ width: '100%' }}>
       <Card elevation={10} sx={{ minHeight: '400px', maxWidth: '1200px', width: '100%' }}>
-        {userLoading ? (
+        {userLoading || scheduleLoading ? (
           <Grid display={'flex'} flexDirection={'row'} margin={4} width={'100%'}>
             <Stack spacing={1}>
               <Skeleton variant="circular" width={100} height={100} />
@@ -134,19 +162,12 @@ function ProfessorProfile() {
                 <Typography variant="body1">
                   <b>Role: </b> {professor?.role}
                 </Typography>
-                {/* 
-                  TODO: Implement this later when backend returns it
-                  <Typography variant="body1">
-                    <b>Faculty: </b> {professor?.faculty}
-                  </Typography> 
-                </Typography>
-                  </Typography> 
-                */}
               </Grid>
             </Grid>
             <Divider variant="middle" sx={{ marginTop: '20px' }} />
             <Grid container display={'flex'} flexDirection={'row'}>
               <Grid
+                item
                 display={'flex'}
                 flexDirection={'column'}
                 alignItems={'center'}
@@ -190,6 +211,7 @@ function ProfessorProfile() {
                 </Grid>
               </Grid>
               <Grid
+                item
                 display={'flex'}
                 flexDirection={'column'}
                 alignItems={'center'}
@@ -236,7 +258,7 @@ function ProfessorProfile() {
                               </ListItemAvatar>
                               <ListItemText
                                 primary={course.CourseID.subject + ' ' + course.CourseID.code}
-                                secondary={course.startDate + ' - ' + course.endDate}
+                                secondary={course.startDate.split('T')[0] + ' - ' + course.endDate.split('T')[0]}
                               />
                             </ListItem>
                           </Card>
