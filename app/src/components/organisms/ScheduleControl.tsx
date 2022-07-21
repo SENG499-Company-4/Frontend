@@ -22,6 +22,7 @@ export function getCurrentTerm(): Term {
 
 interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
+  exportState: () => void;
   loadingCallback: (loading: boolean) => void;
   filter?: boolean;
   save?: boolean;
@@ -38,10 +39,6 @@ export function ScheduleControl(props: ScheduleControlProps) {
 
   function onFilterChange(filteredCourses: CourseSection[]) {
     props.courseDataChanged(filteredCourses);
-  }
-
-  function exportState() {
-    console.log(calendarData);
   }
 
   useEffect(() => {
@@ -136,7 +133,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
                   variant="contained"
                   size="large"
                   color="secondary"
-                  onClick={exportState}
+                  onClick={props.exportState}
                 >
                   Save Schedule
                 </Button>

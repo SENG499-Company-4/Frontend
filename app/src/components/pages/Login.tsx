@@ -44,6 +44,7 @@ const Login = () => {
       const loginResponse = loginData.login;
       if (loginResponse.success) {
         const userInfo: JWTResponse = jwt_decode(loginResponse.token);
+        localStorage.setItem('token', loginResponse.token);
         setUserId(userInfo.userId);
         setTokenLoaded(true);
       } else {

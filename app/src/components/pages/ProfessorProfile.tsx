@@ -29,6 +29,7 @@ function ProfessorProfile() {
   const errorContext = useContext(ErrorContext);
 
   const [professor, setProfessor] = useState<User>();
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [currentlyTeaching, setCurrentlyTeaching] = useState<CourseSection[]>([]);
   const { id } = useParams();
   const paramId = id ? id : '-1';
@@ -123,17 +124,29 @@ function ProfessorProfile() {
     }
   ];
 
+  window.onresize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  function getSkeletonWidth() {
+    if (windowWidth < 1200) {
+      return windowWidth - 100;
+    } else {
+      return 1150;
+    }
+  }
+
   return (
     <Grid display="flex" marginTop={4} justifyContent="center" padding={2} sx={{ width: '100%' }}>
       <Card elevation={10} sx={{ minHeight: '400px', maxWidth: '1200px', width: '100%' }}>
         {userLoading || scheduleLoading ? (
-          <Grid display={'flex'} flexDirection={'row'} margin={4} width={'100%'}>
+          <Grid id="skeleton-container" display={'flex'} flexDirection={'row'} margin={4} width={'100%'}>
             <Stack spacing={1}>
               <Skeleton variant="circular" width={100} height={100} />
-              <Skeleton variant="text" width={800} />
-              <Skeleton variant="text" width={800} />
-              <Skeleton variant="text" width={800} />
-              <Skeleton variant="rectangular" width={800} height={150} />
+              <Skeleton variant="text" width={getSkeletonWidth()} />
+              <Skeleton variant="text" width={getSkeletonWidth()} />
+              <Skeleton variant="text" width={getSkeletonWidth()} />
+              <Skeleton variant="rectangular" width={getSkeletonWidth()} height={150} />
             </Stack>
           </Grid>
         ) : (

@@ -1,4 +1,11 @@
-import { ICalendarCourseItem, ICalendarItem_Teacher, IScheduleListItem } from 'interfaces/timetable.interfaces';
+import {
+  ICalendarCourseItem,
+  ICalendarItem_Teacher,
+  IHourMinute,
+  IProfessorCourse,
+  IProfessorIndex,
+  IScheduleListItem
+} from 'interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import { ability, willing } from 'constants/surveyForm.constants';
 import { CourseSection, MeetingTime, User } from 'types/api.types';
@@ -38,8 +45,6 @@ export function parseCalendarCourse(
     course.meetingTimes.forEach((meetingTime: MeetingTime) => {
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
       const dayshift = daytoInt(meetingTime.day);
-      console.log('Start date: ', course.startDate);
-      console.log('End date: ', course.endDate);
       const courseStartDate = new Date(course.startDate);
       const courseEndDate = new Date(course.startDate);
 
@@ -57,7 +62,7 @@ export function parseCalendarCourse(
       courseEndDate.setHours(parseInt(meetingTime.endTime.split(':')[0]));
       courseEndDate.setMinutes(parseInt(meetingTime.endTime.split(':')[1]));
 
-      console.log(courseStartDate);
+      // console.log(courseStartDate);
       const lastDay = new Date(course.endDate);
 
       if (lastDay.getDay() >= dayshift) {
@@ -69,7 +74,10 @@ export function parseCalendarCourse(
         teacherId: course?.professors[0].id,
         startDate: courseStartDate,
         endDate: courseEndDate,
-        lastDay: lastDay
+        lastDay: lastDay,
+        capacity: course.capacity,
+        term: course.CourseID.term,
+        meetingTime: course.meetingTimes[0]
       };
 
       // Conditional return rules based on props
@@ -133,6 +141,84 @@ export function getCoursesForProfessor(id?: number, data?: CourseSection[]): Cou
     });
   }
   return courses;
+}
+
+export function sortByProf(data: ICalendarCourseItem[]): IProfessorIndex {
+  console.log('sortByProf: ', data);
+  return [];
+  // Extract all professors from data and create a list of unique professors with class data
+  // const profList: IProfessorIndex = {};
+
+  // data.forEach((course: ICalendarCourseItem) => {
+  //   const prof = getTeacherById(course.teacherId);
+
+  //   // If professor is not in list, add them
+  //   if (!profList[prof.id]) {
+  //     profList[prof.id] = {
+  //       id: prof.id,
+  //       username: prof.teacherName,
+  //       classes: []
+  //     };
+  //   }
+
+  //   // Add course to professor's list of classes
+
+  //   const modifiedCourse: IProfessorCourse = {
+  //     courseId: course.courseId,
+  //     term: course.term,
+  //     capacity: course.capacity,
+  //     startDate: course.startDate,
+  //     endDate: course.endDate,
+  //     meetingTime: course.meetingTime
+  //   };
+
+  //   profList[prof.id].classes.push(modifiedCourse);
+  // });
+
+  // return profList;
+}
+
+function compareTime(a: IHourMinute, b: IHourMinute) {
+  if (a.hour > b.hour) {
+    return 1;
+  } else if (a.hour < b.hour) {
+    return -1;
+  } else {
+    //hours are equal
+    if (a.minute > b.minute) {
+      return 1;
+    } else if (a.minute < b.minute) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+}
+
+export function checkCollision(a: MeetingTime, b: MeetingTime) {
+  if (a.day !== b.day) return false;
+
+  const aStart: IHourMinute = {
+    hour: parseInt(a.startTime.split(':')[0]),
+    minute: parseInt(a.startTime.split(':')[1])
+  };
+
+  const aEnd: IHourMinute = {
+    hour: parseInt(a.endTime.split(':')[0]),
+    minute: parseInt(a.endTime.split(':')[1])
+  };
+
+  const bStart: IHourMinute = {
+    hour: parseInt(b.startTime.split(':')[0]),
+    minute: parseInt(b.startTime.split(':')[1])
+  };
+
+  const bEnd: IHourMinute = {
+    hour: parseInt(b.endTime.split(':')[0]),
+    minute: parseInt(b.endTime.split(':')[1])
+  };
+
+  if (compareTime(aEnd, bStart) > 0 && compareTime(aStart, bEnd) < 0) return true;
 }
 
 export function calculateCourseRating(able: string, willingness: string): number {
