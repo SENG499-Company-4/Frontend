@@ -65,26 +65,22 @@ export function TimetableFilter(props: TimetableFilterProps): React.ReactElement
     }
   };
 
-  function filter(data: CourseSection[], search: string) {
-    console.log('Filtering data with search query: ', search);
-    var newData: CourseSection[] = [];
-    // TODO: Filter by teacher
-    // var teacherId = 0;
-    // for (const teacher of calendarTeacherData) {
-    //   if (teacher?.teacherName?.toLowerCase().includes(search.toLowerCase())) {
-    //     teacherId = teacher?.id;
-    //     for (const course of data) {
-    //       if (course?.teacherId === teacherId) {
-    //         newData.push(course);
-    //       }
-    //     }
-    //     return newData;
-    //   }
-    // }
+  function hasProfessor(course: CourseSection, search: string) {
+    if (!!course.professors && course.professors.length > 0) {
+      for (const professor of course.professors) {
+        if (!!professor && !!professor.name && professor.name.toLowerCase().includes(search.toLowerCase())) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
+  function filter(data: CourseSection[], search: string) {
+    var newData: CourseSection[] = [];
     if (data) {
-      for (const course of data) {
-        if (
+      const condition = (course: CourseSection) => {
+        return (
           (
             course.CourseID.subject +
             ' ' +
@@ -95,13 +91,15 @@ export function TimetableFilter(props: TimetableFilterProps): React.ReactElement
             course.CourseID.year
           )
             .toLowerCase()
-            .includes(search.toLowerCase())
-        ) {
+            .includes(search.toLowerCase()) || hasProfessor(course, search)
+        );
+      };
+      for (const course of data) {
+        if (condition(course)) {
           newData.push(course);
         }
       }
     }
-
     return newData;
   }
 
