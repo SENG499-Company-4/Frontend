@@ -22,7 +22,7 @@ function Survey() {
       errorContext.setErrorDialog(meError);
     }
     if (meData) {
-      if (meData.me.preferences && meData.me.preferences.length() > 0) {
+      if (meData.me.preferences && meData.me.preferences.length > 0) {
         for (const pref of meData.me.preferences) {
           if (pref.id.year === 2022) {
             setSubmitted(true);
