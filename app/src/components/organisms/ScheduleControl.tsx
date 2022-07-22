@@ -13,7 +13,7 @@ import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import { getCurrentTerm } from 'utils/utils';
 interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
-  exportState: () => void;
+  exportState?: () => void;
   loadingCallback: (loading: boolean) => void;
   filter?: boolean;
   save?: boolean;
