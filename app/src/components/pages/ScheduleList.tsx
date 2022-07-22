@@ -57,7 +57,7 @@ function ScheduleList() {
   function editSchedule() {
     navigate('/schedule/timetable', {
       state: {
-        year: year, 
+        year: year,
         term: term
       }
     });
@@ -167,7 +167,12 @@ function ScheduleList() {
       <Box display="flex" justifyContent="space-between" margin="5px">
         <Grid container display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
           <Grid item>
-            <ScheduleControl courseDataChanged={onCourseDataChange} loadingCallback={onLoadingChange} onDateChange={onDateChange} filter/>
+            <ScheduleControl
+              courseDataChanged={onCourseDataChange}
+              loadingCallback={onLoadingChange}
+              onDateChange={onDateChange}
+              filter
+            />
           </Grid>
           {cookie.get('user').role === Role.Admin ? (
             <Grid item alignContent={'flex-end'}>

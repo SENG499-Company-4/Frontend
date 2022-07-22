@@ -42,8 +42,8 @@ function ScheduleTimetable() {
   const state: IStateProps = location.state as IStateProps;
   const courseId = state?.courseId ? state.courseId : undefined;
   const professorId = state?.professorId ? state.professorId : undefined;
-  const year = state?.year ?? undefined; 
-  const term = state?.term ?? undefined; 
+  const year = state?.year ?? undefined;
+  const term = state?.term ?? undefined;
 
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2022, 8, 5)); // TODO: SET THIS TO THE FIRST WEEK OF THE SELECTED SEMESTER / YEAR
