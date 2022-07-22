@@ -86,7 +86,7 @@ export function parseCalendarCourse(
       const dayshift = daytoInt(meetingTime.day);
 
       const courseInitDate = getCourseStartDate(course.CourseID.year, course.CourseID.term);
-      
+
       const courseStartDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
       const courseEndDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
 
