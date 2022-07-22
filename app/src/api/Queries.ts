@@ -179,6 +179,7 @@ export const GET_SCHEDULE = gql`
         }
         startDate
         endDate
+        sectionNumber
         meetingTimes {
           day
           startTime
