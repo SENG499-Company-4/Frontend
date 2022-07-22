@@ -26,7 +26,7 @@ function Appointment(model: any) {
     error: getUserError
   } = useQuery(GET_USER_BY_ID_LEAN, {
     variables: {
-      findUserByIdId: targetedAppointmentData.teacherId
+      findUserByIdId: parseInt(targetedAppointmentData.teacherId)
     }
   });
 
