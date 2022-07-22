@@ -43,7 +43,7 @@ const Login = () => {
     if (loginData) {
       const loginResponse = loginData.login;
       if (loginResponse.success) {
-        localStorage.setItem("token", loginResponse.token);
+        localStorage.setItem('token', loginResponse.token);
         const userInfo: JWTResponse = jwt_decode(loginResponse.token);
         localStorage.setItem('token', loginResponse.token);
         setUserId(userInfo.userId);

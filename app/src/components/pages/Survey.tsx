@@ -14,7 +14,7 @@ function Survey() {
   const [submitted, setSubmitted] = useState<boolean>(false);
 
   const { data: courseData, loading: courseLoading, error: courseError } = useQuery(GET_COURSES);
-  const {loading: meLoading, error: meError, data: meData} = useQuery(GET_ME);
+  const { loading: meLoading, error: meError, data: meData } = useQuery(GET_ME);
 
   useEffect(() => {
     loadingContext.setLoading(meLoading);
@@ -45,12 +45,11 @@ function Survey() {
       <Typography variant="h4" gutterBottom marginY={4}>
         Professor Survey Form
       </Typography>
-      {
-        !submitted ? ( 
-          <SurveyForm formData={courseCodes} />
-        ) : 
-        "You have already submitted your survey for this academic year."
-      }
+      {!submitted ? (
+        <SurveyForm formData={courseCodes} />
+      ) : (
+        'You have already submitted your survey for this academic year.'
+      )}
     </Box>
   );
 }
