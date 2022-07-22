@@ -10,7 +10,6 @@ import { gql } from '@apollo/client';
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-
   const GET_USER_BY_ID_LEAN = gql`
     query FindUserById($findUserByIdId: Int!) {
       findUserById(id: $findUserByIdId) {
@@ -27,16 +26,16 @@ function Appointment(model: any) {
     error: getUserError
   } = useQuery(GET_USER_BY_ID_LEAN, {
     variables: {
-      id: targetedAppointmentData.teacherId
+      findUserByIdId: targetedAppointmentData.teacherId
     }
   });
 
   useEffect(() => {
-    if (getUserData) {
-      console.log('Got user: ', getUserData);
+    if (getUserError) {
+      console.log('Error getting user: ', getUserError);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getUserData, getUserLoading, getUserError]);
+  }, [getUserError]);
 
   return (
     <Container sx={{ height: '100%' }}>
@@ -49,6 +48,7 @@ function Appointment(model: any) {
             <Grid item> {getUserData.findUserById.name}</Grid>
             <Grid item>
               {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
+              {' - '}
               {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
             </Grid>
           </>
