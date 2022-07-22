@@ -24,6 +24,7 @@ interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
   exportState: () => void;
   loadingCallback: (loading: boolean) => void;
+  onDateChange: (year?: Date, term?: Term) => void;
   filter?: boolean;
   save?: boolean;
 }
@@ -92,9 +93,11 @@ export function ScheduleControl(props: ScheduleControlProps) {
               term={term}
               onTermChange={(term: Term) => {
                 setTerm(term);
+                props.onDateChange(year, term);
               }}
               onYearChange={(year: Date) => {
                 setYear(year);
+                props.onDateChange(year, term);
               }}
             />
           </Stack>

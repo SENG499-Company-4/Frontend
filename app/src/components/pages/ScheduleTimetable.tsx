@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
-import { CourseSection } from 'types/api.types';
+import { CourseSection, Term } from 'types/api.types';
 import 'components/styles/scheduler.css';
 
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
@@ -30,9 +30,6 @@ import {
 import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
-const currentDate = new Date(2022, 10, 4);
-console.log('CURRENTLY VIEWING DATE: ', currentDate);
-
 interface IStateProps {
   courseId?: string;
   professorId?: number;
@@ -43,7 +40,9 @@ function ScheduleTimetable() {
   const state: IStateProps = location.state as IStateProps;
   const courseId = state?.courseId ? state.courseId : undefined;
   const professorId = state?.professorId ? state.professorId : undefined;
+
   const [scheduleLoading, setScheduleLoading] = useState(false);
+  const [currentDate, setCurrentDate] = useState<Date>(new Date(2022, 8, 5)); // TODO: SET THIS TO THE FIRST WEEK OF THE SELECTED SEMESTER / YEAR
 
   const [calendarTeacherData, setCalendarTeacherData] = useState<ICalendarItem_Teacher[]>([]);
   const [calendarCourseData, setCalendarCourseData] = useState<ICalendarCourseItem[]>([]);
@@ -163,6 +162,10 @@ function ScheduleTimetable() {
     console.log(profErrors);
   }
 
+  useEffect(() => {
+    console.log('ERRORS WITH TIMETABLE: ', errors);
+  }, [errors]);
+
   function onAppointmentFormOpening(e: any) {
     const form = e.form;
     form.option('items', [
@@ -214,6 +217,16 @@ function ScheduleTimetable() {
         }
       }
     ]);
+  }
+
+  function getStartingDate(year: Date, term: Term) {
+    console.log('Getting starting date of month...');
+  }
+
+  function onDateChange(year?: Date, term?: Term) {
+    if (year && term) {
+      console.log('Date updated: ' + year.getFullYear() + ' ' + term);
+    }
   }
 
   return (
@@ -275,6 +288,7 @@ function ScheduleTimetable() {
             save
             loadingCallback={onLoadingChange}
             exportState={exportState}
+            onDateChange={onDateChange}
           />
           <Grid item marginBottom={'10px'}>
             {professorId && <Chip color="primary" label={'Filtered by Professor ID: ' + professorId} />}
@@ -302,8 +316,8 @@ function ScheduleTimetable() {
         ]}
         defaultCurrentView="week"
         defaultCurrentDate={currentDate}
-        startDayHour={0}
-        endDayHour={24}
+        startDayHour={8}
+        endDayHour={20}
         onContentReady={() => {
           console.log('content ready');
         }}

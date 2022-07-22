@@ -2,6 +2,7 @@ import {
   ICalendarCourseItem,
   ICalendarItem_Teacher,
   IHourMinute,
+  IProfessorCourse,
   IProfessorIndex,
   IScheduleListItem
 } from 'interfaces/timetable.interfaces';
@@ -41,34 +42,22 @@ export function parseCalendarCourse(
   let professorProp = professorId ? professorId : undefined;
 
   data.forEach((course: CourseSection) => {
-    console.log('==========================================================');
     course.meetingTimes.forEach((meetingTime: MeetingTime) => {
-      console.log('############################################################');
-
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
       const dayshift = daytoInt(meetingTime.day);
-      console.log('dayshift: ', dayshift);
 
       const courseStartDate = new Date(course.startDate);
-      console.log('courseStartDate init: ', courseStartDate);
 
-      const courseEndDate = new Date(course.endDate);
-      console.log('courseEndDate init: ', courseEndDate);
+      const courseEndDate = new Date(course.startDate);
 
       if (courseStartDate.getDay() > dayshift) {
-        console.log('courseStartDate.getDay() > dayshift: ', courseStartDate.getDay());
         courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseStartDate.getDay() + 1);
         courseEndDate.setDate(parseInt(course.endDate.split('-')[2]) + dayshift + courseEndDate.getDay() + 1);
-        console.log('if block | courseStartDate: ', courseStartDate);
-        console.log('if block | courseEndDate: ', courseEndDate);
       } else {
-        console.log('courseStartDate.getDay() <= dayshift', courseStartDate.getDay());
         courseStartDate.setDate(
           parseInt(course.startDate.split('-')[2].split('T')[0]) + dayshift - courseStartDate.getDay()
         );
         courseEndDate.setDate(parseInt(course.endDate.split('-')[2].split('T')[0]) + dayshift - courseEndDate.getDay());
-        console.log('else block | courseEndDate: ', courseEndDate);
-        console.log('else block | courseStartDate: ', courseStartDate);
       }
 
       const startHour = meetingTime.startTime.substring(0, 2);
@@ -78,18 +67,14 @@ export function parseCalendarCourse(
 
       courseStartDate.setHours(parseInt(startHour));
       courseStartDate.setMinutes(parseInt(startMinute));
-      console.log('courseStartDate updated: ', courseStartDate);
 
       courseEndDate.setHours(parseInt(endHour));
       courseEndDate.setMinutes(parseInt(endMinute));
-      console.log('courseEndDate updated: ', courseEndDate);
 
       // console.log(courseStartDate);
       const lastDay = new Date(course.endDate);
-      console.log('set lastDay: ', lastDay);
       if (lastDay.getDay() >= dayshift) {
         lastDay.setDate(parseInt(course.endDate.split('-')[2].split('T')[0]) - (lastDay.getDay() - dayshift));
-        console.log('updated lastDay to: ', lastDay);
       }
 
       // console.log('Attempting to get appointment meeting times...');
@@ -107,16 +92,16 @@ export function parseCalendarCourse(
       //   appointmentMeetingTimes.push(appointmentMeetingTime);
       // }
 
-      console.log('returning course start/end date: ', courseStartDate, courseEndDate);
-
       const calendarItem: ICalendarCourseItem = {
-        courseId: course.CourseID.subject + course.CourseID.code, // GOOD
-        teacherId: course?.professors[0].id, // GOOD
-        startDate: courseStartDate, // Should be: date obj based on date string starting at first start time
-        endDate: courseEndDate, // Should be: date obj based on date string ending at last end time
-        lastDay: lastDay, // Might need some work
-        capacity: course.capacity, // GOOD
-        term: course.CourseID.term // GOOD
+        courseId: course.CourseID.subject + course.CourseID.code,
+        professorsReference: course?.professors,
+        teacherId: course?.professors[0].id,
+        startDate: courseStartDate,
+        endDate: courseEndDate,
+        lastDay: lastDay,
+        capacity: course.capacity,
+        term: course.CourseID.term,
+        meetingTime: meetingTime
       };
 
       // Conditional return rules based on props
@@ -135,17 +120,8 @@ export function parseCalendarCourse(
       } else {
         calendarCourseData.push(calendarItem);
       }
-      console.log('############################################################');
     });
-    console.log('==========================================================');
   });
-  console.log('$$$$$$$$$$$$$$$$$$$$$');
-  console.log('$$$$$$$$$$$$$$$$$$$$$');
-  console.log('$$$$$$$$$$$$$$$$$$$$$');
-  console.log('CALENDAR COURSE DATA: ', calendarCourseData);
-  console.log('$$$$$$$$$$$$$$$$$$$$$');
-  console.log('$$$$$$$$$$$$$$$$$$$$$');
-  console.log('$$$$$$$$$$$$$$$$$$$$$');
 
   return calendarCourseData;
 }
@@ -193,38 +169,38 @@ export function getCoursesForProfessor(id?: number, data?: CourseSection[]): Cou
 }
 
 export function sortByProf(data: ICalendarCourseItem[]): IProfessorIndex {
-  console.log('sortByProf: ', data);
-  return [];
+  console.log('sortByProf TRIGGERED: ', data);
   // Extract all professors from data and create a list of unique professors with class data
-  // const profList: IProfessorIndex = {};
+  const profList: IProfessorIndex = {};
 
-  // data.forEach((course: ICalendarCourseItem) => {
-  //   const prof = getTeacherById(course.teacherId);
+  data.forEach((course: ICalendarCourseItem) => {
+    const profs = course!.professorsReference!;
 
-  //   // If professor is not in list, add them
-  //   if (!profList[prof.id]) {
-  //     profList[prof.id] = {
-  //       id: prof.id,
-  //       username: prof.teacherName,
-  //       classes: []
-  //     };
-  //   }
+    for (const prof of profs) {
+      // If professor is not in list, add them
+      if (!profList[prof.id]) {
+        profList[prof.id] = {
+          id: prof.id,
+          username: prof.username,
+          classes: []
+        };
+      }
 
-  //   // Add course to professor's list of classes
+      // Add course to professor's list of classes
+      const modifiedCourse: IProfessorCourse = {
+        courseId: course.courseId,
+        term: course.term,
+        capacity: course.capacity,
+        startDate: course.startDate,
+        endDate: course.endDate,
+        meetingTime: course.meetingTime
+      };
 
-  //   const modifiedCourse: IProfessorCourse = {
-  //     courseId: course.courseId,
-  //     term: course.term,
-  //     capacity: course.capacity,
-  //     startDate: course.startDate,
-  //     endDate: course.endDate,
-  //     meetingTime: course.meetingTime
-  //   };
+      profList[prof.id].classes.push(modifiedCourse);
+    }
+  });
 
-  //   profList[prof.id].classes.push(modifiedCourse);
-  // });
-
-  // return profList;
+  return profList;
 }
 
 function compareTime(a: IHourMinute, b: IHourMinute) {

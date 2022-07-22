@@ -7,12 +7,23 @@ export interface ICalendarMeetingTime {
 }
 export interface ICalendarCourseItem {
   courseId: string;
+  professorsReference: User[];
   teacherId: number;
   startDate: Date;
   endDate: Date;
   lastDay: Date;
   capacity: number; //TODO replace with section number later
   term: Term;
+  meetingTime: MeetingTime;
+}
+
+export interface IProfessorCourse {
+  courseId: string;
+  term: Term;
+  capacity: number; //TODO refactor to section number later
+  startDate: Date;
+  endDate: Date;
+  meetingTime: MeetingTime;
 }
 
 export interface IScheduleListItem {
@@ -44,15 +55,6 @@ export interface IProfessorIndexEntry {
   id: number;
   username: string;
   classes: IProfessorCourse[];
-}
-
-export interface IProfessorCourse {
-  courseId: string;
-  term: Term;
-  capacity: number; //TODO refactor to section number later
-  startDate: Date;
-  endDate: Date;
-  meetingTime: MeetingTime;
 }
 
 export interface ICalendarError {
