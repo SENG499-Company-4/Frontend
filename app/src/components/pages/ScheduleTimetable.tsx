@@ -33,6 +33,8 @@ import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
 interface IStateProps {
   courseId?: string;
   professorId?: number;
+  year?: Date;
+  term?: Term;
 }
 
 function ScheduleTimetable() {
@@ -40,6 +42,8 @@ function ScheduleTimetable() {
   const state: IStateProps = location.state as IStateProps;
   const courseId = state?.courseId ? state.courseId : undefined;
   const professorId = state?.professorId ? state.professorId : undefined;
+  const year = state?.year ?? undefined; 
+  const term = state?.term ?? undefined; 
 
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2022, 8, 5)); // TODO: SET THIS TO THE FIRST WEEK OF THE SELECTED SEMESTER / YEAR
@@ -289,6 +293,8 @@ function ScheduleTimetable() {
             loadingCallback={onLoadingChange}
             exportState={exportState}
             onDateChange={onDateChange}
+            year={year}
+            term={term}
           />
           <Grid item marginBottom={'10px'}>
             {professorId && <Chip color="primary" label={'Filtered by Professor ID: ' + professorId} />}

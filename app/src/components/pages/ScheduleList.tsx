@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from 'react';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import { CourseSection, Day, MeetingTime, User } from 'types/api.types';
+import { CourseSection, Day, MeetingTime, Term, User } from 'types/api.types';
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
 import { Role } from 'constants/timetable.constants';
 import Cookie from 'universal-cookie';
@@ -21,6 +21,8 @@ function ScheduleList() {
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const navigate = useNavigate();
   const cookie = new Cookie();
+  const [term, setTerm] = useState<Term | undefined>(Term.Summer);
+  const [year, setYear] = useState<Date | undefined>(new Date(2022, 0, 1));
 
   function parseDaysOfWeek(daysOfWeek: MeetingTime[]): ReactNode {
     const daysAbbreviations = ['M', 'T', 'W', 'R', 'F'];
@@ -53,7 +55,12 @@ function ScheduleList() {
   }
 
   function editSchedule() {
-    navigate('/schedule/timetable');
+    navigate('/schedule/timetable', {
+      state: {
+        year: year, 
+        term: term
+      }
+    });
   }
 
   const columns: GridColDef[] = [
@@ -144,6 +151,14 @@ function ScheduleList() {
     setScheduleLoading(loading);
   }
 
+  function onDateChange(year?: Date, term?: Term) {
+    if (year && term) {
+      setYear(year);
+      setTerm(term);
+      console.log('Date updated: ' + year.getFullYear() + ' ' + term);
+    }
+  }
+
   return (
     <Box sx={{ width: '70%', margin: 'auto' }}>
       <Typography marginTop={5} marginBottom={2} variant="h4" sx={{ textAlign: 'center' }}>
@@ -152,7 +167,7 @@ function ScheduleList() {
       <Box display="flex" justifyContent="space-between" margin="5px">
         <Grid container display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
           <Grid item>
-            <ScheduleControl courseDataChanged={onCourseDataChange} loadingCallback={onLoadingChange} filter />
+            <ScheduleControl courseDataChanged={onCourseDataChange} loadingCallback={onLoadingChange} onDateChange={onDateChange} filter/>
           </Grid>
           {cookie.get('user').role === Role.Admin ? (
             <Grid item alignContent={'flex-end'}>

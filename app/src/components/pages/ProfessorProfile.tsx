@@ -76,7 +76,7 @@ function ProfessorProfile() {
       if (scheduleData.schedule && !doneRequests) {
         const profCourses = getCoursesForProfessor(userData.findUserById.id, scheduleData.schedule.courses);
         let cur = currentlyTeaching.map((item) => {
-          return item; // else return unmodified item
+          return item;
         });
         setCurrentlyTeaching(cur.concat(profCourses));
       }

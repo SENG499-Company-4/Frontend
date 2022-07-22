@@ -29,12 +29,14 @@ interface ScheduleControlProps {
   onDateChange: (year?: Date, term?: Term) => void;
   filter?: boolean;
   save?: boolean;
+  year?: Date;
+  term?: Term;
 }
 
 export function ScheduleControl(props: ScheduleControlProps) {
   const cookie = new Cookie();
-  const [term, setTerm] = useState<Term | undefined>(Term.Summer);
-  const [year, setYear] = useState<Date | undefined>(new Date(2022, 0, 1));
+  const [term, setTerm] = useState<Term | undefined>(props.term || Term.Summer);
+  const [year, setYear] = useState<Date | undefined>(props.year || new Date(2022, 0, 1));
 
   const [calendarData, setCalendarData] = useState<CourseSection[]>([]);
 

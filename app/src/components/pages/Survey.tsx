@@ -23,7 +23,13 @@ function Survey() {
     }
     if (meData) {
       if (meData.me.preferences && meData.me.preferences.length() > 0) {
-        setSubmitted(true);
+        for (const pref of meData.me.preferences) {
+          if (pref.id.year === 2022) {
+            setSubmitted(true);
+            break;
+          }
+        }
+        
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
