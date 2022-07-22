@@ -22,6 +22,7 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { CoursePreference, CourseSection, Term, User } from 'types/api.types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { getCoursesForProfessor } from 'utils/utils';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
 
 function ProfessorProfile() {
   const navigate = useNavigate();
@@ -35,6 +36,8 @@ function ProfessorProfile() {
   const [currentlyTeaching, setCurrentlyTeaching] = useState<CourseSection[]>([]);
   const { id } = useParams();
   const paramId = id ? id : '-1';
+
+  const { year, term, setYear, setTerm } = useContext(TermSelectorContext);
 
   const {
     loading: userLoading,
@@ -59,8 +62,8 @@ function ProfessorProfile() {
       setProfessor(professorResponse);
       fetchSchedule({
         variables: {
-          year: 2022,
-          term: Term.Spring
+          year: 2022, // TODO: UNHACKIFY THIS
+          term: Term.Spring // TODO: UNHACKIFY THIS
         }
       });
     }
@@ -80,23 +83,23 @@ function ProfessorProfile() {
         });
         setCurrentlyTeaching(cur.concat(profCourses));
       }
-      if (currentRequest == Term.Spring) {
+      if (currentRequest === Term.Spring) {
         fetchSchedule({
           variables: {
-            year: 2022,
-            term: Term.Summer
+            year: 2022, // TODO: UNHACKIFY THIS
+            term: Term.Summer // TODO: UNHACKIFY THIS
           }
         });
         setCurrentRequest(Term.Summer);
-      } else if (currentRequest == Term.Summer) {
+      } else if (currentRequest === Term.Summer) {
         fetchSchedule({
           variables: {
-            year: 2022,
-            term: Term.Fall
+            year: 2022, // TODO: UNHACKIFY THIS
+            term: Term.Fall // TODO: UNHACKIFY THIS
           }
         });
         setCurrentRequest(Term.Fall);
-      } else if (currentRequest == Term.Fall) {
+      } else if (currentRequest === Term.Fall) {
         setDoneRequests(true);
       }
     }

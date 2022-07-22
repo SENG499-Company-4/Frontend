@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
-import { checkCollision, parseCalendarCourse, parseCalendarTeacher, sortByProf } from 'utils/utils';
+import { checkCollision, getCourseStartDate, parseCalendarCourse, parseCalendarTeacher, sortByProf } from 'utils/utils';
 import {
   Box,
   Dialog,
@@ -28,13 +28,12 @@ import {
   IProfessorIndexEntry
 } from 'interfaces/timetable.interfaces';
 import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 interface IStateProps {
   courseId?: string;
   professorId?: number;
-  year?: Date;
-  term?: Term;
 }
 
 function ScheduleTimetable() {
@@ -42,10 +41,10 @@ function ScheduleTimetable() {
   const state: IStateProps = location.state as IStateProps;
   const courseId = state?.courseId ? state.courseId : undefined;
   const professorId = state?.professorId ? state.professorId : undefined;
-  const year = state?.year ?? undefined;
-  const term = state?.term ?? undefined;
+  const { year, term } = useContext(TermSelectorContext);
 
   const [scheduleLoading, setScheduleLoading] = useState(false);
+
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2022, 8, 5)); // TODO: SET THIS TO THE FIRST WEEK OF THE SELECTED SEMESTER / YEAR
 
   const [calendarTeacherData, setCalendarTeacherData] = useState<ICalendarItem_Teacher[]>([]);
@@ -223,15 +222,12 @@ function ScheduleTimetable() {
     ]);
   }
 
-  function getStartingDate(year: Date, term: Term) {
-    console.log('Getting starting date of month...');
-  }
-
-  function onDateChange(year?: Date, term?: Term) {
-    if (year && term) {
-      console.log('Date updated: ' + year.getFullYear() + ' ' + term);
+  useEffect(() => {
+    if (!!year && !!term) {
+      setCurrentDate(getCourseStartDate(year.getFullYear(), term));
+      console.log('Current date set to: ', currentDate);
     }
-  }
+  }, [year, term]);
 
   return (
     <>
@@ -292,9 +288,6 @@ function ScheduleTimetable() {
             save
             loadingCallback={onLoadingChange}
             exportState={exportState}
-            onDateChange={onDateChange}
-            year={year}
-            term={term}
           />
           <Grid item marginBottom={'10px'}>
             {professorId && <Chip color="primary" label={'Filtered by Professor ID: ' + professorId} />}
@@ -317,8 +310,9 @@ function ScheduleTimetable() {
         ]}
         defaultCurrentView="week"
         defaultCurrentDate={currentDate}
+        currentDate={currentDate}
         startDayHour={8}
-        endDayHour={20}
+        endDayHour={22}
         onContentReady={() => {
           console.log('content ready');
         }}

@@ -1,8 +1,9 @@
 import { DatePicker, LocalizationProvider } from '@mui/lab';
 import { Grid, MenuItem, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { Term } from 'types/api.types';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
 
 interface SemesterSelectorProps {
   term?: Term;
@@ -13,8 +14,7 @@ interface SemesterSelectorProps {
 
 export function SemesterSelector(props: SemesterSelectorProps): React.ReactElement {
   const termOptions = [Term.Spring, Term.Summer, Term.Fall];
-  const [term, setTerm] = useState<Term | undefined>((props.term as Term) || undefined);
-  const [year, setYear] = useState<Date | undefined>(props.year || undefined);
+  const { year, setYear, term, setTerm } = useContext(TermSelectorContext);
 
   return (
     <Grid container spacing={2} alignItems={'center'}>

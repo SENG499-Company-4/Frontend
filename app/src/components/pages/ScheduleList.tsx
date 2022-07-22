@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { CourseSection, Day, MeetingTime, Term, User } from 'types/api.types';
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
 import { Role } from 'constants/timetable.constants';
 import Cookie from 'universal-cookie';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
 interface TableRow {
   courseName: string;
   capacity: number;
@@ -14,6 +15,7 @@ interface TableRow {
   endDate: Date;
   meetingDays: MeetingTime[];
   meetingTimes: MeetingTime[];
+  sectionNumber: string;
 }
 
 function ScheduleList() {
@@ -21,8 +23,7 @@ function ScheduleList() {
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const navigate = useNavigate();
   const cookie = new Cookie();
-  const [term, setTerm] = useState<Term | undefined>(Term.Summer);
-  const [year, setYear] = useState<Date | undefined>(new Date(2022, 0, 1));
+  const { year, term } = useContext(TermSelectorContext);
 
   function parseDaysOfWeek(daysOfWeek: MeetingTime[]): ReactNode {
     const daysAbbreviations = ['M', 'T', 'W', 'R', 'F'];
@@ -75,6 +76,11 @@ function ScheduleList() {
           </Typography>
         );
       }
+    },
+    {
+      field: 'sectionNumber',
+      headerName: 'Section',
+      width: 100
     },
     {
       field: 'startDate',
@@ -139,8 +145,10 @@ function ScheduleList() {
           startDate: course.startDate,
           endDate: course.endDate,
           meetingDays: course.meetingTimes,
-          meetingTimes: course.meetingTimes
+          meetingTimes: course.meetingTimes,
+          sectionNumber: course.sectionNumber
         };
+        console.log('Row: ', row);
         tableRows.push(row);
       }
       setRows(tableRows);
@@ -151,14 +159,6 @@ function ScheduleList() {
     setScheduleLoading(loading);
   }
 
-  function onDateChange(year?: Date, term?: Term) {
-    if (year && term) {
-      setYear(year);
-      setTerm(term);
-      console.log('Date updated: ' + year.getFullYear() + ' ' + term);
-    }
-  }
-
   return (
     <Box sx={{ width: '70%', margin: 'auto' }}>
       <Typography marginTop={5} marginBottom={2} variant="h4" sx={{ textAlign: 'center' }}>
@@ -167,12 +167,7 @@ function ScheduleList() {
       <Box display="flex" justifyContent="space-between" margin="5px">
         <Grid container display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
           <Grid item>
-            <ScheduleControl
-              courseDataChanged={onCourseDataChange}
-              loadingCallback={onLoadingChange}
-              onDateChange={onDateChange}
-              filter
-            />
+            <ScheduleControl courseDataChanged={onCourseDataChange} loadingCallback={onLoadingChange} filter />
           </Grid>
           {cookie.get('user').role === Role.Admin ? (
             <Grid item alignContent={'flex-end'}>
@@ -191,7 +186,7 @@ function ScheduleList() {
       </Box>
       <DataGrid
         getRowId={(row: TableRow) => {
-          return row.courseName + row.capacity + row.startDate + row.endDate;
+          return row.courseName + row.capacity + row.startDate + row.endDate + Math.random();
         }}
         components={{
           NoRowsOverlay: () => (

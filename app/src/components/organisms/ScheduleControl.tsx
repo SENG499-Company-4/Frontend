@@ -9,34 +9,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import { CourseSection, Term } from 'types/api.types';
 import { Role } from 'constants/timetable.constants';
 import Cookie from 'universal-cookie';
-
-export function getCurrentTerm(): Term {
-  const date = new Date();
-  const month: number = date.getMonth();
-  if (0 <= month && month < 4) {
-    return Term.Spring;
-  } else if (4 <= month && month < 8) {
-    return Term.Summer;
-  } else {
-    return Term.Fall;
-  }
-}
-
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
+import { getCurrentTerm } from 'utils/utils';
 interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
   exportState: () => void;
   loadingCallback: (loading: boolean) => void;
-  onDateChange: (year?: Date, term?: Term) => void;
   filter?: boolean;
   save?: boolean;
-  year?: Date;
-  term?: Term;
 }
 
 export function ScheduleControl(props: ScheduleControlProps) {
   const cookie = new Cookie();
-  const [term, setTerm] = useState<Term | undefined>(props.term || Term.Summer);
-  const [year, setYear] = useState<Date | undefined>(props.year || new Date(2022, 0, 1));
+  const { year, term, setYear, setTerm } = useContext(TermSelectorContext);
 
   const [calendarData, setCalendarData] = useState<CourseSection[]>([]);
 
@@ -98,11 +83,9 @@ export function ScheduleControl(props: ScheduleControlProps) {
               term={term}
               onTermChange={(term: Term) => {
                 setTerm(term);
-                props.onDateChange(year, term);
               }}
               onYearChange={(year: Date) => {
                 setYear(year);
-                props.onDateChange(year, term);
               }}
             />
           </Stack>
