@@ -97,6 +97,36 @@ export type CourseSection = {
   startDate: Scalars['Date'];
 };
 
+export type CourseSectionInput = {
+  /** Maximum capacity of the section */
+  capacity: Scalars['Int'];
+  /** The end date of the course */
+  endDate: Scalars['Date'];
+  /** How many hours per week a course takes */
+  hoursPerWeek: Scalars['Float'];
+  /** The course identifier */
+  id: CourseUpdateInput;
+  /** Days of the week the class is offered in - see Day */
+  meetingTimes: Array<MeetingTimeInput>;
+  /** Professor's info, if any professors are assigned. Usernames */
+  professors: Array<Scalars['String']>;
+  /** Section number for courses, eg: A01, A02 */
+  sectionNumber?: InputMaybe<Scalars['String']>;
+  /** The start date of the course */
+  startDate: Scalars['Date'];
+};
+
+export type CourseUpdateInput = {
+  /** Course code, e.g. 499, 310 */
+  code: Scalars['String'];
+  /** Course subject, e.g. SENG, CSC */
+  subject: Scalars['String'];
+  /** Term course is offered in */
+  term: Term;
+  /** Course Title e.g. Introduction to Artificial Intelligence */
+  title: Scalars['String'];
+};
+
 export type CreateTeachingPreferenceInput = {
   courses: Array<CoursePreferenceInput>;
   fallTermCourses?: InputMaybe<Scalars['Int']>;
@@ -163,6 +193,12 @@ export type MeetingTime = {
   startTime: Scalars['Date'];
 };
 
+export type MeetingTimeInput = {
+  day: Day;
+  endTime: Scalars['Date'];
+  startTime: Scalars['Date'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Change the password of the currently logged in user */
@@ -179,6 +215,8 @@ export type Mutation = {
   logout: AuthPayload;
   /** Reset a users password. */
   resetPassword: ResetPasswordMutationResult;
+  /** Update schedule */
+  updateSchedule: UpdateScheduleResponse;
   /** Updates a user given the user id. */
   updateUser?: Maybe<UpdateUserMutationResult>;
 };
@@ -206,6 +244,10 @@ export type MutationLoginArgs = {
 
 export type MutationResetPasswordArgs = {
   id: Scalars['ID'];
+};
+
+export type MutationUpdateScheduleArgs = {
+  input: UpdateScheduleInput;
 };
 
 export type MutationUpdateUserArgs = {
@@ -296,6 +338,27 @@ export enum Term {
   Spring = 'SPRING',
   Summer = 'SUMMER'
 }
+
+export type UpdateScheduleInput = {
+  /** The updated courses */
+  courses: Array<CourseSectionInput>;
+  /** ID of the schedule to update. If not given, the current schedule will be updated. */
+  id?: InputMaybe<Scalars['ID']>;
+  /** Whether to perform validation on the backend through algorithm 1. */
+  skipValidation: Scalars['Boolean'];
+  /** Which algorithm to use. If COMPANY4 is selected then validation will not be performed regardless of skipValidation. */
+  validation: Company;
+};
+
+export type UpdateScheduleResponse = {
+  __typename?: 'UpdateScheduleResponse';
+  /** Errors associated to updating the schedule. Only populated if success is false. This could include validation issues. */
+  errors?: Maybe<Array<Scalars['String']>>;
+  /** General messaging for the client to consume. */
+  message?: Maybe<Scalars['String']>;
+  /** Whether the update was successful */
+  success: Scalars['Boolean'];
+};
 
 export type UpdateUserInput = {
   /** New active status of user */
