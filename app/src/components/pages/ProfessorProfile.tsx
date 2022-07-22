@@ -45,22 +45,24 @@ function ProfessorProfile() {
       id: parseInt(paramId)
     }
   });
-  const [fetchSchedule, { loading: scheduleLoading, error: scheduleError, data: scheduleData }] = useLazyQuery(GET_SCHEDULE);
+  const [fetchSchedule, { loading: scheduleLoading, error: scheduleError, data: scheduleData }] =
+    useLazyQuery(GET_SCHEDULE);
 
   useEffect(() => {
     loadingContext.setLoading(userLoading);
     if (userData) {
       let professorResponse = Object.assign({}, userData.findUserById);
-      professorResponse.preferences = professorResponse.preferences.filter((value: any, index: any, self: any) =>
-        index === self.findIndex((t: any) => (
-          t.id.subject === value.id.subject && t.id.code === value.id.code
-        ))
+      professorResponse.preferences = professorResponse.preferences.filter(
+        (value: any, index: any, self: any) =>
+          index === self.findIndex((t: any) => t.id.subject === value.id.subject && t.id.code === value.id.code)
       );
       setProfessor(professorResponse);
-      fetchSchedule({ variables: {
-        year: 2021,
-        term: Term.Spring
-      }});
+      fetchSchedule({
+        variables: {
+          year: 2021,
+          term: Term.Spring
+        }
+      });
     }
     if (userError) {
       errorContext.setErrorDialog(userError);
@@ -73,23 +75,26 @@ function ProfessorProfile() {
     if (scheduleData && userData) {
       if (scheduleData.schedule && !doneRequests) {
         const profCourses = getCoursesForProfessor(userData.findUserById.id, scheduleData.schedule.courses);
-        let cur = currentlyTeaching.map(item => 
-          {
-            return item; // else return unmodified item 
-          });
+        let cur = currentlyTeaching.map((item) => {
+          return item; // else return unmodified item
+        });
         setCurrentlyTeaching(cur.concat(profCourses));
       }
       if (currentRequest == Term.Spring) {
-        fetchSchedule({ variables: {
-          year: 2021,
-          term: Term.Summer
-        }});
+        fetchSchedule({
+          variables: {
+            year: 2021,
+            term: Term.Summer
+          }
+        });
         setCurrentRequest(Term.Summer);
       } else if (currentRequest == Term.Summer) {
-        fetchSchedule({ variables: {
-          year: 2021,
-          term: Term.Fall
-        }});
+        fetchSchedule({
+          variables: {
+            year: 2021,
+            term: Term.Fall
+          }
+        });
         setCurrentRequest(Term.Fall);
       } else if (currentRequest == Term.Fall) {
         setDoneRequests(true);

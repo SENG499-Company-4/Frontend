@@ -42,10 +42,10 @@ function ScheduleList() {
 
   function parseMeetingTimes(meetingTimes: MeetingTime[]): ReactNode {
     return meetingTimes.map((meetingTime: MeetingTime, index: number) => {
-      let timeString = meetingTime.startTime.split("-")[0];
-      const startTime = timeString.slice(0,-2) + ":" + timeString.slice(-2);
-      timeString = meetingTime.endTime.split("-")[0];
-      const endTime = timeString.slice(0,-2) + ":" + timeString.slice(-2);
+      let timeString = meetingTime.startTime.split('-')[0];
+      const startTime = timeString.slice(0, -2) + ':' + timeString.slice(-2);
+      timeString = meetingTime.endTime.split('-')[0];
+      const endTime = timeString.slice(0, -2) + ':' + timeString.slice(-2);
       if (index === 0) {
         return <Chip sx={{ marginX: '2px' }} key={index} label={`${startTime} - ${endTime}`} />;
       }
@@ -154,7 +154,7 @@ function ScheduleList() {
           <Grid item>
             <ScheduleControl courseDataChanged={onCourseDataChange} loadingCallback={onLoadingChange} filter />
           </Grid>
-          { cookie.get('user').role === Role.Admin ? (
+          {cookie.get('user').role === Role.Admin ? (
             <Grid item alignContent={'flex-end'}>
               <Button
                 sx={{ height: '56px', marginTop: '62px' }}
@@ -165,8 +165,8 @@ function ScheduleList() {
               >
                 Edit Schedule
               </Button>
-            </Grid>) : null
-          }
+            </Grid>
+          ) : null}
         </Grid>
       </Box>
       <DataGrid
