@@ -4,6 +4,8 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
 import { CourseSection, Day, MeetingTime, User } from 'types/api.types';
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
+import { Role } from 'constants/timetable.constants';
+import Cookie from 'universal-cookie';
 interface TableRow {
   courseName: string;
   capacity: number;
@@ -18,6 +20,7 @@ function ScheduleList() {
   const [rows, setRows] = useState<TableRow[]>([]);
   const [scheduleLoading, setScheduleLoading] = useState(false);
   const navigate = useNavigate();
+  const cookie = new Cookie();
 
   function parseDaysOfWeek(daysOfWeek: MeetingTime[]): ReactNode {
     const daysAbbreviations = ['M', 'T', 'W', 'R', 'F'];
@@ -39,16 +42,10 @@ function ScheduleList() {
 
   function parseMeetingTimes(meetingTimes: MeetingTime[]): ReactNode {
     return meetingTimes.map((meetingTime: MeetingTime, index: number) => {
-      const startTime = new Date(meetingTime.startTime).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: false
-      });
-      const endTime = new Date(meetingTime.endTime).toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: false
-      });
+      let timeString = meetingTime.startTime.split("-")[0];
+      const startTime = timeString.slice(0,-2) + ":" + timeString.slice(-2);
+      timeString = meetingTime.endTime.split("-")[0];
+      const endTime = timeString.slice(0,-2) + ":" + timeString.slice(-2);
       if (index === 0) {
         return <Chip sx={{ marginX: '2px' }} key={index} label={`${startTime} - ${endTime}`} />;
       }
@@ -157,17 +154,19 @@ function ScheduleList() {
           <Grid item>
             <ScheduleControl courseDataChanged={onCourseDataChange} loadingCallback={onLoadingChange} filter />
           </Grid>
-          <Grid item alignContent={'flex-end'}>
-            <Button
-              sx={{ height: '56px', marginTop: '62px' }}
-              variant="contained"
-              size="large"
-              color="primary"
-              onClick={editSchedule}
-            >
-              Edit Schedule
-            </Button>
-          </Grid>
+          { cookie.get('user').role === Role.Admin ? (
+            <Grid item alignContent={'flex-end'}>
+              <Button
+                sx={{ height: '56px', marginTop: '62px' }}
+                variant="contained"
+                size="large"
+                color="primary"
+                onClick={editSchedule}
+              >
+                Edit Schedule
+              </Button>
+            </Grid>) : null
+          }
         </Grid>
       </Box>
       <DataGrid
@@ -178,7 +177,7 @@ function ScheduleList() {
           NoRowsOverlay: () => (
             <Box display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
               <Typography variant="h6" mt={2}>
-                <strong> No records matching your searh settings.</strong>
+                <strong> No records match your search settings.</strong>
               </Typography>
               <Typography variant="body1" mb={2}>
                 Try changing your search settings or the selected term.

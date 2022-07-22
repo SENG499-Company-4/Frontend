@@ -15,7 +15,7 @@ import {
 import { Faculty } from 'constants/timetable.constants';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { GET_SCHEDULE, GET_USER_BY_ID } from 'api/Queries';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
@@ -28,6 +28,8 @@ function ProfessorProfile() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
 
+  const [doneRequests, setDoneRequests] = useState<boolean>(false);
+  const [currentRequest, setCurrentRequest] = useState<Term>(Term.Spring);
   const [professor, setProfessor] = useState<User>();
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [currentlyTeaching, setCurrentlyTeaching] = useState<CourseSection[]>([]);
@@ -43,22 +45,22 @@ function ProfessorProfile() {
       id: parseInt(paramId)
     }
   });
-
-  const {
-    loading: scheduleLoading,
-    error: scheduleError,
-    data: scheduleData
-  } = useQuery(GET_SCHEDULE, {
-    variables: {
-      year: 2021, // TODO: UPDATE THIS TO GRAB CURRENT SCHEDULE
-      term: Term.Fall // TODO: UPDATE THIS TO GRAB CURRENT SCHEDULE
-    }
-  });
+  const [fetchSchedule, { loading: scheduleLoading, error: scheduleError, data: scheduleData }] = useLazyQuery(GET_SCHEDULE);
 
   useEffect(() => {
     loadingContext.setLoading(userLoading);
     if (userData) {
-      setProfessor(userData.findUserById);
+      let professorResponse = Object.assign({}, userData.findUserById);
+      professorResponse.preferences = professorResponse.preferences.filter((value: any, index: any, self: any) =>
+        index === self.findIndex((t: any) => (
+          t.id.subject === value.id.subject && t.id.code === value.id.code
+        ))
+      );
+      setProfessor(professorResponse);
+      fetchSchedule({ variables: {
+        year: 2021,
+        term: Term.Spring
+      }});
     }
     if (userError) {
       errorContext.setErrorDialog(userError);
@@ -69,15 +71,35 @@ function ProfessorProfile() {
   useEffect(() => {
     loadingContext.setLoading(scheduleLoading);
     if (scheduleData && userData) {
-      if (scheduleData.schedule) {
-        setCurrentlyTeaching(getCoursesForProfessor(userData.findUserById.id, scheduleData.schedule.courses));
+      if (scheduleData.schedule && !doneRequests) {
+        const profCourses = getCoursesForProfessor(userData.findUserById.id, scheduleData.schedule.courses);
+        let cur = currentlyTeaching.map(item => 
+          {
+            return item; // else return unmodified item 
+          });
+        setCurrentlyTeaching(cur.concat(profCourses));
+      }
+      if (currentRequest == Term.Spring) {
+        fetchSchedule({ variables: {
+          year: 2021,
+          term: Term.Summer
+        }});
+        setCurrentRequest(Term.Summer);
+      } else if (currentRequest == Term.Summer) {
+        fetchSchedule({ variables: {
+          year: 2021,
+          term: Term.Fall
+        }});
+        setCurrentRequest(Term.Fall);
+      } else if (currentRequest == Term.Fall) {
+        setDoneRequests(true);
       }
     }
     if (scheduleError) {
       errorContext.setErrorDialog(scheduleError);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduleLoading, scheduleData, scheduleError, userData, userError, userLoading]);
+  }, [scheduleLoading, scheduleData, scheduleError, userData, userError, userLoading, doneRequests]);
 
   const facultyIcons = {
     SENG: <Code />,
@@ -107,14 +129,6 @@ function ProfessorProfile() {
       flex: 1,
       renderCell: (params) => {
         return <strong>{params.row.id.subject + ' ' + params.row.id.code}</strong>;
-      }
-    },
-    {
-      field: 'term',
-      headerName: 'Term',
-      flex: 1,
-      renderCell: (params) => {
-        return params.row.id.term + ' ' + params.row.id.year;
       }
     },
     {
@@ -205,7 +219,8 @@ function ProfessorProfile() {
                       loading={userLoading}
                       autoHeight
                       rows={professor?.preferences.filter((preference: CoursePreference) => {
-                        return preference.preference > 0;
+                        const a = preference;
+                        return a.preference > 0;
                       })}
                       style={{ width: '100%' }}
                       columns={columns}
@@ -271,7 +286,7 @@ function ProfessorProfile() {
                               </ListItemAvatar>
                               <ListItemText
                                 primary={course.CourseID.subject + ' ' + course.CourseID.code}
-                                secondary={course.startDate.split('T')[0] + ' - ' + course.endDate.split('T')[0]}
+                                secondary={course.CourseID.term + ' ' + course.CourseID.year}
                               />
                             </ListItem>
                           </Card>

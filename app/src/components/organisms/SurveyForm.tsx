@@ -67,13 +67,25 @@ function SurveyForm(props: { formData: string[] }) {
       const courseCode: string = entry[0];
       const courseAbility: ICourseAbility = entry[1] as ICourseAbility;
       const rating = calculateCourseRating(courseAbility.ability as ability, courseAbility.willing as willing);
-      const coursePreference: CoursePreferenceInput = {
+      const springCoursePreference: CoursePreferenceInput = {
+        subject: courseCode.split(' ')[0],
+        code: courseCode.split(' ')[1],
+        term: Term.Spring,
+        preference: rating
+      };
+      const summerCoursePreference: CoursePreferenceInput = {
+        subject: courseCode.split(' ')[0],
+        code: courseCode.split(' ')[1],
+        term: Term.Summer,
+        preference: rating
+      };
+      const fallCoursePreference: CoursePreferenceInput = {
         subject: courseCode.split(' ')[0],
         code: courseCode.split(' ')[1],
         term: Term.Fall,
         preference: rating
       };
-      coursePreferences.push(coursePreference);
+      coursePreferences.push(springCoursePreference, summerCoursePreference, fallCoursePreference);
     });
     return coursePreferences;
   };

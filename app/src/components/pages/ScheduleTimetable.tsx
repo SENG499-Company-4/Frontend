@@ -304,11 +304,6 @@ function ScheduleTimetable() {
         textExpr="courseId"
         views={[
           {
-            type: 'day',
-            name: 'Day',
-            maxAppointmentsPerCell: 'auto'
-          },
-          {
             type: 'week',
             name: 'Week',
             maxAppointmentsPerCell: 1

@@ -7,6 +7,8 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { LoadingContext } from 'contexts/LoadingContext';
 import React, { useContext, useEffect, useState } from 'react';
 import { CourseSection, Term } from 'types/api.types';
+import { Role } from 'constants/timetable.constants';
+import Cookie from 'universal-cookie';
 
 export function getCurrentTerm(): Term {
   const date = new Date();
@@ -30,8 +32,9 @@ interface ScheduleControlProps {
 }
 
 export function ScheduleControl(props: ScheduleControlProps) {
-  const [term, setTerm] = useState<Term | undefined>(Term.Fall); // TODO: UPDATE THIS
-  const [year, setYear] = useState<Date | undefined>(new Date(2021, 0, 1)); // TODO: UPDATE THIS
+  const cookie = new Cookie();
+  const [term, setTerm] = useState<Term | undefined>(Term.Summer);
+  const [year, setYear] = useState<Date | undefined>(new Date(2022, 0, 1));
 
   const [calendarData, setCalendarData] = useState<CourseSection[]>([]);
 
@@ -119,7 +122,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
             </Grid>
           </>
         )}
-        {props.save && (
+        {props.save && cookie.get('user').role === Role.Admin && (
           <>
             <Divider
               orientation="vertical"

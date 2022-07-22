@@ -12,7 +12,7 @@ interface SemesterSelectorProps {
 }
 
 export function SemesterSelector(props: SemesterSelectorProps): React.ReactElement {
-  const termOptions = [Term.Fall, Term.Summer, Term.Spring];
+  const termOptions = [Term.Spring, Term.Summer, Term.Fall];
   const [term, setTerm] = useState<Term | undefined>((props.term as Term) || undefined);
   const [year, setYear] = useState<Date | undefined>(props.year || undefined);
 
