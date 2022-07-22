@@ -8,7 +8,9 @@ import {
 } from 'interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import { ability, willing } from 'constants/surveyForm.constants';
-import { CourseSection, MeetingTime, User } from 'types/api.types';
+import { CourseSection, MeetingTime, Term, User } from 'types/api.types';
+
+const moment = require('moment');
 
 export function parseCalendarTeacher(data: CourseSection[]): ICalendarItem_Teacher[] {
   const calendarTeacherData: ICalendarItem_Teacher[] = [];
@@ -32,6 +34,43 @@ function daytoInt(day: string) {
   return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].indexOf(day);
 }
 
+// Reference: https://ianvink.wordpress.com/2021/08/25/typescript-how-to-get-the-first-monday-in-the-month/
+export function firstMondayInMonth(zeroBasedMonth: number, year: number) {
+  let firstMonday = moment().year(year).month(zeroBasedMonth).date(1).day(8);
+  if (firstMonday.date() > 7) {
+    firstMonday.day(-6);
+  }
+  return firstMonday;
+}
+
+export function getCourseStartDate(year: number, term: Term): Date {
+  const month = () => {
+    switch (term) {
+      case Term.Fall:
+        return 8;
+      case Term.Spring:
+        return 0;
+      case Term.Summer:
+        return 4;
+      default:
+        return 0;
+    }
+  };
+  return firstMondayInMonth(month(), year).toDate();
+}
+
+export function getCurrentTerm(): Term {
+  const date = new Date();
+  const month: number = date.getMonth();
+  if (0 <= month && month < 4) {
+    return Term.Spring;
+  } else if (4 <= month && month < 8) {
+    return Term.Summer;
+  } else {
+    return Term.Fall;
+  }
+}
+
 export function parseCalendarCourse(
   data: CourseSection[],
   courseId?: string,
@@ -46,22 +85,26 @@ export function parseCalendarCourse(
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
       const dayshift = daytoInt(meetingTime.day);
 
-      const courseStartDate = new Date(course.startDate);
-
-      const courseEndDate = new Date(course.startDate);
+      const courseInitDate = getCourseStartDate(course.CourseID.year, course.CourseID.term);
+      
+      const courseStartDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
+      const courseEndDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
 
       if (courseStartDate.getDay() > dayshift) {
         courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseStartDate.getDay() + 1);
         courseEndDate.setDate(parseInt(course.endDate.split('-')[2]) + dayshift + courseEndDate.getDay() + 1);
       } else {
         courseStartDate.setDate(
-          parseInt(course.startDate.split('-')[2].split('T')[0]) + dayshift - courseStartDate.getDay()
+          parseInt(course.startDate.split('-')[2].split('T')[0]) + dayshift - courseStartDate.getDay() + 1
         );
-        courseEndDate.setDate(parseInt(course.endDate.split('-')[2].split('T')[0]) + dayshift - courseEndDate.getDay());
+        courseEndDate.setDate(
+          parseInt(course.endDate.split('-')[2].split('T')[0]) + dayshift - courseEndDate.getDay() + 1
+        );
       }
 
       const startHour = meetingTime.startTime.substring(0, 2);
       const startMinute = meetingTime.startTime.substring(2, 4);
+
       const endHour = meetingTime.endTime.substring(0, 2);
       const endMinute = meetingTime.endTime.substring(2, 4);
 
@@ -71,26 +114,10 @@ export function parseCalendarCourse(
       courseEndDate.setHours(parseInt(endHour));
       courseEndDate.setMinutes(parseInt(endMinute));
 
-      // console.log(courseStartDate);
       const lastDay = new Date(course.endDate);
       if (lastDay.getDay() >= dayshift) {
         lastDay.setDate(parseInt(course.endDate.split('-')[2].split('T')[0]) - (lastDay.getDay() - dayshift));
       }
-
-      // console.log('Attempting to get appointment meeting times...');
-      // for (const meetingTime of course.meetingTimes) {
-      //   console.log('meeting time: ', meetingTime);
-      //   const startHour = meetingTime.startTime.substring(0, 2);
-      //   const startMinute = meetingTime.startTime.substring(2, 4);
-      //   const endHour = meetingTime.endTime.substring(0, 2);
-      //   const endMinute = meetingTime.endTime.substring(2, 4);
-      //   const appointmentMeetingTime: ICalendarMeetingTime = {
-      //     StartTime: startHour + ':' + startMinute + ':00',
-      //     EndTime: endHour + ':' + endMinute + ':00',
-      //     Day: meetingTime.day
-      //   };
-      //   appointmentMeetingTimes.push(appointmentMeetingTime);
-      // }
 
       const calendarItem: ICalendarCourseItem = {
         courseId: course.CourseID.subject + course.CourseID.code,
