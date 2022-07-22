@@ -59,7 +59,7 @@ function ProfessorProfile() {
       setProfessor(professorResponse);
       fetchSchedule({
         variables: {
-          year: 2021,
+          year: 2022,
           term: Term.Spring
         }
       });
@@ -83,7 +83,7 @@ function ProfessorProfile() {
       if (currentRequest == Term.Spring) {
         fetchSchedule({
           variables: {
-            year: 2021,
+            year: 2022,
             term: Term.Summer
           }
         });
@@ -91,7 +91,7 @@ function ProfessorProfile() {
       } else if (currentRequest == Term.Summer) {
         fetchSchedule({
           variables: {
-            year: 2021,
+            year: 2022,
             term: Term.Fall
           }
         });
