@@ -60,8 +60,17 @@ function ScheduleGenerate() {
   useEffect(() => {
     loadingContext.setLoading(loading);
     if (data) {
-      setSuccessDialogOpen(true);
-      console.log('Schedule generate data: ', data);
+      if (data.generateSchedule.success) {
+        setSuccessDialogOpen(true);
+        console.log('Schedule generate data: ', data);
+      } else {
+        const errorMessage = data.generateSchedule.message ?? '';
+        errorContext.setErrorDialog({
+          code: 500,
+          message: 'Schedule generation failed. Please try again. \n' + errorMessage,
+          namespace: 'graphql'
+        });
+      }
     }
     if (error) {
       const errorCode = error.graphQLErrors.length > 0 ? error.graphQLErrors[0].extensions.code : 400;
