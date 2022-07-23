@@ -1,8 +1,14 @@
 import { BubbleChart, Code, DeveloperBoard, Engineering, Paid, Public, Science } from '@mui/icons-material';
 import {
   Avatar,
+  Button,
   ButtonBase,
   Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Divider,
   Grid,
   ListItem,
@@ -14,8 +20,9 @@ import {
 } from '@mui/material';
 import { Faculty } from 'constants/timetable.constants';
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useQuery, useLazyQuery } from '@apollo/client';
+import { useNavigate, useParams} from 'react-router-dom';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
+import { SUBMIT_SURVEY } from 'api/Mutations';
 import { GET_SCHEDULE, GET_USER_BY_ID } from 'api/Queries';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
@@ -34,6 +41,7 @@ function ProfessorProfile() {
   const [professor, setProfessor] = useState<User>();
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [currentlyTeaching, setCurrentlyTeaching] = useState<CourseSection[]>([]);
+  const [preferencesDialogOpen, setPreferencesDialogOpen] = useState<boolean>(false);
   const { id } = useParams();
   const paramId = id ? id : '-1';
 
@@ -50,6 +58,8 @@ function ProfessorProfile() {
   });
   const [fetchSchedule, { loading: scheduleLoading, error: scheduleError, data: scheduleData }] =
     useLazyQuery(GET_SCHEDULE);
+
+  const [submitSurvey, { data: submitData, loading: submitLoading, error: submitError }] = useMutation(SUBMIT_SURVEY);
 
   useEffect(() => {
     loadingContext.setLoading(userLoading);
@@ -158,8 +168,54 @@ function ProfessorProfile() {
     }
   }
 
+  function clearPreferences(e: any) {
+    e.preventDefault();
+    const values = {
+      courses: null,
+      fallTermCourses: null,
+      springTermCourses: null,
+      summerTermCourses: null,
+      hasRelief: false,
+      hasTopic: false,
+      nonTeachingTerm: null,
+      peng: false,
+      reliefReason: null,
+      topicDescription: null,
+      userId: '2'
+    };
+    const variables = { input: values };
+    submitSurvey({ variables });
+  }
+
   return (
     <Grid display="flex" marginTop={4} justifyContent="center" padding={2} sx={{ width: '100%' }}>
+      <Dialog
+        fullWidth={true}
+        maxWidth={'sm'}
+        open={preferencesDialogOpen}
+        onClose={() => {
+          setPreferencesDialogOpen(false);
+        }}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <DialogTitle>{'Warning'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-slide-description">
+            Proceeding will clear this user's preference survey responses for this year.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              clearPreferences();
+              setPreferencesDialogOpen(false);
+              window.location.reload();
+            }}
+          >
+            Clear
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Card elevation={10} sx={{ minHeight: '400px', maxWidth: '1200px', width: '100%' }}>
         {userLoading || scheduleLoading ? (
           <Grid id="skeleton-container" display={'flex'} flexDirection={'row'} margin={4} width={'100%'}>
@@ -197,6 +253,14 @@ function ProfessorProfile() {
                 <Typography variant="body1">
                   <b>Role: </b> {professor?.role}
                 </Typography>
+                <Button
+                  variant="contained"
+                  size="large"
+                  color="primary"
+                  onClick={() => setPreferencesDialogOpen(true)}
+                >
+                  Clear Preferences
+                </Button>
               </Grid>
             </Grid>
             <Divider variant="middle" sx={{ marginTop: '20px' }} />

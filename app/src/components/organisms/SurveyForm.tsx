@@ -31,6 +31,7 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { CoursePreferenceInput, CreateTeachingPreferenceInput, Term } from 'types/api.types';
 import Cookie from 'universal-cookie';
 import { calculateCourseRating } from 'utils/utils';
+import { Co2Sharp } from '@mui/icons-material';
 
 function SurveyForm(props: { formData: string[] }) {
   const [disable, setDisabled] = useState(true);
@@ -39,6 +40,8 @@ function SurveyForm(props: { formData: string[] }) {
   const [numSummerCourses, setNumSummerCourses] = useState(0);
   const [numSpringCourses, setNumSpringCourses] = useState(0);
   const [numFallCourses, setNumFallCourses] = useState(0);
+  const [topicCourse, setTopicCourse] = useState('SENG 480');
+
 
   const navigate = useNavigate();
   const cookie = new Cookie();
@@ -90,6 +93,25 @@ function SurveyForm(props: { formData: string[] }) {
     return coursePreferences;
   };
 
+  const parseTopics = (): CoursePreferenceInput[] => {
+    if (topic) {
+      const topicPreference: CoursePreferenceInput = {
+        subject: topicCourse.split(' ')[0],
+        code: topicCourse.split(' ')[1],
+        term: Term.Fall,
+        preference: 6
+      };
+      return [topicPreference];
+    }
+    return [];
+  };
+
+  const getCourses = () => {
+    let abilities = parseAbilities();
+    let topics = parseTopics();
+    return abilities.concat(topics);
+  }
+
   const [values, setValues] = useState<CreateTeachingPreferenceInput>(() => {
     const currentValues: CreateTeachingPreferenceInput = {
       courses: parseAbilities(),
@@ -110,7 +132,7 @@ function SurveyForm(props: { formData: string[] }) {
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     setValues((currentValues) => {
       currentValues = {
-        courses: parseAbilities(),
+        courses: getCourses(),
         fallTermCourses: numFallCourses,
         springTermCourses: numSpringCourses,
         summerTermCourses: numSummerCourses,
@@ -200,7 +222,7 @@ function SurveyForm(props: { formData: string[] }) {
         <DialogTitle id="alert-dialog-title">Success!</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Your survey has been submitted successfully. You will be notified when the schedule is released.
+            Your survey has been submitted successfully. Check back at a later date to see your schedule.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -214,9 +236,6 @@ function SurveyForm(props: { formData: string[] }) {
         </DialogActions>
       </Dialog>
       <form onSubmit={onSubmit}>
-        <Typography variant="overline" gutterBottom>
-          * = additional qualifications neccessary
-        </Typography>
         <Stack direction="row">
           <Typography variant="overline" gutterBottom sx={{ width: '30%' }}>
             Course
@@ -263,11 +282,33 @@ function SurveyForm(props: { formData: string[] }) {
                 onChange={(event) => handleTopicCheck(event as React.ChangeEvent<HTMLInputElement>)}
               />
             </FormGroup>
+            <FormControl>
+              <InputLabel id="select-topic-label">Department</InputLabel>
+              <Select
+                labelId="select-topic-label"
+                label="Which department"
+                id="select-department"
+                value={topicCourse}
+                disabled={!topic}
+                sx={{ color: 'black' }}
+                onChange={(event) => setTopicCourse((event as React.ChangeEvent<HTMLInputElement>).target.value)}
+              >
+                <MenuItem sx={{ color: 'black' }} value={'SENG 480'}>
+                  SENG 480
+                </MenuItem>
+                <MenuItem sx={{ color: 'black' }} value={'CSC 482'}>
+                  CSC 482
+                </MenuItem>
+                <MenuItem sx={{ color: 'black' }} value={'ECE 496'}>
+                  ECE 496
+                </MenuItem>
+              </Select>
+            </FormControl>
             <TextField
               id="topics-title-textarea"
               label="Topics course description"
               disabled={!topic}
-              style={{ width: '100%' }}
+              style={{ width: '40%' }}
               inputProps={{ style: { color: 'black' } }}
               onChange={(event) => handleTopic(event as React.ChangeEvent<HTMLInputElement>)}
             />
