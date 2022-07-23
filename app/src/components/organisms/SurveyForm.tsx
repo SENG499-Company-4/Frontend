@@ -108,7 +108,7 @@ function SurveyForm(props: { formData: string[] }) {
     let abilities = parseAbilities();
     let topics = parseTopics();
     return abilities.concat(topics);
-  }
+  };
 
   const [values, setValues] = useState<CreateTeachingPreferenceInput>(() => {
     const currentValues: CreateTeachingPreferenceInput = {
