@@ -42,7 +42,6 @@ function SurveyForm(props: { formData: string[] }) {
   const [numFallCourses, setNumFallCourses] = useState(0);
   const [topicCourse, setTopicCourse] = useState('SENG 480');
 
-
   const navigate = useNavigate();
   const cookie = new Cookie();
 
@@ -110,7 +109,7 @@ function SurveyForm(props: { formData: string[] }) {
     let abilities = parseAbilities();
     let topics = parseTopics();
     return abilities.concat(topics);
-  }
+  };
 
   const [values, setValues] = useState<CreateTeachingPreferenceInput>(() => {
     const currentValues: CreateTeachingPreferenceInput = {

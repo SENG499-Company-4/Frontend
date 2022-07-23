@@ -20,7 +20,7 @@ import {
 } from '@mui/material';
 import { Faculty } from 'constants/timetable.constants';
 import React, { useContext, useEffect, useState } from 'react';
-import { useNavigate, useParams} from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 import { SUBMIT_SURVEY } from 'api/Mutations';
 import { GET_SCHEDULE, GET_USER_BY_ID } from 'api/Queries';
@@ -253,12 +253,7 @@ function ProfessorProfile() {
                 <Typography variant="body1">
                   <b>Role: </b> {professor?.role}
                 </Typography>
-                <Button
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  onClick={() => setPreferencesDialogOpen(true)}
-                >
+                <Button variant="contained" size="large" color="primary" onClick={() => setPreferencesDialogOpen(true)}>
                   Clear Preferences
                 </Button>
               </Grid>

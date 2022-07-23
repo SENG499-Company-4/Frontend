@@ -54,7 +54,8 @@ function Survey() {
         <SurveyForm formData={courseCodes} />
       ) : (
         <Typography gutterBottom marginY={4}>
-          You have already submitted your survey for this academic year. Please contact the site administrator to reset your preferences if re-submission is necessary.
+          You have already submitted your survey for this academic year. Please contact the site administrator to reset
+          your preferences if re-submission is necessary.
         </Typography>
       )}
     </Box>
