@@ -69,7 +69,10 @@ function ProfessorProfile() {
       let professorResponse = Object.assign({}, userData.findUserById);
       professorResponse.preferences = professorResponse.preferences.filter(
         (value: any, index: any, self: any) =>
-          index === self.findIndex((t: any) => t.id.subject === value.id.subject && t.id.code === value.id.code && t.id.year === 2022)
+          index ===
+          self.findIndex(
+            (t: any) => t.id.subject === value.id.subject && t.id.code === value.id.code && t.id.year === 2022
+          )
       );
       setProfessor(professorResponse);
       fetchSchedule({
@@ -124,7 +127,7 @@ function ProfessorProfile() {
   useEffect(() => {
     loadingContext.setLoading(submitLoading);
     if (submitData) {
-      console.log("Preferences cleared successfully");
+      console.log('Preferences cleared successfully');
       window.location.reload();
     }
     if (submitError) {
@@ -265,16 +268,16 @@ function ProfessorProfile() {
                 <Typography variant="body1">
                   <b>Role: </b> {professor?.role}
                 </Typography>
-                {cookie.get('user').role === Role.Admin ?
-                  (<Button
+                {cookie.get('user').role === Role.Admin ? (
+                  <Button
                     variant="contained"
                     size="large"
                     color="primary"
                     onClick={() => setPreferencesDialogOpen(true)}
                   >
                     Clear Preferences
-                  </Button>)
-                : null}
+                  </Button>
+                ) : null}
               </Grid>
             </Grid>
             <Divider variant="middle" sx={{ marginTop: '20px' }} />
@@ -296,7 +299,7 @@ function ProfessorProfile() {
                     <b>Preferences</b>
                   </Typography>
                 </Grid>
-                {professor && professor?.preferences && professor?.preferences?.length > 0 ? (  
+                {professor && professor?.preferences && professor?.preferences?.length > 0 ? (
                   <Grid item width={'100%'}>
                     <DataGrid
                       getRowId={(row) => {
@@ -319,10 +322,10 @@ function ProfessorProfile() {
                         }
                       }}
                     />
-                    </Grid>
-                  ) : (
-                    <Typography variant="body1">No preferences recorded.</Typography>
-                  )}
+                  </Grid>
+                ) : (
+                  <Typography variant="body1">No preferences recorded.</Typography>
+                )}
               </Grid>
               <Grid
                 item
