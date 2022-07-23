@@ -26,13 +26,15 @@ import { SUBMIT_SURVEY } from 'api/Mutations';
 import { GET_SCHEDULE, GET_USER_BY_ID } from 'api/Queries';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
-import { CoursePreference, CourseSection, Term, User } from 'types/api.types';
+import { CoursePreference, CourseSection, Role, Term, User } from 'types/api.types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { getCoursesForProfessor } from 'utils/utils';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
+import Cookie from 'universal-cookie';
 
 function ProfessorProfile() {
   const navigate = useNavigate();
+  const cookie = new Cookie();
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
 
@@ -67,7 +69,7 @@ function ProfessorProfile() {
       let professorResponse = Object.assign({}, userData.findUserById);
       professorResponse.preferences = professorResponse.preferences.filter(
         (value: any, index: any, self: any) =>
-          index === self.findIndex((t: any) => t.id.subject === value.id.subject && t.id.code === value.id.code)
+          index === self.findIndex((t: any) => t.id.subject === value.id.subject && t.id.code === value.id.code && t.id.year === 2022)
       );
       setProfessor(professorResponse);
       fetchSchedule({
@@ -119,6 +121,18 @@ function ProfessorProfile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scheduleLoading, scheduleData, scheduleError, userData, userError, userLoading, doneRequests]);
 
+  useEffect(() => {
+    loadingContext.setLoading(submitLoading);
+    if (submitData) {
+      console.log("Preferences cleared successfully");
+      window.location.reload();
+    }
+    if (submitError) {
+      errorContext.setErrorDialog(submitError);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submitData, submitError, submitLoading]);
+
   const facultyIcons = {
     SENG: <Code />,
     CSC: <BubbleChart />,
@@ -168,10 +182,9 @@ function ProfessorProfile() {
     }
   }
 
-  function clearPreferences(e: any) {
-    e.preventDefault();
+  function clearPreferences() {
     const values = {
-      courses: null,
+      courses: [],
       fallTermCourses: null,
       springTermCourses: null,
       summerTermCourses: null,
@@ -181,7 +194,7 @@ function ProfessorProfile() {
       peng: false,
       reliefReason: null,
       topicDescription: null,
-      userId: '2'
+      userId: professor?.id
     };
     const variables = { input: values };
     submitSurvey({ variables });
@@ -209,7 +222,6 @@ function ProfessorProfile() {
             onClick={() => {
               clearPreferences();
               setPreferencesDialogOpen(false);
-              window.location.reload();
             }}
           >
             Clear
@@ -253,14 +265,16 @@ function ProfessorProfile() {
                 <Typography variant="body1">
                   <b>Role: </b> {professor?.role}
                 </Typography>
-                <Button
-                  variant="contained"
-                  size="large"
-                  color="primary"
-                  onClick={() => setPreferencesDialogOpen(true)}
-                >
-                  Clear Preferences
-                </Button>
+                {cookie.get('user').role === Role.Admin ?
+                  (<Button
+                    variant="contained"
+                    size="large"
+                    color="primary"
+                    onClick={() => setPreferencesDialogOpen(true)}
+                  >
+                    Clear Preferences
+                  </Button>)
+                : null}
               </Grid>
             </Grid>
             <Divider variant="middle" sx={{ marginTop: '20px' }} />
@@ -282,8 +296,8 @@ function ProfessorProfile() {
                     <b>Preferences</b>
                   </Typography>
                 </Grid>
-                <Grid item width={'100%'}>
-                  {professor && professor?.preferences && professor?.preferences?.length > 0 ? (
+                {professor && professor?.preferences && professor?.preferences?.length > 0 ? (  
+                  <Grid item width={'100%'}>
                     <DataGrid
                       getRowId={(row) => {
                         return row.id.subject + row.id.code + row.id.term + row.id.year;
@@ -305,10 +319,10 @@ function ProfessorProfile() {
                         }
                       }}
                     />
+                    </Grid>
                   ) : (
                     <Typography variant="body1">No preferences recorded.</Typography>
                   )}
-                </Grid>
               </Grid>
               <Grid
                 item

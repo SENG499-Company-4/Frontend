@@ -31,7 +31,6 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { CoursePreferenceInput, CreateTeachingPreferenceInput, Term } from 'types/api.types';
 import Cookie from 'universal-cookie';
 import { calculateCourseRating } from 'utils/utils';
-import { Co2Sharp } from '@mui/icons-material';
 
 function SurveyForm(props: { formData: string[] }) {
   const [disable, setDisabled] = useState(true);
@@ -41,7 +40,6 @@ function SurveyForm(props: { formData: string[] }) {
   const [numSpringCourses, setNumSpringCourses] = useState(0);
   const [numFallCourses, setNumFallCourses] = useState(0);
   const [topicCourse, setTopicCourse] = useState('SENG 480');
-
 
   const navigate = useNavigate();
   const cookie = new Cookie();
@@ -114,7 +112,7 @@ function SurveyForm(props: { formData: string[] }) {
 
   const [values, setValues] = useState<CreateTeachingPreferenceInput>(() => {
     const currentValues: CreateTeachingPreferenceInput = {
-      courses: parseAbilities(),
+      courses: getCourses(),
       fallTermCourses: 0,
       springTermCourses: 0,
       summerTermCourses: 0,
@@ -144,11 +142,11 @@ function SurveyForm(props: { formData: string[] }) {
         topicDescription: currentValues.topicDescription,
         userId: currentValues.userId
       };
+      const variables = { input: currentValues };
+      submitSurvey({ variables });
       return currentValues;
     });
     e.preventDefault();
-    const variables = { input: values };
-    submitSurvey({ variables });
   };
 
   useEffect(() => {
@@ -317,7 +315,7 @@ function SurveyForm(props: { formData: string[] }) {
           <Stack direction="row" spacing={2}>
             <TextField
               id="Relief Amount"
-              label="Relief Amount (Days)"
+              label="Relief Amount (Courses)"
               type="number"
               defaultValue={0}
               inputProps={{ style: { color: 'black' } }}
