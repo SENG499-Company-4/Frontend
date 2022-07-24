@@ -2,7 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
 import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
-import { checkCollision, getCourseStartDate, parseCalendarCourse, parseCalendarTeacher, sortByProf } from 'utils/utils';
+import {
+  checkCollision,
+  firstMondayInMonth,
+  getCourseStartDate,
+  parseCalendarCourse,
+  parseCalendarTeacher,
+  sortByProf
+} from 'utils/utils';
 import {
   Box,
   Dialog,
@@ -16,7 +23,7 @@ import {
 } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
-import { CourseSection, Term } from 'types/api.types';
+import { CourseSection, Role } from 'types/api.types';
 import 'components/styles/scheduler.css';
 
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
@@ -27,8 +34,9 @@ import {
   IProfessorIndex,
   IProfessorIndexEntry
 } from 'interfaces/timetable.interfaces';
-import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
+import { AppointmentAddingEvent, AppointmentDeletingEvent, AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
+import Cookie from 'universal-cookie';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 interface IStateProps {
@@ -37,15 +45,16 @@ interface IStateProps {
 }
 
 function ScheduleTimetable() {
+  const cookie = new Cookie();
   const location: Location = useLocation();
   const state: IStateProps = location.state as IStateProps;
   const courseId = state?.courseId ? state.courseId : undefined;
   const professorId = state?.professorId ? state.professorId : undefined;
-  const { year, term } = useContext(TermSelectorContext);
+  const { year, term, firstMondayOfTerm } = useContext(TermSelectorContext);
 
   const [scheduleLoading, setScheduleLoading] = useState(false);
 
-  const [currentDate, setCurrentDate] = useState<Date>(new Date(2022, 8, 5)); // TODO: SET THIS TO THE FIRST WEEK OF THE SELECTED SEMESTER / YEAR
+  const [currentDate, setCurrentDate] = useState<Date>(firstMondayOfTerm);
 
   const [calendarTeacherData, setCalendarTeacherData] = useState<ICalendarItem_Teacher[]>([]);
   const [calendarCourseData, setCalendarCourseData] = useState<ICalendarCourseItem[]>([]);
@@ -77,7 +86,26 @@ function ScheduleTimetable() {
     setScheduleLoading(loading);
   }
 
+  function validateAdd(appointment: AppointmentAddingEvent) {
+    if (!checkPermissions()) {
+      appointment.cancel = true;
+    }
+    return;
+  }
+
+  function validateDelete(appointment: AppointmentDeletingEvent) {
+    if (!checkPermissions()) {
+      appointment.cancel = true;
+    }
+    return;
+  }
+
   function validateAppointment(appointment: AppointmentUpdatingEvent) {
+    // Cancel update if not an admin user.
+    if (!checkPermissions()) {
+      appointment.cancel = true;
+      return;
+    }
     console.log('updating', appointment);
     console.log(appointment.newData.startDate.getHours());
 
@@ -220,6 +248,11 @@ function ScheduleTimetable() {
         }
       }
     ]);
+    form.option('readOnly', !checkPermissions());
+  }
+
+  function checkPermissions() {
+    return (cookie.get('user').role as Role) === Role.Admin;
   }
 
   useEffect(() => {
@@ -328,8 +361,10 @@ function ScheduleTimetable() {
         showAllDayPanel={false}
         onAppointmentFormOpening={onAppointmentFormOpening}
         onAppointmentUpdating={(e) => validateAppointment(e)}
+        onAppointmentAdding={(e) => validateAdd(e)}
+        onAppointmentDeleting={(e) => validateDelete(e)}
       >
-        <Editing allowAdding={false} allowDragging={true} />
+        <Editing allowAdding={false} allowDragging={checkPermissions()} />
         <Resource
           dataSource={calendarTeacherData}
           fieldExpr="teacherId"
