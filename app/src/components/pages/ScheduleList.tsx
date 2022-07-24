@@ -138,9 +138,20 @@ function ScheduleList() {
     if (courseData) {
       const tableRows: TableRow[] = [];
       for (const course of courseData) {
+        // Get number of course sections for course
+        const courseId = course.CourseID.subject + course.CourseID.code;
+        console.log('Course ID: ', courseId);
+        let numSections = 0;
+        for (const courseSection of courseData) {
+          console.log('Checking against course ID: ', courseSection.CourseID.subject + courseSection.CourseID.code);
+          if (courseSection.CourseID.subject + courseSection.CourseID.code === courseId) {
+            console.log('Found matching course');
+            numSections++;
+          }
+        }
         const row: TableRow = {
           courseName: course.CourseID.subject + ' ' + course.CourseID.code,
-          capacity: course.capacity,
+          capacity: Math.floor(course.capacity / (numSections === 0 ? 1 : numSections)),
           professors: course.professors ? course.professors : [],
           startDate: course.startDate,
           endDate: course.endDate,

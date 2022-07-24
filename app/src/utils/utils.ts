@@ -81,6 +81,17 @@ export function parseCalendarCourse(
   let professorProp = professorId ? professorId : undefined;
 
   data.forEach((course: CourseSection) => {
+    // Get number of course sections for course
+    const courseId = course.CourseID.subject + course.CourseID.code;
+    console.log('Course ID: ', courseId);
+    let numSections = 0;
+    for (const courseSection of data) {
+      console.log('Checking against course ID: ', courseSection.CourseID.subject + courseSection.CourseID.code);
+      if (courseSection.CourseID.subject + courseSection.CourseID.code === courseId) {
+        console.log('Found matching course');
+        numSections++;
+      }
+    }
     course.meetingTimes.forEach((meetingTime: MeetingTime) => {
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
       const dayshift = daytoInt(meetingTime.day);
@@ -126,7 +137,7 @@ export function parseCalendarCourse(
         startDate: courseStartDate,
         endDate: courseEndDate,
         lastDay: lastDay,
-        capacity: course.capacity,
+        capacity: Math.floor(course.capacity / (numSections === 0 ? 1 : numSections)),
         term: course.CourseID.term,
         meetingTime: meetingTime
       };
@@ -151,32 +162,6 @@ export function parseCalendarCourse(
   });
 
   return calendarCourseData;
-}
-
-export function parseScheduleListItems(data: CourseSection[]): IScheduleListItem[] {
-  const scheduleListItemData: IScheduleListItem[] = [];
-  data.forEach((course: CourseSection) => {
-    const daysOfWeek: string[] = [];
-    course.meetingTimes.forEach((element) => {
-      if (element.day === 'THURSDAY') {
-        daysOfWeek.push('R');
-      } else {
-        daysOfWeek.push(element.day.slice(0, 1));
-      }
-    });
-    const scheduleListItem: IScheduleListItem = {
-      courseNumber: course.CourseID.code,
-      title: course.CourseID.subject + course.CourseID.code,
-      professors: course?.professors,
-      startDate: course.startDate,
-      endDate: course.endDate,
-      timeOfDay: course.meetingTimes[0].startTime + ' - ' + course.meetingTimes[0].endTime,
-      daysOffered: daysOfWeek,
-      capacity: course.capacity
-    };
-    scheduleListItemData.push(scheduleListItem);
-  });
-  return scheduleListItemData;
 }
 
 // Given a data source and a professor username, return courses that professor is teaching or has taught.
