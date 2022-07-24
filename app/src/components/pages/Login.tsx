@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Grid } from '@mui/material';
+import { Card, Grid } from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { LOGIN } from 'api/Mutations';
 import Cookie from 'universal-cookie';
@@ -114,6 +114,11 @@ const Login = () => {
             style={{ width: 300 }}
             label="Username"
             value={formState.username}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                login({ variables: { username: formState.username, password: formState.password } });
+              }
+            }}
             onChange={(e) =>
               setFormState({
                 ...formState,
@@ -129,6 +134,11 @@ const Login = () => {
             label="Password"
             type="password"
             value={formState.password}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                login({ variables: { username: formState.username, password: formState.password } });
+              }
+            }}
             onChange={(e) =>
               setFormState({
                 ...formState,
@@ -140,7 +150,7 @@ const Login = () => {
         <Grid item>
           <Button
             variant="contained"
-            style={{ width: 300, marginTop: 15 }}
+            style={{ width: 300, height: 56 }}
             onClick={() =>
               login({
                 variables: {
