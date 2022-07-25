@@ -457,10 +457,8 @@ function ScheduleTimetable() {
         showAllDayPanel={false}
         onAppointmentFormOpening={onAppointmentFormOpening}
         onAppointmentUpdating={(e) => validateAppointment(e)}
-        onAppointmentAdding={(e) => validateAdd(e)}
-        onAppointmentDeleting={(e) => validateDelete(e)}
       >
-        <Editing allowAdding={false} allowDragging={checkPermissions()} />
+        <Editing allowAdding={false} allowDeleting={false} allowResizing={false} allowDragging={checkPermissions()} />
         <Resource
           dataSource={calendarTeacherData}
           fieldExpr="teacherId"
