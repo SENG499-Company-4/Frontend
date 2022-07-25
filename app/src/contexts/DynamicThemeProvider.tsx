@@ -1,6 +1,6 @@
 import { createTheme, PaletteMode, ThemeOptions, ThemeProvider } from '@mui/material';
 import React from 'react';
-import Themes from "devextreme/ui/themes";
+import Themes from 'devextreme/ui/themes';
 
 interface IThemeContext {
   themeType: boolean;

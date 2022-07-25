@@ -83,7 +83,6 @@ export const GET_SURVEY = gql`
   }
 `;
 
-
 /**
  * Fetch the schedule for a given year.
  */
