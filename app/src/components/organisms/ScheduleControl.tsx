@@ -24,7 +24,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
   const { year, term, setYear, setTerm } = useContext(TermSelectorContext);
 
   const [calendarData, setCalendarData] = useState<CourseSection[]>([]);
-  const [scheduleId, setScheduleId] = useState<String>("-1");
+  const [scheduleId, setScheduleId] = useState<String>('-1');
 
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);

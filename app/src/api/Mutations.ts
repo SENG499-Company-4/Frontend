@@ -122,12 +122,12 @@ export const GENERATE_SCHEDULE = gql`
 /**
  * Update a schedule
  */
- export const UPDATE_SCHEDULE = gql`
- mutation Mutation($input: UpdateScheduleInput!) {
-   updateSchedule(input: $input) {
-     success
-     message
-     errors
-   }
- }
+export const UPDATE_SCHEDULE = gql`
+  mutation Mutation($input: UpdateScheduleInput!) {
+    updateSchedule(input: $input) {
+      success
+      message
+      errors
+    }
+  }
 `;

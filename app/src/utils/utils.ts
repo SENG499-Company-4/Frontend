@@ -103,7 +103,7 @@ export function parseCalendarCourse(
 
       const firstMonday = parseInt(course.startDate.split('-')[2]);
       const newDate = firstMonday + dayshift;
-      courseStartDate.setDate(newDate); 
+      courseStartDate.setDate(newDate);
       courseEndDate.setDate(newDate);
 
       const startHour = meetingTime.startTime.substring(0, 2);

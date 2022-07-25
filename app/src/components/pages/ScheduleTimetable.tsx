@@ -217,28 +217,42 @@ function ScheduleTimetable() {
           }
         } else {
           const section = course.section;
-          const newObject = {[section]: [course]}
+          const newObject = { [section]: [course] };
           grouped[course.courseId] = newObject;
         }
       }
 
       let courses: CourseSectionInput[] = [];
       for (const key in grouped) {
-        const course_split = key.split(/(\d+)/)
+        const course_split = key.split(/(\d+)/);
         for (const section in grouped[key]) {
           const sectionMeetings = grouped[key][section];
           let meetingTimes = [];
           let professors: string[] = [];
           for (const meeting of sectionMeetings) {
-            const weekday = [Day.Sunday, Day.Monday, Day.Tuesday, Day.Wednesday, Day.Thursday, Day.Friday, Day.Saturday];
+            const weekday = [
+              Day.Sunday,
+              Day.Monday,
+              Day.Tuesday,
+              Day.Wednesday,
+              Day.Thursday,
+              Day.Friday,
+              Day.Saturday
+            ];
             const day = weekday[meeting.startDate.getDay()];
-            const startTime = String(meeting.startDate.getHours()).padStart(2, '0') + String(meeting.startDate.getMinutes()).padEnd(2, '0') + "-01-01T00:00:00.000Z";
-            const endTime = String(meeting.endDate.getHours()).padStart(2, '0') + String(meeting.endDate.getMinutes()).padEnd(2, '0') + "-01-01T00:00:00.000Z";
+            const startTime =
+              String(meeting.startDate.getHours()).padStart(2, '0') +
+              String(meeting.startDate.getMinutes()).padEnd(2, '0') +
+              '-01-01T00:00:00.000Z';
+            const endTime =
+              String(meeting.endDate.getHours()).padStart(2, '0') +
+              String(meeting.endDate.getMinutes()).padEnd(2, '0') +
+              '-01-01T00:00:00.000Z';
             const updatedTime: MeetingTime = {
               day: day,
-              endTime: endTime, 
+              endTime: endTime,
               startTime: startTime
-            }
+            };
             meetingTimes.push(updatedTime);
             for (const prof of meeting.professorsReference) {
               if (!professors.includes(prof.username)) professors.push(prof.username);
@@ -249,7 +263,7 @@ function ScheduleTimetable() {
             subject: course_split[0],
             term: sectionMeetings[0].term,
             title: sectionMeetings[0].title
-          }
+          };
           const courseInput: CourseSectionInput = {
             capacity: sectionMeetings[0].capacity,
             endDate: new Date(sectionMeetings[0].endDateString),
@@ -259,14 +273,14 @@ function ScheduleTimetable() {
             professors: professors,
             sectionNumber: section,
             startDate: new Date(sectionMeetings[0].startDateString)
-          }
+          };
           courses.push(courseInput);
         }
       }
       const values = {
-        courses: courses, 
+        courses: courses,
         id: id,
-        skipValidation: true, 
+        skipValidation: true,
         validation: 'COMPANY4'
       };
       const variables = { input: values };
