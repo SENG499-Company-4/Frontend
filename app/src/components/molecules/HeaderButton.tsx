@@ -8,6 +8,7 @@ interface IHeaderButtonProps {
   label: string;
   url: string;
   icon?: any;
+  fullWidth?: boolean;
 }
 
 function HeaderButton(props: IHeaderButtonProps) {
@@ -27,7 +28,7 @@ function HeaderButton(props: IHeaderButtonProps) {
 
   return (
     <>
-      <Button onClick={navTo(props.url)} color="inherit" startIcon={props.icon}>
+      <Button onClick={navTo(props.url)} fullWidth={props.fullWidth} color="inherit" startIcon={props.icon}>
         {props.label}
       </Button>
     </>

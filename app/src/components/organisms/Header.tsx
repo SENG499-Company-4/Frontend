@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import HeaderButton from 'components/molecules/HeaderButton';
-import { Typography } from '@mui/material';
+import { Button, IconButton, Typography } from '@mui/material';
 import HeaderMenu from 'components/molecules/HeaderMenu';
 import { Role } from 'constants/timetable.constants';
 import { IUser } from 'interfaces/user.interfaces';
@@ -18,13 +18,17 @@ import {
   AddCircle,
   Power,
   Person,
-  CalendarViewDay
+  CalendarViewDay,
+  Brightness7,
+  Bedtime
 } from '@mui/icons-material';
+import { ThemeContext } from 'contexts/DynamicThemeProvider';
 
 const appLogo = require('assets/app-logo.png');
 
 function Header(props: { user: IUser }) {
   const role = props.user?.role as Role;
+  const themeContext = useContext(ThemeContext);
   if (!role) {
     return null;
   }
@@ -39,6 +43,14 @@ function Header(props: { user: IUser }) {
             </Typography>
           </Box>
           <Box display="flex" flexGrow={1} flexDirection="row" justifyContent="space-between" marginX={4}>
+
+            <Button color='inherit'
+              onClick={() => { themeContext.setThemeType(!themeContext.themeType) }}
+              startIcon={themeContext.themeType ? <Brightness7 /> : <Bedtime />}>
+
+              Toggle Dark Mode
+            </Button>
+
             <HeaderButton key="home" label="Home" url="/" icon={<Home />} />
             {role === Role.User ? <HeaderButton key="survey" label="Survey" url="/survey" icon={<Poll />} /> : null}
             <HeaderMenu key="schedule" label="Schedule" icon={<CalendarMonth />}>

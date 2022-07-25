@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Button, Menu, MenuItem } from '@mui/material';
+import HeaderButton from './HeaderButton';
 
 interface IHeaderMenuProps {
   children: React.ReactNode;
@@ -32,7 +33,8 @@ function HeaderMenu(props: IHeaderMenuProps) {
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         {React.Children.map(props.children, (child: ReactNode) => {
-          return child ? <MenuItem>{child}</MenuItem> : null;
+          return child ? <MenuItem sx={{ padding: 0, margin: 1 }}>{React.cloneElement(child as React.ReactElement<any>, { fullWidth: true })}</MenuItem> : null;
+
         })}
       </Menu>
     </>

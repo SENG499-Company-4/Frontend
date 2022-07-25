@@ -1,17 +1,20 @@
-import { ThemeProvider } from '@emotion/react';
-import appTheme from 'themes/appTheme';
+
 import React from 'react';
 import AppRouter from 'router/AppRouter';
 import { LoadingContextProvider } from 'contexts/LoadingContext';
 import { ErrorContextProvider } from 'contexts/ErrorContext';
+import { CssBaseline } from '@mui/material';
+
+import DynamicThemeProvider from 'contexts/DynamicThemeProvider';
 
 function App() {
   return (
     <LoadingContextProvider>
       <ErrorContextProvider>
-        <ThemeProvider theme={appTheme}>
+        <DynamicThemeProvider>
+          <CssBaseline />
           <AppRouter />
-        </ThemeProvider>
+        </DynamicThemeProvider>
       </ErrorContextProvider>
     </LoadingContextProvider>
   );
