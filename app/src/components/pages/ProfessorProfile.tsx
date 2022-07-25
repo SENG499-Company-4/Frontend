@@ -29,7 +29,6 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { CoursePreference, CourseSection, Role, Term, User } from 'types/api.types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { getCoursesForProfessor } from 'utils/utils';
-import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import Cookie from 'universal-cookie';
 
 function ProfessorProfile() {
@@ -46,8 +45,6 @@ function ProfessorProfile() {
   const [preferencesDialogOpen, setPreferencesDialogOpen] = useState<boolean>(false);
   const { id } = useParams();
   const paramId = id ? id : '-1';
-
-  const { year, term, setYear, setTerm } = useContext(TermSelectorContext);
 
   const {
     loading: userLoading,
@@ -273,6 +270,7 @@ function ProfessorProfile() {
                     variant="contained"
                     size="large"
                     color="primary"
+                    sx={{ marginTop: '1rem' }}
                     onClick={() => setPreferencesDialogOpen(true)}
                   >
                     Clear Preferences

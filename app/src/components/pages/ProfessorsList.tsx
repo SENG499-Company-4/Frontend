@@ -48,7 +48,15 @@ function ProfessorsList() {
       headerName: 'View Professor Profile',
       width: 200,
       renderCell: (params) => {
-        return <Link href={'/professors/' + params.id}> View profile </Link>;
+        return (
+          <ButtonBase
+            onClick={() => {
+              navigate('/professors/' + params.id);
+            }}
+          >
+            <Link> View profile </Link>
+          </ButtonBase>
+        );
       }
     },
     {
