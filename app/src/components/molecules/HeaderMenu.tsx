@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { ButtonBase, Menu, MenuItem, Typography } from '@mui/material';
 
 interface IHeaderMenuProps {
   children: React.ReactNode;
@@ -19,9 +19,12 @@ function HeaderMenu(props: IHeaderMenuProps) {
 
   return (
     <>
-      <Button color="inherit" onClick={handleClick} startIcon={props.icon}>
-        {props.label}
-      </Button>
+      <ButtonBase onClick={handleClick} sx={{ padding: '15px' }}>
+        {props.icon}
+        <Typography variant="button" ml={1}>
+          {props.label}
+        </Typography>
+      </ButtonBase>
       <Menu
         anchorEl={anchorEl}
         id="account-menu"
@@ -30,9 +33,10 @@ function HeaderMenu(props: IHeaderMenuProps) {
         onClick={handleClose}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        style={{ padding: 0, margin: 0 }}
       >
         {React.Children.map(props.children, (child: ReactNode) => {
-          return child ? <MenuItem>{child}</MenuItem> : null;
+          return child ? <MenuItem style={{ padding: 0, margin: 0 }}>{child}</MenuItem> : null;
         })}
       </Menu>
     </>

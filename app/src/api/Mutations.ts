@@ -96,14 +96,13 @@ export const RESET_PASSWORD = gql`
 `;
 
 /**
- * Submit a survey (Not implemented?)
+ * Submit a survey
  */
 export const SUBMIT_SURVEY = gql`
-  mutation CreateTeachingPreference($peng: Boolean, $userId: ID, $courses: [CoursePreferenceInput]!) {
-    createTeachingPreference(peng: $peng, userId: $userId, courses: $courses) {
-      peng
-      userId
-      courses
+  mutation CreateTeachingPreference($input: CreateTeachingPreferenceInput!) {
+    createTeachingPreference(input: $input) {
+      success
+      message
     }
   }
 `;
@@ -116,6 +115,19 @@ export const GENERATE_SCHEDULE = gql`
     generateSchedule(input: $input) {
       success
       message
+    }
+  }
+`;
+
+/**
+ * Update a schedule
+ */
+export const UPDATE_SCHEDULE = gql`
+  mutation Mutation($input: UpdateScheduleInput!) {
+    updateSchedule(input: $input) {
+      success
+      message
+      errors
     }
   }
 `;

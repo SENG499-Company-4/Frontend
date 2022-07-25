@@ -14,7 +14,7 @@ export interface ILoadingState {
 export const LoadingContext = React.createContext<ILoadingState>({
   isLoading: false,
   setLoading: (loading: boolean) => {
-    console.log('setLoading', loading);
+    console.log('LoadingContext | setLoading:', loading);
   }
 });
 

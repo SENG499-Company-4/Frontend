@@ -8,18 +8,17 @@ import { Role } from 'constants/timetable.constants';
 import { IUser } from 'interfaces/user.interfaces';
 import {
   CalendarMonth,
-  Event,
   EventRepeat,
   Home,
   Login,
-  ModeEdit,
   Poll,
   People,
   School,
   Today,
   AddCircle,
   Power,
-  Person
+  Person,
+  CalendarViewDay
 } from '@mui/icons-material';
 
 const appLogo = require('assets/app-logo.png');
@@ -46,14 +45,6 @@ function Header(props: { user: IUser }) {
               <HeaderButton key="view-schedule" label="View Schedule" url="/schedule" icon={<Today />} />
               {role === Role.Admin ? (
                 <HeaderButton
-                  key="manage-schedule"
-                  label="Manage Schedule"
-                  url="/schedule/manage"
-                  icon={<ModeEdit />}
-                />
-              ) : null}
-              {role === Role.Admin ? (
-                <HeaderButton
                   key="generate-schedule"
                   label="Generate Schedule"
                   url="/schedule/generate"
@@ -64,7 +55,7 @@ function Header(props: { user: IUser }) {
                 key="schedule-timetable"
                 label="Schedule Timetable"
                 url="/schedule/timetable"
-                icon={<Event />}
+                icon={<CalendarViewDay />}
               />
             </HeaderMenu>
             {role === Role.Admin ? (

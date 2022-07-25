@@ -1,54 +1,38 @@
-import { Faculty, Role, Term, WeekDay } from 'constants/timetable.constants';
+import { Day, MeetingTime, Term, User } from 'types/api.types';
 
-export interface IProfessorPreference {
-  id: ICourseID;
-  preference: number;
-}
-
-export interface ICourseID {
-  subject: Faculty;
-  code: string;
-  term: Term;
-}
-
-export interface IProfessor {
-  id: number;
-  username: string;
-  password?: string;
-  faculty?: Faculty;
-  role: Role;
-  preferences: IProfessorPreference[];
-  active: boolean;
-}
-
-export interface IMeetingTime {
-  Day: WeekDay;
+export interface ICalendarMeetingTime {
+  Day: Day;
   StartTime: string;
   EndTime: string;
 }
-
-export interface ICourse {
-  CourseID: ICourseID;
-  hoursPerWeek: number;
-  capacity: number;
-  professors: IProfessor[];
-  startDate: string;
-  endDate: string;
-  meetingTimes: IMeetingTime[];
-}
-
 export interface ICalendarCourseItem {
   courseId: string;
+  professorsReference: User[];
   teacherId: number;
   startDate: Date;
   endDate: Date;
-  recurrenceRule: string;
+  lastDay: Date;
+  capacity: number; //TODO replace with section number later
+  term: Term;
+  meetingTime: MeetingTime;
+  section: string;
+  year: number;
+  title: string;
+}
+
+export interface IProfessorCourse {
+  courseId: string;
+  term: Term;
+  capacity: number; //TODO refactor to section number later
+  startDate: Date;
+  endDate: Date;
+  meetingTime: MeetingTime;
 }
 
 export interface IScheduleListItem {
   courseNumber: string;
   title: string;
-  professors: IProfessor[];
+  professors: User[];
   startDate: string;
   endDate: string;
   timeOfDay: string;
@@ -64,4 +48,29 @@ export interface ICalendarItem_Teacher {
   teacherName: string;
   color: string;
   link: string;
+}
+
+export interface IProfessorIndex {
+  [key: number]: IProfessorIndexEntry;
+}
+
+export interface IProfessorIndexEntry {
+  id: number;
+  username: string;
+  classes: IProfessorCourse[];
+}
+
+export interface ICalendarError {
+  courseId: string;
+  capacity: number; //TODO refactor to section number later
+  type: string;
+  message: string;
+  startDate: Date;
+  endDate: Date;
+  professorId: number;
+}
+
+export interface IHourMinute {
+  hour: number;
+  minute: number;
 }

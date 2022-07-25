@@ -1,80 +1,33 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
-import { GET_SCHEDULE } from 'api/Queries';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import React, { ReactNode, useContext, useState } from 'react';
+import { Box, Button, Chip, Grid, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
-import { LoadingContext } from 'contexts/LoadingContext';
-import { Day, MeetingTime, Schedule, Term, User } from 'types/api.types';
-import { ErrorContext } from 'contexts/ErrorContext';
-
-interface ITableRow {
+import { CourseSection, Day, MeetingTime, Term, User } from 'types/api.types';
+import { ScheduleControl } from 'components/organisms/ScheduleControl';
+import { Role } from 'constants/timetable.constants';
+import Cookie from 'universal-cookie';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
+interface TableRow {
   courseName: string;
   capacity: number;
   professors: User[];
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
+  meetingDays: MeetingTime[];
   meetingTimes: MeetingTime[];
+  sectionNumber: string;
 }
 
 function ScheduleList() {
-  const [schedule, setSchedule] = useState<Schedule>();
-  const [scheduleLoaded, setScheduleLoaded] = useState<boolean>(false);
-  const [rows, setRows] = useState<ITableRow[]>([]);
-  const loadingContext = useContext(LoadingContext);
-  const errorContext = useContext(ErrorContext);
+  const [rows, setRows] = useState<TableRow[]>([]);
+  const [scheduleLoading, setScheduleLoading] = useState(false);
   const navigate = useNavigate();
+  const cookie = new Cookie();
+  const { year, term } = useContext(TermSelectorContext);
 
-  const {
-    loading: scheduleLoading,
-    error: scheduleError,
-    data: scheduleData
-  } = useQuery(GET_SCHEDULE, {
-    variables: {
-      year: 2022,
-      term: Term.Fall
-    }
-  });
-
-  useEffect(() => {
-    loadingContext.setLoading(scheduleLoading);
-    if (scheduleData) {
-      console.log('Got information from GQL: ', scheduleData);
-      setSchedule(scheduleData.schedule);
-      setScheduleLoaded(true);
-    }
-    if (scheduleError) {
-      errorContext.setErrorDialog(scheduleError);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scheduleLoading, scheduleData, scheduleError]);
-
-  useEffect(() => {
-    if (scheduleLoaded && schedule?.courses) {
-      const tableRows: ITableRow[] = [];
-      for (const course of schedule.courses) {
-        console.log('Parsing course: ', course);
-        const row: ITableRow = {
-          courseName: course.CourseID.subject + ' ' + course.CourseID.code,
-          capacity: course.capacity,
-          professors: course.professors ? course.professors : [],
-          startDate: course.startDate,
-          endDate: course.endDate,
-          meetingTimes: course.meetingTimes
-        };
-        tableRows.push(row);
-      }
-      console.log('SETTING ROWS: ', tableRows);
-      setRows(tableRows);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [schedule, scheduleLoaded]);
-
-  //TODO: UPDATE THIS
-  function parseDaysOfWeek(daysOfWeek: any): ReactNode {
+  function parseDaysOfWeek(daysOfWeek: MeetingTime[]): ReactNode {
     const daysAbbreviations = ['M', 'T', 'W', 'R', 'F'];
-
-    const meetingDays = daysOfWeek.value.map((meetingTime: MeetingTime) => {
+    const meetingDays = daysOfWeek.map((meetingTime: MeetingTime) => {
       if (meetingTime.day === Day.Thursday) {
         return 'R';
       } else {
@@ -90,17 +43,76 @@ function ScheduleList() {
     });
   }
 
+  function parseMeetingTimes(meetingTimes: MeetingTime[]): ReactNode {
+    return meetingTimes.map((meetingTime: MeetingTime, index: number) => {
+      let timeString = meetingTime.startTime.split('-')[0];
+      const startTime = timeString.slice(0, -2) + ':' + timeString.slice(-2);
+      timeString = meetingTime.endTime.split('-')[0];
+      const endTime = timeString.slice(0, -2) + ':' + timeString.slice(-2);
+      if (index === 0) {
+        return <Chip sx={{ marginX: '2px' }} key={index} label={`${startTime} - ${endTime}`} />;
+      }
+    });
+  }
+
+  function editSchedule() {
+    navigate('/schedule/timetable', {
+      state: {
+        year: year,
+        term: term
+      }
+    });
+  }
+
   const columns: GridColDef[] = [
-    { field: 'courseName', headerName: 'Course Title', width: 130 },
-    { field: 'startDate', headerName: 'Start Date', width: 140 },
-    { field: 'endDate', headerName: 'End Date', width: 140 },
+    {
+      field: 'courseName',
+      headerName: 'Course Title',
+      width: 130,
+      renderCell: (params) => {
+        return (
+          <Typography variant="body1" ml={1}>
+            {params.value}
+          </Typography>
+        );
+      }
+    },
+    {
+      field: 'sectionNumber',
+      headerName: 'Section',
+      width: 100
+    },
+    {
+      field: 'startDate',
+      headerName: 'Start Date',
+      width: 140,
+      renderCell: (params) => {
+        return params.value.split('T')[0];
+      }
+    },
+    {
+      field: 'endDate',
+      headerName: 'End Date',
+      width: 140,
+      renderCell: (params) => {
+        return params.value.split('T')[0];
+      }
+    },
     { field: 'capacity', headerName: 'Capacity', width: 80 },
     {
-      field: 'meetingTimes',
+      field: 'meetingDays',
       headerName: 'Days of Week',
       width: 240,
       renderCell: (params) => {
-        return parseDaysOfWeek(params);
+        return parseDaysOfWeek(params.value as MeetingTime[]);
+      }
+    },
+    {
+      field: 'meetingTimes',
+      headerName: 'Meeting Time',
+      width: 160,
+      renderCell: (params) => {
+        return parseMeetingTimes(params.value as MeetingTime[]);
       }
     },
     {
@@ -121,17 +133,87 @@ function ScheduleList() {
     }
   ];
 
+  function onCourseDataChange(courseData: CourseSection[]) {
+    console.log('Course data changed!: ', courseData);
+    if (courseData) {
+      const tableRows: TableRow[] = [];
+      for (const course of courseData) {
+        // Get number of course sections for course
+        const courseId = course.CourseID.subject + course.CourseID.code;
+        console.log('Course ID: ', courseId);
+        let numSections = 0;
+        for (const courseSection of courseData) {
+          console.log('Checking against course ID: ', courseSection.CourseID.subject + courseSection.CourseID.code);
+          if (courseSection.CourseID.subject + courseSection.CourseID.code === courseId) {
+            console.log('Found matching course');
+            numSections++;
+          }
+        }
+        const row: TableRow = {
+          courseName: course.CourseID.subject + ' ' + course.CourseID.code,
+          capacity: Math.floor(course.capacity / (numSections === 0 ? 1 : numSections)),
+          professors: course.professors ? course.professors : [],
+          startDate: course.startDate,
+          endDate: course.endDate,
+          meetingDays: course.meetingTimes,
+          meetingTimes: course.meetingTimes,
+          sectionNumber: course.sectionNumber
+        };
+        console.log('Row: ', row);
+        tableRows.push(row);
+      }
+      setRows(tableRows);
+    }
+  }
+
+  function onLoadingChange(loading: boolean) {
+    setScheduleLoading(loading);
+  }
+
   return (
-    <Box sx={{ width: '60%', margin: 'auto' }}>
+    <Box sx={{ width: '70%', margin: 'auto' }}>
       <Typography marginTop={5} marginBottom={2} variant="h4" sx={{ textAlign: 'center' }}>
-        Current Schedule
+        Schedule List
       </Typography>
+      <Box display="flex" justifyContent="space-between" margin="5px">
+        <Grid container display={'flex'} flexDirection={'row'} justifyContent={'space-between'}>
+          <Grid item>
+            <ScheduleControl courseDataChanged={onCourseDataChange} loadingCallback={onLoadingChange} filter />
+          </Grid>
+          {cookie.get('user').role === Role.Admin ? (
+            <Grid item alignContent={'flex-end'}>
+              <Button
+                sx={{ height: '56px', marginTop: '62px' }}
+                variant="contained"
+                size="large"
+                color="primary"
+                onClick={editSchedule}
+              >
+                Edit Schedule
+              </Button>
+            </Grid>
+          ) : null}
+        </Grid>
+      </Box>
       <DataGrid
-        getRowId={(row: ITableRow) => {
-          return row.courseName + row.capacity + row.startDate + row.endDate;
+        getRowId={(row: TableRow) => {
+          return row.courseName + row.capacity + row.startDate + row.endDate + Math.random();
+        }}
+        components={{
+          NoRowsOverlay: () => (
+            <Box display={'flex'} flexDirection={'column'} justifyContent={'center'} alignItems={'center'}>
+              <Typography variant="h6" mt={2}>
+                <strong> No records match your search settings.</strong>
+              </Typography>
+              <Typography variant="body1" mb={2}>
+                Try changing your search settings or the selected term.
+              </Typography>
+            </Box>
+          )
         }}
         loading={scheduleLoading}
-        autoHeight
+        disableSelectionOnClick
+        autoHeight={true}
         rows={rows}
         columns={columns}
         rowsPerPageOptions={[5]}

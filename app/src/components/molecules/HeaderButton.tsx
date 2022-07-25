@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@mui/material';
+import { ButtonBase, Typography } from '@mui/material';
 import Cookies from 'universal-cookie';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,11 +26,12 @@ function HeaderButton(props: IHeaderButtonProps) {
   }
 
   return (
-    <>
-      <Button onClick={navTo(props.url)} color="inherit" startIcon={props.icon}>
+    <ButtonBase onClick={navTo(props.url)} sx={{ padding: '15px' }}>
+      {props.icon}
+      <Typography variant="button" ml={1}>
         {props.label}
-      </Button>
-    </>
+      </Typography>
+    </ButtonBase>
   );
 }
 

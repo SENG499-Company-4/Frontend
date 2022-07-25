@@ -4,13 +4,16 @@ import React from 'react';
 import AppRouter from 'router/AppRouter';
 import { LoadingContextProvider } from 'contexts/LoadingContext';
 import { ErrorContextProvider } from 'contexts/ErrorContext';
+import { TermSelectorContextProvider } from 'contexts/TermSelectorContext';
 
 function App() {
   return (
     <LoadingContextProvider>
       <ErrorContextProvider>
         <ThemeProvider theme={appTheme}>
-          <AppRouter />
+          <TermSelectorContextProvider>
+            <AppRouter />
+          </TermSelectorContextProvider>
         </ThemeProvider>
       </ErrorContextProvider>
     </LoadingContextProvider>
