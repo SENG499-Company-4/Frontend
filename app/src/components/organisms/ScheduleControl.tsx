@@ -13,7 +13,7 @@ import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import { getCurrentTerm } from 'utils/utils';
 interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
-  exportState?: () => void;
+  exportState?: (id: String) => void;
   loadingCallback: (loading: boolean) => void;
   filter?: boolean;
   save?: boolean;
@@ -24,6 +24,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
   const { year, term, setYear, setTerm } = useContext(TermSelectorContext);
 
   const [calendarData, setCalendarData] = useState<CourseSection[]>([]);
+  const [scheduleId, setScheduleId] = useState<String>("-1");
 
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
@@ -59,6 +60,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
       if (scheduleData.schedule) {
         setCalendarData(scheduleData.schedule.courses);
         props.courseDataChanged(scheduleData.schedule.courses);
+        setScheduleId(scheduleData.schedule.id);
       } else {
         setCalendarData([]);
         props.courseDataChanged([]);
@@ -124,7 +126,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
                   variant="contained"
                   size="large"
                   color="secondary"
-                  onClick={props.exportState}
+                  onClick={() => props.exportState(scheduleId)}
                 >
                   Save Schedule
                 </Button>

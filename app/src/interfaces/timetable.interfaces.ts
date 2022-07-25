@@ -15,6 +15,9 @@ export interface ICalendarCourseItem {
   capacity: number; //TODO replace with section number later
   term: Term;
   meetingTime: MeetingTime;
+  section: string;
+  year: number;
+  title: string;
 }
 
 export interface IProfessorCourse {

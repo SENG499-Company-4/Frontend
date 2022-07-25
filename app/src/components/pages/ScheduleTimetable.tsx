@@ -23,7 +23,9 @@ import {
 } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
-import { CourseSection, Role } from 'types/api.types';
+import { useMutation } from '@apollo/client';
+import { UPDATE_SCHEDULE } from 'api/Mutations';
+import { CourseSection, CourseSectionInput, CourseUpdateInput, Day, MeetingTime, Role } from 'types/api.types';
 import 'components/styles/scheduler.css';
 
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
@@ -63,6 +65,8 @@ function ScheduleTimetable() {
   const [profErrorIndex, setProfErrorIndex] = useState<IProfessorIndex>({});
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
+  const [updateSchedule, { updateData, updateLoading, updateError }] = useMutation(UPDATE_SCHEDULE);
+
   const [containerHeight, setContainerHeight] = useState<number>(() => {
     return courseId || professorId ? window.innerHeight - 256 : window.innerHeight - 224;
   });
@@ -76,6 +80,17 @@ function ScheduleTimetable() {
     setCalendarCourseData(parseCalendarCourse(courseData, courseId, professorId));
     setCalendarTeacherData(parseCalendarTeacher(courseData));
   }
+
+  useEffect(() => {
+    //loadingContext.setLoading(loading);
+    if (updateData) {
+      console.log(updateData);
+    }
+    if (updateError) {
+      console.log(updateError);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [updateData, updateLoading, updateError]);
 
   useEffect(() => {
     console.log('Calendar course data: ', calendarCourseData);
@@ -143,13 +158,12 @@ function ScheduleTimetable() {
     }
   }
 
-  function exportState() {
+  function exportState(id: String) {
     console.log(calendarTeacherData);
     console.log(calendarCourseData);
 
     console.log('errors');
     console.log(errors);
-    setDialogOpen(true);
 
     const profIndex = sortByProf(calendarCourseData);
     const profErrors: IProfessorIndex = {};
@@ -189,8 +203,76 @@ function ScheduleTimetable() {
     });
 
     setProfErrorIndex(profErrors);
-    console.log('profErrors');
-    console.log(profErrors);
+
+    if (Object.keys(profErrors).length === 0) {
+      let grouped = {} as any;
+      for (const course of calendarCourseData) {
+        if (course.courseId in grouped) {
+          if (course.section in grouped[course.courseId]) {
+            const section = course.section;
+            grouped[course.courseId][section].push(course);
+          } else {
+            const section = course.section;
+            grouped[course.courseId][section] = [course];
+          }
+        } else {
+          const section = course.section;
+          const newObject = {[section]: [course]}
+          grouped[course.courseId] = newObject;
+        }
+      }
+
+      let courses: CourseSectionInput[] = [];
+      for (const key in grouped) {
+        const course_split = key.split(/(\d+)/)
+        for (const section in grouped[key]) {
+          const sectionMeetings = grouped[key][section];
+          let meetingTimes = [];
+          let professors: string[] = [];
+          for (const meeting of sectionMeetings) {
+            const weekday = [Day.Sunday, Day.Monday, Day.Tuesday, Day.Wednesday, Day.Thursday, Day.Friday, Day.Saturday];
+            const day = weekday[meeting.startDate.getDay()];
+            const startTime = String(meeting.startDate.getHours()).padStart(2, '0') + String(meeting.startDate.getMinutes()).padEnd(2, '0') + "-01-01T00:00:00.000Z";
+            const endTime = String(meeting.endDate.getHours()).padStart(2, '0') + String(meeting.endDate.getMinutes()).padEnd(2, '0') + "-01-01T00:00:00.000Z";
+            const updatedTime: MeetingTime = {
+              day: day,
+              endTime: endTime, 
+              startTime: startTime
+            }
+            meetingTimes.push(updatedTime);
+            for (const prof of meeting.professorsReference) {
+              if (!professors.includes(prof.username)) professors.push(prof.username);
+            }
+          }
+          const updateInput: CourseUpdateInput = {
+            code: course_split[1],
+            subject: course_split[0],
+            term: sectionMeetings[0].term,
+            title: sectionMeetings[0].title
+          }
+          const courseInput: CourseSectionInput = {
+            capacity: sectionMeetings[0].capacity,
+            endDate: new Date(sectionMeetings[0].endDateString),
+            hoursPerWeek: 3,
+            id: updateInput,
+            meetingTimes: meetingTimes,
+            professors: professors,
+            sectionNumber: section,
+            startDate: new Date(sectionMeetings[0].startDateString)
+          }
+          courses.push(courseInput);
+        }
+      }
+      const values = {
+        courses: courses, 
+        id: id,
+        skipValidation: true, 
+        validation: 'COMPANY4'
+      };
+      const variables = { input: values };
+      updateSchedule({ variables });
+    }
+    setDialogOpen(true);
   }
 
   useEffect(() => {
@@ -300,7 +382,7 @@ function ScheduleTimetable() {
                     </>
                   );
                 })
-              : "Your generation request was submitted successfully. When the scheduling algorithm completes, you'll be able to view the schedule on the management page."}
+              : "Your re-generation request was submitted successfully. When the scheduling algorithm checks complete, you'll be able to view the updated schedule here."}
           </DialogContentText>
         </DialogContent>
         <DialogActions>

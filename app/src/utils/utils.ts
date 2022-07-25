@@ -101,17 +101,10 @@ export function parseCalendarCourse(
       const courseStartDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
       const courseEndDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
 
-      if (courseStartDate.getDay() > dayshift) {
-        courseStartDate.setDate(parseInt(course.startDate.split('-')[2]) + dayshift + courseStartDate.getDay() + 1);
-        courseEndDate.setDate(parseInt(course.endDate.split('-')[2]) + dayshift + courseEndDate.getDay() + 1);
-      } else {
-        courseStartDate.setDate(
-          parseInt(course.startDate.split('-')[2].split('T')[0]) + dayshift - courseStartDate.getDay() + 1
-        );
-        courseEndDate.setDate(
-          parseInt(course.endDate.split('-')[2].split('T')[0]) + dayshift - courseEndDate.getDay() + 1
-        );
-      }
+      const firstMonday = parseInt(course.startDate.split('-')[2]);
+      const newDate = firstMonday + dayshift;
+      courseStartDate.setDate(newDate); 
+      courseEndDate.setDate(newDate);
 
       const startHour = meetingTime.startTime.substring(0, 2);
       const startMinute = meetingTime.startTime.substring(2, 4);
@@ -136,10 +129,15 @@ export function parseCalendarCourse(
         teacherId: course?.professors[0].id,
         startDate: courseStartDate,
         endDate: courseEndDate,
+        startDateString: course.startDate,
+        endDateString: course.endDate,
         lastDay: lastDay,
         capacity: Math.floor(course.capacity / (numSections === 0 ? 1 : numSections)),
         term: course.CourseID.term,
-        meetingTime: meetingTime
+        meetingTime: meetingTime,
+        section: course?.sectionNumber,
+        year: course.CourseID.year,
+        title: course.CourseID.title
       };
 
       // Conditional return rules based on props
