@@ -1,11 +1,11 @@
 import { LoadingContext } from 'contexts/LoadingContext';
 import { IPublicRouteMeta } from 'interfaces/route.interfaces';
-import { IUser } from 'interfaces/user.interfaces';
 import React, { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { UserCookie } from 'router/AppRouter';
 
 interface IPublicRouteProps {
-  user?: IUser;
+  user?: UserCookie;
   meta: IPublicRouteMeta;
   children: React.ReactNode;
 }

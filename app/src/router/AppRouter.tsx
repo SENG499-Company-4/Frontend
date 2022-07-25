@@ -14,13 +14,19 @@ import PlugAndPlay from 'components/pages/PlugAndPlay';
 import { PublicRouteMeta, AdminRouteMeta, ProfessorRouteMeta, ProtectedRouteMeta } from 'constants/route.constants';
 import { PublicRoute } from 'router/routes/PublicRoute';
 import { ProtectedRoute } from 'router/routes/ProtectedRoute';
-import { IUser } from 'interfaces/user.interfaces';
 import Cookie from 'universal-cookie';
 import ScheduleList from 'components/pages/ScheduleList';
+import { Role } from 'types/api.types';
+
+export interface UserCookie {
+  userId: number;
+  username: string;
+  role: Role;
+}
 
 function AppRouter() {
   const cookie = new Cookie();
-  const user: IUser = cookie.get('user');
+  const user: UserCookie = cookie.get('user');
 
   return (
     <Router>
