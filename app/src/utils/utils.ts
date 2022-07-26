@@ -15,18 +15,18 @@ export function parseCalendarTeacher(professors: User[], darkMode: boolean): ICa
   const calendarTeacherData: ICalendarItem_Teacher[] = [];
   professors.forEach((professor: User) => {
     const appointmentColor = darkMode
-        ? darkModeColors[professor.id % darkModeColors.length]
-        : lightModeColors[professor.id % lightModeColors.length];
-      const calendarItem: ICalendarItem_Teacher = {
-        id: professor.id,
-        teacherName: professor.username,
-        courseId: "",
-        term: "",
-        color: appointmentColor,
-        link: '/professors/' + professor.id
-      };
-      calendarTeacherData.push(calendarItem);
-  })
+      ? darkModeColors[professor.id % darkModeColors.length]
+      : lightModeColors[professor.id % lightModeColors.length];
+    const calendarItem: ICalendarItem_Teacher = {
+      id: professor.id,
+      teacherName: professor.username,
+      courseId: '',
+      term: '',
+      color: appointmentColor,
+      link: '/professors/' + professor.id
+    };
+    calendarTeacherData.push(calendarItem);
+  });
   return calendarTeacherData;
 }
 
