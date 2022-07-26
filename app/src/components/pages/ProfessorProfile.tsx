@@ -37,7 +37,7 @@ function ProfessorProfile() {
   const cookie = new Cookie();
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
-  const { setYear, setTerm } = useContext(TermSelectorContext);
+  const { setYear, setTerm, setCourseIdFilter } = useContext(TermSelectorContext);
 
   const [doneRequests, setDoneRequests] = useState<boolean>(false);
   const [currentRequest, setCurrentRequest] = useState<Term>(Term.Spring);
@@ -360,11 +360,8 @@ function ProfessorProfile() {
                           onClick={() => {
                             setYear(new Date(course.CourseID.year, 1, 2));
                             setTerm(course.CourseID.term);
-                            navigate('/schedule/timetable', {
-                              state: {
-                                courseId: course.CourseID.subject + course.CourseID.code
-                              }
-                            });
+                            setCourseIdFilter(course.CourseID.subject + course.CourseID.code);
+                            navigate('/schedule/timetable');
                           }}
                           sx={{ display: 'block', textAlign: 'initial', width: '100%' }}
                         >

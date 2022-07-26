@@ -91,7 +91,7 @@ function ScheduleList() {
     {
       field: 'courseName',
       headerName: 'Course Title',
-      width: 130,
+      flex: 1,
       renderCell: (params) => {
         return (
           <Typography variant="body1" ml={1}>
@@ -103,21 +103,21 @@ function ScheduleList() {
     {
       field: 'sectionNumber',
       headerName: 'Section',
-      width: 100
+      flex: 1
     },
     {
       field: 'startDate',
       headerName: 'Start Date',
-      width: 140,
-      renderCell: (params) => {
+      flex: 1,
+      renderCell: () => {
         return makeStartDateString(year.getFullYear(), term);
       }
     },
     {
       field: 'endDate',
       headerName: 'End Date',
-      width: 140,
-      renderCell: (params) => {
+      flex: 1,
+      renderCell: () => {
         return makeEndDateString(year.getFullYear(), term);
       }
     },
@@ -125,7 +125,7 @@ function ScheduleList() {
     {
       field: 'meetingDays',
       headerName: 'Days of Week',
-      width: 240,
+      flex: 2,
       renderCell: (params) => {
         return parseDaysOfWeek(params.value as MeetingTime[]);
       }
@@ -133,7 +133,7 @@ function ScheduleList() {
     {
       field: 'meetingTimes',
       headerName: 'Meeting Time',
-      width: 160,
+      flex: 1,
       renderCell: (params) => {
         return parseMeetingTimes(params.value as MeetingTime[]);
       }
@@ -141,7 +141,7 @@ function ScheduleList() {
     {
       field: 'professors',
       headerName: 'Professor',
-      width: 150,
+      flex: 2,
       renderCell: (params) => {
         return (
           <Button
@@ -196,7 +196,7 @@ function ScheduleList() {
   }
 
   return (
-    <Box sx={{ width: 'fit-content', margin: 'auto' }}>
+    <Box sx={{ width: '90%', maxWidth: 1200, margin: 'auto' }}>
       <Typography marginTop={5} marginBottom={2} variant="h4" sx={{ textAlign: 'center' }}>
         Schedule List
       </Typography>

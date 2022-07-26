@@ -50,7 +50,11 @@ function Appointment(model: any) {
           </>
         ) : (
           <>
-            <Grid item>{targetedAppointmentData.courseId}</Grid>
+            <Grid item>
+              <Typography variant="body1">
+                <strong>{targetedAppointmentData.courseId}</strong>
+              </Typography>
+            </Grid>
             <Grid item>{getUserData.findUserById.name}</Grid>
             <Grid item>
               {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}

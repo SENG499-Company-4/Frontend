@@ -30,8 +30,12 @@ export function parseCalendarTeacher(professors: User[], darkMode: boolean): ICa
   return calendarTeacherData;
 }
 
-function daytoInt(day: string) {
+export function daytoInt(day: string) {
   return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].indexOf(day);
+}
+
+export function intToDay(day: number) {
+  return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
 }
 
 export function garfield(year: number, term: Term): number {
@@ -127,8 +131,8 @@ export function parseCalendarCourse(
   professorId?: number
 ): ICalendarCourseItem[] {
   const calendarCourseData: ICalendarCourseItem[] = [];
-  let courseProp = courseId ? courseId : undefined;
-  let professorProp = professorId ? professorId : undefined;
+  let courseProp = courseId ? courseId : '';
+  let professorProp = professorId ? professorId : -1;
 
   data.forEach((course: CourseSection) => {
     // Get number of course sections for course
@@ -188,15 +192,15 @@ export function parseCalendarCourse(
       };
 
       // Conditional return rules based on props
-      if (professorProp && courseProp) {
+      if (professorProp !== -1 && courseProp !== '') {
         if (calendarItem.teacherId === professorProp && courseProp === calendarItem.courseId) {
           calendarCourseData.push(calendarItem);
         }
-      } else if (courseProp && !professorProp) {
+      } else if (courseProp !== '' && professorProp === -1) {
         if (calendarItem.courseId === courseProp) {
           calendarCourseData.push(calendarItem);
         }
-      } else if (!courseProp && professorProp) {
+      } else if (courseProp === '' && professorProp !== -1) {
         if (calendarItem.teacherId === professorProp) {
           calendarCourseData.push(calendarItem);
         }
@@ -299,8 +303,12 @@ export function checkCollision(a: MeetingTime, b: MeetingTime) {
     hour: parseInt(b.endTime.split(':')[0]),
     minute: parseInt(b.endTime.split(':')[1])
   };
-
-  if (compareTime(aEnd, bStart) > 0 && compareTime(aStart, bEnd) < 0) return true;
+  console.log('Same day. Comparing times...');
+  if (compareTime(aEnd, bStart) > 0 && compareTime(aStart, bEnd) < 0) {
+    console.log('Collision detected!');
+    return true;
+  }
+  return false;
 }
 
 export function calculateCourseRating(able: string, willingness: string): number {

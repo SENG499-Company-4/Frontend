@@ -42,16 +42,14 @@ function Header(props: { user: UserCookie }) {
               Scheduler
             </Typography>
           </Box>
-          <Box display="flex" flexGrow={1} flexDirection="row" justifyContent="space-between" marginX={4}>
-            <Button
-              color="inherit"
-              onClick={() => {
-                themeContext.setThemeType(!themeContext.themeType);
-              }}
-              startIcon={themeContext.themeType ? <Brightness7 /> : <Bedtime />}
-            >
-              {themeContext.themeType ? 'Light Mode' : 'Dark Mode'}
-            </Button>
+          <Box
+            display="flex"
+            flexGrow={1}
+            flexDirection="row"
+            justifyContent="space-between"
+            marginX={4}
+            sx={{ marginLeft: '75px' }}
+          >
             <HeaderButton key="home" label="Home" url="/" icon={<Home />} />
             {role === Role.User ? <HeaderButton key="survey" label="Survey" url="/survey" icon={<Poll />} /> : null}
             <HeaderMenu key="schedule" label="Schedule" icon={<CalendarMonth />}>
@@ -81,6 +79,16 @@ function Header(props: { user: UserCookie }) {
               <HeaderButton key="plug-and-play" label="Plug and Play" url="/plug-and-play" icon={<Power />} />
             ) : null}
             <HeaderButton key="profile" label="Profile" url={'/professors/' + props.user.userId} icon={<Person />} />
+            <Button
+              style={{ backgroundColor: 'transparent' }}
+              color="inherit"
+              onClick={() => {
+                themeContext.setThemeType(!themeContext.themeType);
+              }}
+              startIcon={themeContext.themeType ? <Brightness7 /> : <Bedtime />}
+            >
+              {themeContext.themeType ? 'Light Mode' : 'Dark Mode'}
+            </Button>
             <HeaderButton
               key="login"
               label={role ? 'Logout' : 'Login'}

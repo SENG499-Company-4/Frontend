@@ -11,10 +11,12 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { useQuery } from '@apollo/client';
 import { GET_PROFESSORS } from 'api/Queries';
 import { User } from 'types/api.types';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
 
 function ProfessorsList() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
+  const { setProfessorIdFilter } = useContext(TermSelectorContext);
   const [professorsList, setProfessorsList] = useState<User[]>([]);
   const [search, setSearch] = useState<string>('');
   const [rows, setRows] = useState<User[]>([]);
@@ -68,11 +70,8 @@ function ProfessorsList() {
         return (
           <ButtonBase
             onClick={() => {
-              navigate('/schedule/timetable', {
-                state: {
-                  professorId: params.id
-                }
-              });
+              setProfessorIdFilter(params.id);
+              navigate('/schedule/timetable');
             }}
           >
             <Link>View Courses</Link>

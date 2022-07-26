@@ -27,7 +27,14 @@ function HeaderButton(props: IHeaderButtonProps) {
   }
 
   return (
-    <Button onClick={navTo(props.url)} fullWidth={props.fullWidth} color="inherit" startIcon={props.icon}>
+    <Button
+      variant="text"
+      style={{ backgroundColor: 'transparent' }}
+      onClick={navTo(props.url)}
+      fullWidth={props.fullWidth}
+      color="inherit"
+      startIcon={props.icon}
+    >
       {props.label}
     </Button>
   );
