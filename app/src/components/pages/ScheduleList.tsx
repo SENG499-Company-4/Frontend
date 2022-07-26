@@ -65,12 +65,24 @@ function ScheduleList() {
     });
   }
 
-  function makeStartDateString(year: number, term: Term) { 
-    return year + "-" + String(getTermMonthIndex(term) + 1).padStart(2, '0') + "-" + String(garfield(year, term)).padStart(2, '0');
+  function makeStartDateString(year: number, term: Term) {
+    return (
+      year +
+      '-' +
+      String(getTermMonthIndex(term) + 1).padStart(2, '0') +
+      '-' +
+      String(garfield(year, term)).padStart(2, '0')
+    );
   }
 
   function makeEndDateString(year: number, term: Term) {
-    return year + "-" + String(getTermMonthIndex(term) + 4).padStart(2, '0') + "-" + String(getLastFriday(year, term)).padStart(2, '0');
+    return (
+      year +
+      '-' +
+      String(getTermMonthIndex(term) + 4).padStart(2, '0') +
+      '-' +
+      String(getLastFriday(year, term)).padStart(2, '0')
+    );
   }
 
   const columns: GridColDef[] = [
@@ -135,7 +147,7 @@ function ScheduleList() {
               navigate('/professors/' + params.value[0].id);
             }}
           >
-            <Typography noWrap variant='inherit'>
+            <Typography noWrap variant="inherit">
               {params.value[0].name}
             </Typography>
           </Button>

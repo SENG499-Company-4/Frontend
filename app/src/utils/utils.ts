@@ -37,24 +37,24 @@ function daytoInt(day: string) {
 export function garfield(year: number, term: Term): number {
   const mondays = {
     2021: {
-      'SPRING': 4,
-      'SUMMER': 3,
-      'FALL': 6
+      SPRING: 4,
+      SUMMER: 3,
+      FALL: 6
     },
     2022: {
-      'SPRING': 3,
-      'SUMMER': 2,
-      'FALL': 5
+      SPRING: 3,
+      SUMMER: 2,
+      FALL: 5
     },
     2023: {
-      'SPRING': 2,
-      'SUMMER': 1,
-      'FALL': 4
+      SPRING: 2,
+      SUMMER: 1,
+      FALL: 4
     },
     2024: {
-      'SPRING': 1,
-      'SUMMER': 6,
-      'FALL': 2
+      SPRING: 1,
+      SUMMER: 6,
+      FALL: 2
     }
   } as any;
   return mondays[year][term];
@@ -64,24 +64,24 @@ export function getLastFriday(year: number, term: Term): number {
   // Using first friday of the last month of a term as a rough estimation of the term ending date
   const fridays = {
     2021: {
-      'SPRING': 2,
-      'SUMMER': 6,
-      'FALL': 3
+      SPRING: 2,
+      SUMMER: 6,
+      FALL: 3
     },
     2022: {
-      'SPRING': 1,
-      'SUMMER': 5,
-      'FALL': 2
+      SPRING: 1,
+      SUMMER: 5,
+      FALL: 2
     },
     2023: {
-      'SPRING': 7,
-      'SUMMER': 4,
-      'FALL': 1
+      SPRING: 7,
+      SUMMER: 4,
+      FALL: 1
     },
     2024: {
-      'SPRING': 5,
-      'SUMMER': 2,
-      'FALL': 6
+      SPRING: 5,
+      SUMMER: 2,
+      FALL: 6
     }
   } as any;
   return fridays[year][term];

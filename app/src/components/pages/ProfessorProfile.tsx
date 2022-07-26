@@ -358,7 +358,7 @@ function ProfessorProfile() {
                       >
                         <ButtonBase
                           onClick={() => {
-                            setYear(new Date(course.CourseID.year, 1, 2)); 
+                            setYear(new Date(course.CourseID.year, 1, 2));
                             setTerm(course.CourseID.term);
                             navigate('/schedule/timetable', {
                               state: {

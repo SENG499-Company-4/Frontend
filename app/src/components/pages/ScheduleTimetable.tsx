@@ -2,13 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
 // import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
-import {
-  checkCollision,
-  getCourseStartDate,
-  parseCalendarCourse,
-  parseCalendarTeacher,
-  sortByProf
-} from 'utils/utils';
+import { checkCollision, getCourseStartDate, parseCalendarCourse, parseCalendarTeacher, sortByProf } from 'utils/utils';
 import {
   Box,
   Dialog,

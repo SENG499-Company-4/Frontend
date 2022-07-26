@@ -29,7 +29,7 @@ function ProfessorsList() {
   useEffect(() => {
     loadingContext.setLoading(professorsListLoading);
     if (professorsListData) {
-      const no_tbd = professorsListData.allUsers.filter(user => user.username != "TBD");
+      const no_tbd = professorsListData.allUsers.filter((user) => user.username != 'TBD');
       setProfessorsList(no_tbd);
       setRows(no_tbd);
     }
@@ -85,7 +85,10 @@ function ProfessorsList() {
   function filter(data: User[], search: string) {
     var newData: User[] = [];
     for (const user of data) {
-      if (user?.name?.toLowerCase().includes(search.toLowerCase()) || user?.username?.toLowerCase().includes(search.toLowerCase())) {
+      if (
+        user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        user?.username?.toLowerCase().includes(search.toLowerCase())
+      ) {
         newData.push(user);
       }
     }
