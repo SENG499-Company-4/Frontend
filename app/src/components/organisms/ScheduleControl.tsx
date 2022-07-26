@@ -1,5 +1,5 @@
 import { useLazyQuery } from '@apollo/client';
-import { Divider, Grid, Stack, Typography, Button } from '@mui/material';
+import { Divider, Grid, Stack, Typography, Button, makeStyles, Chip } from '@mui/material';
 import { GET_SCHEDULE } from 'api/Queries';
 import { SemesterSelector } from 'components/molecules/SemesterSelector';
 import { TimetableFilter } from 'components/molecules/TimetableFilter';
@@ -11,6 +11,7 @@ import { Role } from 'constants/timetable.constants';
 import Cookie from 'universal-cookie';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import { getCurrentTerm } from 'utils/utils';
+import { ThemeContext } from 'contexts/DynamicThemeProvider';
 interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
   exportState?: (id: String) => void;
@@ -21,17 +22,25 @@ interface ScheduleControlProps {
 
 export function ScheduleControl(props: ScheduleControlProps) {
   const cookie = new Cookie();
-  const { year, term, setYear, setTerm } = useContext(TermSelectorContext);
 
   const [calendarData, setCalendarData] = useState<CourseSection[]>([]);
   const [scheduleId, setScheduleId] = useState<String>('-1');
 
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
+  const themeContext = useContext(ThemeContext);
+  const { year, term, setYear, setTerm, professorIdFilter, courseIdFilter, setProfessorIdFilter, setCourseIdFilter } =
+    useContext(TermSelectorContext);
 
   function onFilterChange(filteredCourses: CourseSection[]) {
     props.courseDataChanged(filteredCourses);
   }
+
+  useEffect(() => {
+    // Update teacher data on theme change
+    props.courseDataChanged(calendarData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themeContext.themeType]);
 
   useEffect(() => {
     if (term && year) {
@@ -41,7 +50,12 @@ export function ScheduleControl(props: ScheduleControlProps) {
       getCurrentTerm();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [year, term]);
+  }, [year, term, professorIdFilter, courseIdFilter]);
+
+  useEffect(() => {
+    props.courseDataChanged(calendarData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [professorIdFilter, courseIdFilter]);
 
   const [fetchSchedule, { loading: scheduleLoading, error: scheduleError, data: scheduleData }] = useLazyQuery(
     GET_SCHEDULE,
@@ -54,6 +68,7 @@ export function ScheduleControl(props: ScheduleControlProps) {
   );
 
   useEffect(() => {
+    console.log("Something's changed");
     loadingContext.setLoading(scheduleLoading);
     props.loadingCallback(scheduleLoading);
     if (scheduleData) {
@@ -73,68 +88,97 @@ export function ScheduleControl(props: ScheduleControlProps) {
   }, [scheduleLoading, scheduleData, scheduleError]);
 
   return (
-    <Grid item>
-      <Grid container display={'flex'} flexDirection={'row'} marginTop={'5px'} marginBottom={'15px'} spacing={2}>
-        <Grid item>
-          <Stack>
-            <Grid item marginBottom={'10px'}>
-              <Typography variant="h6">1. Select Term</Typography>
-            </Grid>
-            <SemesterSelector
-              year={year}
-              term={term}
-              onTermChange={(term: Term) => {
-                setTerm(term);
-              }}
-              onYearChange={(year: Date) => {
-                setYear(year);
-              }}
-            />
-          </Stack>
+    <>
+      <Grid item>
+        <Grid container display={'flex'} flexDirection={'row'} marginTop={'5px'} marginBottom={'15px'} spacing={2}>
+          <Grid item>
+            <Stack>
+              <Grid item marginBottom={'10px'}>
+                <Typography variant="h6">1. Select Term</Typography>
+              </Grid>
+              <SemesterSelector
+                year={year}
+                term={term}
+                onTermChange={(term: Term) => {
+                  setTerm(term);
+                }}
+                onYearChange={(year: Date) => {
+                  setYear(year);
+                }}
+              />
+            </Stack>
+          </Grid>
+          {props.filter && (
+            <>
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ marginLeft: '20px', marginRight: '5px', marginTop: '20px' }}
+              />
+              <Grid item>
+                <Stack>
+                  <Grid item marginBottom={'10px'}>
+                    <Typography variant="h6">2. Filter</Typography>
+                  </Grid>
+                  <TimetableFilter
+                    courseData={calendarData}
+                    disabled={!year || !term}
+                    onFilterChange={onFilterChange}
+                  />
+                </Stack>
+              </Grid>
+            </>
+          )}
+          {props.save && cookie.get('user').role === Role.Admin && (
+            <>
+              <Divider
+                orientation="vertical"
+                flexItem
+                sx={{ marginLeft: '20px', marginRight: '5px', marginTop: '20px' }}
+              />
+              <Grid item>
+                <Stack>
+                  <Grid item marginBottom={'10px'}>
+                    <Typography variant="h6">3. Save</Typography>
+                  </Grid>
+                  <Button
+                    sx={{
+                      height: '56px',
+                      borderRadius: '28px'
+                    }}
+                    variant="contained"
+                    size="large"
+                    color="secondary"
+                    onClick={() => props.exportState(scheduleId)}
+                  >
+                    Save Schedule
+                  </Button>
+                </Stack>
+              </Grid>
+            </>
+          )}
         </Grid>
-        {props.filter && (
-          <>
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ marginLeft: '20px', marginRight: '5px', marginTop: '20px' }}
-            />
-            <Grid item>
-              <Stack>
-                <Grid item marginBottom={'10px'}>
-                  <Typography variant="h6">2. Filter</Typography>
-                </Grid>
-                <TimetableFilter courseData={calendarData} disabled={!year || !term} onFilterChange={onFilterChange} />
-              </Stack>
-            </Grid>
-          </>
+      </Grid>
+      <Grid item marginBottom={'10px'}>
+        {professorIdFilter !== -1 && (
+          <Chip
+            color="primary"
+            label={'Filtered by Professor ID: ' + professorIdFilter}
+            onDelete={() => {
+              setProfessorIdFilter(-1);
+            }}
+          />
         )}
-        {props.save && cookie.get('user').role === Role.Admin && (
-          <>
-            <Divider
-              orientation="vertical"
-              flexItem
-              sx={{ marginLeft: '20px', marginRight: '5px', marginTop: '20px' }}
-            />
-            <Grid item>
-              <Stack>
-                <Grid item marginBottom={'10px'}>
-                  <Typography variant="h6">3. Save</Typography>
-                </Grid>
-                <Button
-                  sx={{ height: '56px' }}
-                  variant="contained"
-                  size="large"
-                  color="secondary"
-                  onClick={() => props.exportState(scheduleId)}
-                >
-                  Save Schedule
-                </Button>
-              </Stack>
-            </Grid>
-          </>
+        {courseIdFilter !== '' && (
+          <Chip
+            color="primary"
+            label={'Filtered by Course: ' + courseIdFilter}
+            onDelete={() => {
+              setCourseIdFilter('');
+            }}
+          />
         )}
       </Grid>
-    </Grid>
+    </>
   );
 }

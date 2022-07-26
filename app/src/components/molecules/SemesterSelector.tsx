@@ -43,7 +43,7 @@ export function SemesterSelector(props: SemesterSelectorProps): React.ReactEleme
             views={['year']}
             label="Select Year"
             value={year}
-            minDate={new Date(2020, 0, 1)}
+            minDate={new Date(2021, 0, 1)}
             maxDate={new Date(2024, 0, 1)}
             onChange={(e) => {
               setYear(e as Date);

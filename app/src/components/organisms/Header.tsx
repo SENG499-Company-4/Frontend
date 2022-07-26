@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import HeaderButton from 'components/molecules/HeaderButton';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import HeaderMenu from 'components/molecules/HeaderMenu';
 import { Role } from 'constants/timetable.constants';
-import { IUser } from 'interfaces/user.interfaces';
 import {
   CalendarMonth,
   EventRepeat,
@@ -18,13 +17,18 @@ import {
   AddCircle,
   Power,
   Person,
-  CalendarViewDay
+  CalendarViewDay,
+  Brightness7,
+  Bedtime
 } from '@mui/icons-material';
+import { ThemeContext } from 'contexts/DynamicThemeProvider';
+import { UserCookie } from 'router/AppRouter';
 
 const appLogo = require('assets/app-logo.png');
 
-function Header(props: { user: IUser }) {
+function Header(props: { user: UserCookie }) {
   const role = props.user?.role as Role;
+  const themeContext = useContext(ThemeContext);
   if (!role) {
     return null;
   }
@@ -38,7 +42,14 @@ function Header(props: { user: IUser }) {
               Scheduler
             </Typography>
           </Box>
-          <Box display="flex" flexGrow={1} flexDirection="row" justifyContent="space-between" marginX={4}>
+          <Box
+            display="flex"
+            flexGrow={1}
+            flexDirection="row"
+            justifyContent="space-between"
+            marginX={4}
+            sx={{ marginLeft: '75px' }}
+          >
             <HeaderButton key="home" label="Home" url="/" icon={<Home />} />
             {role === Role.User ? <HeaderButton key="survey" label="Survey" url="/survey" icon={<Poll />} /> : null}
             <HeaderMenu key="schedule" label="Schedule" icon={<CalendarMonth />}>
@@ -68,6 +79,16 @@ function Header(props: { user: IUser }) {
               <HeaderButton key="plug-and-play" label="Plug and Play" url="/plug-and-play" icon={<Power />} />
             ) : null}
             <HeaderButton key="profile" label="Profile" url={'/professors/' + props.user.userId} icon={<Person />} />
+            <Button
+              style={{ backgroundColor: 'transparent' }}
+              color="inherit"
+              onClick={() => {
+                themeContext.setThemeType(!themeContext.themeType);
+              }}
+              startIcon={themeContext.themeType ? <Brightness7 /> : <Bedtime />}
+            >
+              {themeContext.themeType ? 'Light Mode' : 'Dark Mode'}
+            </Button>
             <HeaderButton
               key="login"
               label={role ? 'Logout' : 'Login'}

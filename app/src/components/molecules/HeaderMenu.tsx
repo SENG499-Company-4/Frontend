@@ -36,7 +36,11 @@ function HeaderMenu(props: IHeaderMenuProps) {
         style={{ padding: 0, margin: 0 }}
       >
         {React.Children.map(props.children, (child: ReactNode) => {
-          return child ? <MenuItem style={{ padding: 0, margin: 0 }}>{child}</MenuItem> : null;
+          return child ? (
+            <MenuItem sx={{ padding: 0, margin: 1 }}>
+              {React.cloneElement(child as React.ReactElement<any>, { fullWidth: true })}
+            </MenuItem>
+          ) : null;
         })}
       </Menu>
     </>

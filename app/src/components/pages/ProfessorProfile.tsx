@@ -29,14 +29,15 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { CoursePreference, CourseSection, Role, Term, User } from 'types/api.types';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { getCoursesForProfessor } from 'utils/utils';
-import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import Cookie from 'universal-cookie';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
 
 function ProfessorProfile() {
   const navigate = useNavigate();
   const cookie = new Cookie();
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
+  const { setYear, setTerm, setCourseIdFilter } = useContext(TermSelectorContext);
 
   const [doneRequests, setDoneRequests] = useState<boolean>(false);
   const [currentRequest, setCurrentRequest] = useState<Term>(Term.Spring);
@@ -46,8 +47,6 @@ function ProfessorProfile() {
   const [preferencesDialogOpen, setPreferencesDialogOpen] = useState<boolean>(false);
   const { id } = useParams();
   const paramId = id ? id : '-1';
-
-  const { year, term, setYear, setTerm } = useContext(TermSelectorContext);
 
   const {
     loading: userLoading,
@@ -273,6 +272,7 @@ function ProfessorProfile() {
                     variant="contained"
                     size="large"
                     color="primary"
+                    sx={{ marginTop: '1rem' }}
                     onClick={() => setPreferencesDialogOpen(true)}
                   >
                     Clear Preferences
@@ -358,11 +358,10 @@ function ProfessorProfile() {
                       >
                         <ButtonBase
                           onClick={() => {
-                            navigate('/schedule/timetable', {
-                              state: {
-                                courseId: course.CourseID.subject + course.CourseID.code
-                              }
-                            });
+                            setYear(new Date(course.CourseID.year, 1, 2));
+                            setTerm(course.CourseID.term);
+                            setCourseIdFilter(course.CourseID.subject + course.CourseID.code);
+                            navigate('/schedule/timetable');
                           }}
                           sx={{ display: 'block', textAlign: 'initial', width: '100%' }}
                         >

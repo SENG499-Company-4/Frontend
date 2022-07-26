@@ -7,6 +7,7 @@ import { ScheduleControl } from 'components/organisms/ScheduleControl';
 import { Role } from 'constants/timetable.constants';
 import Cookie from 'universal-cookie';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
+import { garfield, getLastFriday, getTermMonthIndex } from 'utils/utils';
 interface TableRow {
   courseName: string;
   capacity: number;
@@ -51,6 +52,8 @@ function ScheduleList() {
       const endTime = timeString.slice(0, -2) + ':' + timeString.slice(-2);
       if (index === 0) {
         return <Chip sx={{ marginX: '2px' }} key={index} label={`${startTime} - ${endTime}`} />;
+      } else {
+        return <></>;
       }
     });
   }
@@ -64,11 +67,31 @@ function ScheduleList() {
     });
   }
 
+  function makeStartDateString(year: number, term: Term) {
+    return (
+      year +
+      '-' +
+      String(getTermMonthIndex(term) + 1).padStart(2, '0') +
+      '-' +
+      String(garfield(year, term)).padStart(2, '0')
+    );
+  }
+
+  function makeEndDateString(year: number, term: Term) {
+    return (
+      year +
+      '-' +
+      String(getTermMonthIndex(term) + 4).padStart(2, '0') +
+      '-' +
+      String(getLastFriday(year, term)).padStart(2, '0')
+    );
+  }
+
   const columns: GridColDef[] = [
     {
       field: 'courseName',
       headerName: 'Course Title',
-      width: 130,
+      flex: 1,
       renderCell: (params) => {
         return (
           <Typography variant="body1" ml={1}>
@@ -80,29 +103,29 @@ function ScheduleList() {
     {
       field: 'sectionNumber',
       headerName: 'Section',
-      width: 100
+      flex: 1
     },
     {
       field: 'startDate',
       headerName: 'Start Date',
-      width: 140,
-      renderCell: (params) => {
-        return params.value.split('T')[0];
+      flex: 1,
+      renderCell: () => {
+        return makeStartDateString(year.getFullYear(), term);
       }
     },
     {
       field: 'endDate',
       headerName: 'End Date',
-      width: 140,
-      renderCell: (params) => {
-        return params.value.split('T')[0];
+      flex: 1,
+      renderCell: () => {
+        return makeEndDateString(year.getFullYear(), term);
       }
     },
     { field: 'capacity', headerName: 'Capacity', width: 80 },
     {
       field: 'meetingDays',
       headerName: 'Days of Week',
-      width: 240,
+      flex: 2,
       renderCell: (params) => {
         return parseDaysOfWeek(params.value as MeetingTime[]);
       }
@@ -110,7 +133,7 @@ function ScheduleList() {
     {
       field: 'meetingTimes',
       headerName: 'Meeting Time',
-      width: 160,
+      flex: 1,
       renderCell: (params) => {
         return parseMeetingTimes(params.value as MeetingTime[]);
       }
@@ -118,7 +141,7 @@ function ScheduleList() {
     {
       field: 'professors',
       headerName: 'Professor',
-      width: 180,
+      flex: 2,
       renderCell: (params) => {
         return (
           <Button
@@ -126,7 +149,9 @@ function ScheduleList() {
               navigate('/professors/' + params.value[0].id);
             }}
           >
-            {params.value[0].name}
+            <Typography noWrap variant="inherit">
+              {params.value[0].name}
+            </Typography>
           </Button>
         );
       }
@@ -171,7 +196,7 @@ function ScheduleList() {
   }
 
   return (
-    <Box sx={{ width: '70%', margin: 'auto' }}>
+    <Box sx={{ width: '90%', maxWidth: 1200, margin: 'auto' }}>
       <Typography marginTop={5} marginBottom={2} variant="h4" sx={{ textAlign: 'center' }}>
         Schedule List
       </Typography>
@@ -183,7 +208,7 @@ function ScheduleList() {
           {cookie.get('user').role === Role.Admin ? (
             <Grid item alignContent={'flex-end'}>
               <Button
-                sx={{ height: '56px', marginTop: '62px' }}
+                sx={{ height: '56px', marginTop: '62px', marginLeft: '10px' }}
                 variant="contained"
                 size="large"
                 color="primary"
@@ -197,7 +222,7 @@ function ScheduleList() {
       </Box>
       <DataGrid
         getRowId={(row: TableRow) => {
-          return row.courseName + row.capacity + row.startDate + row.endDate + Math.random();
+          return row.courseName + row.capacity + row.startDate + row.endDate + row.sectionNumber;
         }}
         components={{
           NoRowsOverlay: () => (

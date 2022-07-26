@@ -3,47 +3,95 @@ import {
   ICalendarItem_Teacher,
   IHourMinute,
   IProfessorCourse,
-  IProfessorIndex,
-  IScheduleListItem
+  IProfessorIndex
 } from 'interfaces/timetable.interfaces';
-import colors from 'data/CourseColor.json';
+import darkModeColors from 'data/DarkColors.json';
+import lightModeColors from 'data/LightColors.json';
 import { ability, willing } from 'constants/surveyForm.constants';
 import { CourseSection, MeetingTime, Term, User } from 'types/api.types';
 
-const moment = require('moment');
-
-export function parseCalendarTeacher(data: CourseSection[]): ICalendarItem_Teacher[] {
+export function parseCalendarTeacher(professors: User[], darkMode: boolean): ICalendarItem_Teacher[] {
+  console.log('DARK MODE? ', darkMode);
   const calendarTeacherData: ICalendarItem_Teacher[] = [];
-  data.forEach((course: CourseSection) => {
-    if (course.professors && course.professors.length > 0) {
-      const calendarItem: ICalendarItem_Teacher = {
-        id: course.professors[0].id,
-        teacherName: course.professors[0].username,
-        courseId: course.CourseID.subject + course.CourseID.code,
-        term: course.CourseID.term,
-        color: colors[course.professors[0].id % colors.length],
-        link: '/professors/' + course.professors[0].id
-      };
-      calendarTeacherData.push(calendarItem);
-    }
+  professors.forEach((professor: User) => {
+    const appointmentColor = darkMode
+      ? darkModeColors[professor.id % darkModeColors.length]
+      : lightModeColors[professor.id % lightModeColors.length];
+    const calendarItem: ICalendarItem_Teacher = {
+      id: professor.id,
+      teacherName: professor.username,
+      courseId: '',
+      term: '',
+      color: appointmentColor,
+      link: '/professors/' + professor.id
+    };
+    calendarTeacherData.push(calendarItem);
   });
   return calendarTeacherData;
 }
 
-function daytoInt(day: string) {
+export function daytoInt(day: string) {
   return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].indexOf(day);
 }
 
-// Reference: https://ianvink.wordpress.com/2021/08/25/typescript-how-to-get-the-first-monday-in-the-month/
-export function firstMondayInMonth(zeroBasedMonth: number, year: number) {
-  let firstMonday = moment().year(year).month(zeroBasedMonth).date(1).day(8);
-  if (firstMonday.date() > 7) {
-    firstMonday.day(-6);
-  }
-  return firstMonday;
+export function intToDay(day: number) {
+  return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day];
 }
 
-export function getCourseStartDate(year: number, term: Term): Date {
+export function garfield(year: number, term: Term): number {
+  const mondays = {
+    2021: {
+      SPRING: 4,
+      SUMMER: 3,
+      FALL: 6
+    },
+    2022: {
+      SPRING: 3,
+      SUMMER: 2,
+      FALL: 5
+    },
+    2023: {
+      SPRING: 2,
+      SUMMER: 1,
+      FALL: 4
+    },
+    2024: {
+      SPRING: 1,
+      SUMMER: 6,
+      FALL: 2
+    }
+  } as any;
+  return mondays[year][term];
+}
+
+export function getLastFriday(year: number, term: Term): number {
+  // Using first friday of the last month of a term as a rough estimation of the term ending date
+  const fridays = {
+    2021: {
+      SPRING: 2,
+      SUMMER: 6,
+      FALL: 3
+    },
+    2022: {
+      SPRING: 1,
+      SUMMER: 5,
+      FALL: 2
+    },
+    2023: {
+      SPRING: 7,
+      SUMMER: 4,
+      FALL: 1
+    },
+    2024: {
+      SPRING: 5,
+      SUMMER: 2,
+      FALL: 6
+    }
+  } as any;
+  return fridays[year][term];
+}
+
+export function getTermMonthIndex(term: Term): number {
   const month = () => {
     switch (term) {
       case Term.Fall:
@@ -56,7 +104,13 @@ export function getCourseStartDate(year: number, term: Term): Date {
         return 0;
     }
   };
-  return firstMondayInMonth(month(), year).toDate();
+  return month();
+}
+
+export function getCourseStartDate(year: number, term: Term): Date {
+  const firstMonday = garfield(year, term);
+  const termIndex = getTermMonthIndex(term);
+  return new Date(year, termIndex, firstMonday);
 }
 
 export function getCurrentTerm(): Term {
@@ -77,31 +131,28 @@ export function parseCalendarCourse(
   professorId?: number
 ): ICalendarCourseItem[] {
   const calendarCourseData: ICalendarCourseItem[] = [];
-  let courseProp = courseId ? courseId : undefined;
-  let professorProp = professorId ? professorId : undefined;
+  let courseProp = courseId ? courseId : '';
+  let professorProp = professorId ? professorId : -1;
 
   data.forEach((course: CourseSection) => {
     // Get number of course sections for course
     const courseId = course.CourseID.subject + course.CourseID.code;
-    console.log('Course ID: ', courseId);
     let numSections = 0;
     for (const courseSection of data) {
-      console.log('Checking against course ID: ', courseSection.CourseID.subject + courseSection.CourseID.code);
       if (courseSection.CourseID.subject + courseSection.CourseID.code === courseId) {
-        console.log('Found matching course');
         numSections++;
       }
     }
+    const firstMonday = garfield(course.CourseID.year, course.CourseID.term);
     course.meetingTimes.forEach((meetingTime: MeetingTime) => {
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
-      const dayshift = daytoInt(meetingTime.day);
+      const dayshift = daytoInt(meetingTime.day) - 1;
 
       const courseInitDate = getCourseStartDate(course.CourseID.year, course.CourseID.term);
 
       const courseStartDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
       const courseEndDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
 
-      const firstMonday = parseInt(course.startDate.split('-')[2]);
       const newDate = firstMonday + dayshift;
       courseStartDate.setDate(newDate);
       courseEndDate.setDate(newDate);
@@ -141,15 +192,15 @@ export function parseCalendarCourse(
       };
 
       // Conditional return rules based on props
-      if (professorProp && courseProp) {
+      if (professorProp !== -1 && courseProp !== '') {
         if (calendarItem.teacherId === professorProp && courseProp === calendarItem.courseId) {
           calendarCourseData.push(calendarItem);
         }
-      } else if (courseProp && !professorProp) {
+      } else if (courseProp !== '' && professorProp === -1) {
         if (calendarItem.courseId === courseProp) {
           calendarCourseData.push(calendarItem);
         }
-      } else if (!courseProp && professorProp) {
+      } else if (courseProp === '' && professorProp !== -1) {
         if (calendarItem.teacherId === professorProp) {
           calendarCourseData.push(calendarItem);
         }
@@ -252,8 +303,12 @@ export function checkCollision(a: MeetingTime, b: MeetingTime) {
     hour: parseInt(b.endTime.split(':')[0]),
     minute: parseInt(b.endTime.split(':')[1])
   };
-
-  if (compareTime(aEnd, bStart) > 0 && compareTime(aStart, bEnd) < 0) return true;
+  console.log('Same day. Comparing times...');
+  if (compareTime(aEnd, bStart) > 0 && compareTime(aStart, bEnd) < 0) {
+    console.log('Collision detected!');
+    return true;
+  }
+  return false;
 }
 
 export function calculateCourseRating(able: string, willingness: string): number {

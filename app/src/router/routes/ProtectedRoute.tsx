@@ -2,12 +2,12 @@ import ErrorPage from 'components/pages/ErrorPage';
 import { Role } from 'constants/timetable.constants';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { IProtectedRouteMeta } from 'interfaces/route.interfaces';
-import { IUser } from 'interfaces/user.interfaces';
 import React, { useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { UserCookie } from 'router/AppRouter';
 
 interface IProtectedRouteProps {
-  user: IUser;
+  user: UserCookie;
   meta: IProtectedRouteMeta;
   children: React.ReactNode;
 }

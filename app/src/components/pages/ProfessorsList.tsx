@@ -11,10 +11,12 @@ import { ErrorContext } from 'contexts/ErrorContext';
 import { useQuery } from '@apollo/client';
 import { GET_PROFESSORS } from 'api/Queries';
 import { User } from 'types/api.types';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
 
 function ProfessorsList() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
+  const { setProfessorIdFilter } = useContext(TermSelectorContext);
   const [professorsList, setProfessorsList] = useState<User[]>([]);
   const [search, setSearch] = useState<string>('');
   const [rows, setRows] = useState<User[]>([]);
@@ -29,8 +31,9 @@ function ProfessorsList() {
   useEffect(() => {
     loadingContext.setLoading(professorsListLoading);
     if (professorsListData) {
-      setProfessorsList(professorsListData.allUsers);
-      setRows(professorsListData.allUsers);
+      const no_tbd = professorsListData.allUsers.filter((user: User) => user.username !== 'TBD');
+      setProfessorsList(no_tbd);
+      setRows(no_tbd);
     }
     if (professorsListError) {
       errorContext.setErrorDialog(professorsListError);
@@ -48,7 +51,15 @@ function ProfessorsList() {
       headerName: 'View Professor Profile',
       width: 200,
       renderCell: (params) => {
-        return <Link href={'/professors/' + params.id}> View profile </Link>;
+        return (
+          <ButtonBase
+            onClick={() => {
+              navigate('/professors/' + params.id);
+            }}
+          >
+            <Link> View profile </Link>
+          </ButtonBase>
+        );
       }
     },
     {
@@ -59,11 +70,8 @@ function ProfessorsList() {
         return (
           <ButtonBase
             onClick={() => {
-              navigate('/schedule/timetable', {
-                state: {
-                  professorId: params.id
-                }
-              });
+              setProfessorIdFilter(params.id);
+              navigate('/schedule/timetable');
             }}
           >
             <Link>View Courses</Link>
@@ -76,7 +84,10 @@ function ProfessorsList() {
   function filter(data: User[], search: string) {
     var newData: User[] = [];
     for (const user of data) {
-      if (user?.name?.toLowerCase().includes(search.toLowerCase())) {
+      if (
+        user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        user?.username?.toLowerCase().includes(search.toLowerCase())
+      ) {
         newData.push(user);
       }
     }
@@ -96,7 +107,7 @@ function ProfessorsList() {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
-          placeholder="Search by username"
+          placeholder="Search by username or name"
           inputProps={{ 'aria-label': 'search' }}
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}

@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
-import 'devextreme/dist/css/dx.light.css';
+// import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
 import {
   checkCollision,
-  firstMondayInMonth,
   getCourseStartDate,
+  intToDay,
   parseCalendarCourse,
   parseCalendarTeacher,
   sortByProf
@@ -19,13 +19,14 @@ import {
   DialogTitle,
   Grid,
   Typography,
-  Button
+  Button,
+  Skeleton,
+  Alert
 } from '@mui/material';
-import { Location, useLocation } from 'react-router-dom';
-import { Chip } from '@mui/material';
-import { useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { UPDATE_SCHEDULE } from 'api/Mutations';
-import { CourseSection, CourseSectionInput, CourseUpdateInput, Day, MeetingTime, Role } from 'types/api.types';
+import { GET_PROFESSORS } from 'api/Queries';
+import { CourseSection, CourseSectionInput, CourseUpdateInput, Day, MeetingTime, Role, User } from 'types/api.types';
 import 'components/styles/scheduler.css';
 
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
@@ -36,26 +37,19 @@ import {
   IProfessorIndex,
   IProfessorIndexEntry
 } from 'interfaces/timetable.interfaces';
-import { AppointmentAddingEvent, AppointmentDeletingEvent, AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
+import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import Cookie from 'universal-cookie';
-
-//The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
-interface IStateProps {
-  courseId?: string;
-  professorId?: number;
-}
+import { ThemeContext } from 'contexts/DynamicThemeProvider';
+import { LoadingContext } from 'contexts/LoadingContext';
 
 function ScheduleTimetable() {
   const cookie = new Cookie();
-  const location: Location = useLocation();
-  const state: IStateProps = location.state as IStateProps;
-  const courseId = state?.courseId ? state.courseId : undefined;
-  const professorId = state?.professorId ? state.professorId : undefined;
-  const { year, term, firstMondayOfTerm } = useContext(TermSelectorContext);
-
+  const loadingContext = useContext(LoadingContext);
+  const { year, term, firstMondayOfTerm, professorIdFilter, courseIdFilter } = useContext(TermSelectorContext);
+  const themeContext = useContext(ThemeContext);
+  const skeletonHeights = [54, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50];
   const [scheduleLoading, setScheduleLoading] = useState(false);
-
   const [currentDate, setCurrentDate] = useState<Date>(firstMondayOfTerm);
 
   const [calendarTeacherData, setCalendarTeacherData] = useState<ICalendarItem_Teacher[]>([]);
@@ -64,25 +58,48 @@ function ScheduleTimetable() {
   const [errors, setErrors] = useState<ICalendarError[]>([]);
   const [profErrorIndex, setProfErrorIndex] = useState<IProfessorIndex>({});
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [professorsList, setProfessorsList] = useState<User[]>([]);
 
   const [updateSchedule, { updateData, updateLoading, updateError }] = useMutation(UPDATE_SCHEDULE);
 
+  const {
+    data: professorsListData,
+    loading: professorsListLoading,
+    error: professorsListError
+  } = useQuery(GET_PROFESSORS);
+
+  useEffect(() => {
+    loadingContext.setLoading(professorsListLoading);
+    if (professorsListData) {
+      const no_tbd = professorsListData.allUsers.filter((user: User) => user.username !== 'TBD');
+      setProfessorsList(no_tbd);
+      setCalendarTeacherData(parseCalendarTeacher(no_tbd, themeContext.themeType));
+    }
+    if (professorsListError) {
+      console.log(professorsListError);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [professorsListData, professorsListLoading, professorsListError]);
+
   const [containerHeight, setContainerHeight] = useState<number>(() => {
-    return courseId || professorId ? window.innerHeight - 256 : window.innerHeight - 224;
+    return courseIdFilter !== '' || professorIdFilter !== -1 ? window.innerHeight - 256 : window.innerHeight - 224;
   });
 
   window.onresize = function () {
-    setContainerHeight(courseId || professorId ? window.innerHeight - 256 : window.innerHeight - 224);
+    setContainerHeight(
+      courseIdFilter !== '' || professorIdFilter !== -1 ? window.innerHeight - 256 : window.innerHeight - 224
+    );
   };
 
   function onCourseDataChange(courseData: CourseSection[]) {
-    console.log('Course data changed!: ', courseData);
-    setCalendarCourseData(parseCalendarCourse(courseData, courseId, professorId));
-    setCalendarTeacherData(parseCalendarTeacher(courseData));
+    setScheduleLoading(true);
+    setErrors([]);
+    setProfErrorIndex({});
+    setCalendarCourseData(parseCalendarCourse(courseData, courseIdFilter, professorIdFilter));
+    setCalendarTeacherData(parseCalendarTeacher(professorsList, themeContext.themeType));
   }
 
   useEffect(() => {
-    //loadingContext.setLoading(loading);
     if (updateData) {
       console.log(updateData);
     }
@@ -93,36 +110,20 @@ function ScheduleTimetable() {
   }, [updateData, updateLoading, updateError]);
 
   useEffect(() => {
-    console.log('Calendar course data: ', calendarCourseData);
-    console.log('Calendar teacher data: ', calendarTeacherData);
+    setScheduleLoading(false);
   }, [calendarCourseData, calendarTeacherData]);
 
   function onLoadingChange(loading: boolean) {
     setScheduleLoading(loading);
   }
 
-  function validateAdd(appointment: AppointmentAddingEvent) {
-    if (!checkPermissions()) {
-      appointment.cancel = true;
-    }
-    return;
-  }
-
-  function validateDelete(appointment: AppointmentDeletingEvent) {
-    if (!checkPermissions()) {
-      appointment.cancel = true;
-    }
-    return;
-  }
-
+  // Checks if time is valid (Cannot be before 830am or after 9pm)
   function validateAppointment(appointment: AppointmentUpdatingEvent) {
     // Cancel update if not an admin user.
     if (!checkPermissions()) {
       appointment.cancel = true;
       return;
     }
-    console.log('updating', appointment);
-    console.log(appointment.newData.startDate.getHours());
 
     const toAdd = appointment.newData;
 
@@ -134,47 +135,46 @@ function ScheduleTimetable() {
 
     const courseId = toAdd.courseId;
 
-    console.log(courseId + ' start ' + startHour + ':' + startMinute + ' end ' + endHour + ':' + endMinute);
-
     // check if the time is valid and if it is, remove from the errors array
     // (will happen whether it was in the array or not)
     if ((startHour <= 8 && startMinute < 30) || (endHour >= 21 && endMinute > 0)) {
-      console.log('adding ' + courseId + ' to errors');
       setErrors([
         ...errors,
         {
           courseId: courseId,
           capacity: toAdd.capacity,
           type: 'time',
-          message: 'Classes must be between 8:30 AM and 9:00 PM',
+          message: 'Classes must be scheduled between 8:30 AM and 9:00 PM',
+          startDate: toAdd.startDate,
+          endDate: toAdd.endDate,
+          professorId: toAdd.teacherId
+        }
+      ]);
+    } else if (toAdd.startDate.getDay() === 0 || toAdd.startDate.getDay() === 6) {
+      setErrors([
+        ...errors,
+        {
+          courseId: courseId,
+          capacity: toAdd.capacity,
+          type: 'day',
+          message: 'Classes must be scheduled on a weekday',
           startDate: toAdd.startDate,
           endDate: toAdd.endDate,
           professorId: toAdd.teacherId
         }
       ]);
     } else {
-      console.log('removing' + courseId + ' from errors');
       setErrors(errors.filter((x) => x.courseId !== courseId));
     }
   }
 
   function exportState(id: String) {
-    console.log(calendarTeacherData);
-    console.log(calendarCourseData);
-
-    console.log('errors');
-    console.log(errors);
-
     const profIndex = sortByProf(calendarCourseData);
     const profErrors: IProfessorIndex = {};
 
-    console.log('profIndex');
-    console.log(profIndex);
-
-    Object.keys(profIndex).map((key) => {
+    Object.keys(profIndex).forEach((key) => {
       const prof = profIndex[parseInt(key)];
       const added: number[] = [];
-      console.log('Prof: ', prof);
       prof.classes.forEach((course, index) => {
         prof.classes.forEach((course2, index2) => {
           if (index !== index2) {
@@ -204,7 +204,7 @@ function ScheduleTimetable() {
 
     setProfErrorIndex(profErrors);
 
-    if (Object.keys(profErrors).length === 0) {
+    if (Object.keys(profErrors).length === 0 && errors.length === 0) {
       let grouped = {} as any;
       for (const course of calendarCourseData) {
         if (course.courseId in grouped) {
@@ -254,9 +254,11 @@ function ScheduleTimetable() {
               startTime: startTime
             };
             meetingTimes.push(updatedTime);
-            for (const prof of meeting.professorsReference) {
-              if (!professors.includes(prof.username)) professors.push(prof.username);
-            }
+            const profId = Array.isArray(meeting.teacherId) ? meeting.teacherId[0] : meeting.teacherId;
+            const prof = calendarTeacherData.filter((teacher) => {
+              return teacher.id === profId;
+            })[0];
+            if (!professors.includes(prof.teacherName)) professors.push(prof.teacherName);
           }
           const updateInput: CourseUpdateInput = {
             code: course_split[1],
@@ -289,10 +291,6 @@ function ScheduleTimetable() {
     setDialogOpen(true);
   }
 
-  useEffect(() => {
-    console.log('ERRORS WITH TIMETABLE: ', errors);
-  }, [errors]);
-
   function onAppointmentFormOpening(e: any) {
     const form = e.form;
     form.option('items', [
@@ -324,24 +322,6 @@ function ScheduleTimetable() {
           width: '100%',
           type: 'time'
         }
-      },
-      {
-        label: { text: 'Course Start Date' },
-        dataField: 'startDate',
-        editorType: 'dxDateBox',
-        editorOptions: {
-          width: '100%',
-          type: 'date'
-        }
-      },
-      {
-        label: { text: 'Course End Date' },
-        dataField: 'lastDay',
-        editorType: 'dxDateBox',
-        editorOptions: {
-          width: '100%',
-          type: 'date'
-        }
       }
     ]);
     form.option('readOnly', !checkPermissions());
@@ -354,8 +334,8 @@ function ScheduleTimetable() {
   useEffect(() => {
     if (!!year && !!term) {
       setCurrentDate(getCourseStartDate(year.getFullYear(), term));
-      console.log('Current date set to: ', currentDate);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year, term]);
 
   return (
@@ -369,11 +349,16 @@ function ScheduleTimetable() {
         }}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{Object.keys(profErrorIndex).length > 0 ? 'Errors persist' : 'Submission Successful'}</DialogTitle>
+        <DialogTitle>
+          {Object.keys(profErrorIndex).length > 0 || errors.length > 0
+            ? 'Error(s) Saving Schedule'
+            : 'Submission Successful'}
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description">
-            {Object.keys(profErrorIndex).length > 0
-              ? Object.values(profErrorIndex).map((prof: IProfessorIndexEntry) => {
+            {Object.keys(profErrorIndex).length > 0 || errors.length > 0 ? (
+              <>
+                {Object.values(profErrorIndex).map((prof: IProfessorIndexEntry) => {
                   return (
                     <>
                       <Typography>{prof.username + ' has course overlaps'}</Typography>
@@ -395,8 +380,35 @@ function ScheduleTimetable() {
                       })}
                     </>
                   );
-                })
-              : "Your re-generation request was submitted successfully. When the scheduling algorithm checks complete, you'll be able to view the updated schedule here."}
+                })}
+                {errors.map((error) => {
+                  return (
+                    <Alert severity="error" sx={{ marginY: '15px' }}>
+                      <Typography>
+                        <strong>{error.courseId} </strong>
+                        is scheduled at an invalid time.
+                      </Typography>
+                      <Typography>{error.message}</Typography>
+                      <Typography>
+                        Scheduled on <strong>{intToDay(error.startDate.getDay())}</strong> at{' '}
+                        <strong>
+                          {error.startDate.getHours() +
+                            ':' +
+                            (error.startDate.getMinutes() === 0 ? '00' : error.startDate.getMinutes()) +
+                            ' - ' +
+                            error.endDate.getHours() +
+                            ':' +
+                            (error.endDate.getMinutes() === 0 ? '00' : error.endDate.getMinutes())}
+                        </strong>
+                      </Typography>
+                      <br />
+                    </Alert>
+                  );
+                })}
+              </>
+            ) : (
+              "Your re-generation request was submitted successfully. When the scheduling algorithm checks complete, you'll be able to view the updated schedule here."
+            )}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -418,58 +430,72 @@ function ScheduleTimetable() {
             loadingCallback={onLoadingChange}
             exportState={exportState}
           />
-          <Grid item marginBottom={'10px'}>
-            {professorId && <Chip color="primary" label={'Filtered by Professor ID: ' + professorId} />}
-            {courseId && <Chip color="primary" label={'Filtered by Course: ' + courseId} />}
-          </Grid>
         </Grid>
       </Box>
-
-      {/*@ts-ignore*/}
-      <Scheduler
-        timeZone="Canada/Pacific"
-        dataSource={calendarCourseData}
-        textExpr="courseId"
-        views={[
-          {
-            type: 'week',
-            name: 'Week',
-            maxAppointmentsPerCell: 1
-          }
-        ]}
-        defaultCurrentView="week"
-        defaultCurrentDate={currentDate}
-        currentDate={currentDate}
-        startDayHour={8}
-        endDayHour={22}
-        onContentReady={() => {
-          console.log('content ready');
-        }}
-        onInitialized={() => {
-          console.log('initialized');
-        }}
-        onAppointmentAdded={() => {
-          console.log('appointment added');
-        }}
-        height={containerHeight}
-        width={'100%'}
-        appointmentComponent={Appointment}
-        showAllDayPanel={false}
-        onAppointmentFormOpening={onAppointmentFormOpening}
-        onAppointmentUpdating={(e) => validateAppointment(e)}
-        onAppointmentAdding={(e) => validateAdd(e)}
-        onAppointmentDeleting={(e) => validateDelete(e)}
-      >
-        <Editing allowAdding={false} allowDragging={checkPermissions()} />
-        <Resource
-          dataSource={calendarTeacherData}
-          fieldExpr="teacherId"
-          displayExpr="teacherName"
-          label="Professor"
-          allowMultiple={true}
-          useColorAsDefault={true}
-        />
-      </Scheduler>
+      {!scheduleLoading ? (
+        <>
+          {/*@ts-ignore*/}
+          <Scheduler
+            timeZone="Canada/Pacific"
+            dataSource={calendarCourseData}
+            textExpr="courseId"
+            views={[
+              {
+                type: 'week',
+                name: 'Week',
+                maxAppointmentsPerCell: 1
+              }
+            ]}
+            defaultCurrentView="week"
+            defaultCurrentDate={currentDate}
+            currentDate={currentDate}
+            startDayHour={8}
+            endDayHour={22}
+            height={containerHeight}
+            width={'100%'}
+            appointmentComponent={Appointment}
+            showAllDayPanel={false}
+            onAppointmentFormOpening={onAppointmentFormOpening}
+            onAppointmentUpdating={(e) => validateAppointment(e)}
+          >
+            <Editing
+              allowAdding={false}
+              allowDeleting={false}
+              allowResizing={false}
+              allowDragging={checkPermissions()}
+            />
+            <Resource
+              dataSource={calendarTeacherData}
+              fieldExpr="teacherId"
+              displayExpr="teacherName"
+              label="Professor"
+              allowMultiple={true}
+              useColorAsDefault={true}
+            />
+          </Scheduler>
+        </>
+      ) : (
+        <Grid
+          container
+          height={containerHeight}
+          display={'flex'}
+          justifyContent={'center'}
+          alignContent={'flex-start'}
+          spacing={1}
+        >
+          {skeletonHeights.map((skeletonHeight, index) => {
+            if (skeletonHeights.slice(index).reduce((a, b) => a + b, 0) < containerHeight + skeletonHeights[index]) {
+              return (
+                <Grid item width="100%" mx={0}>
+                  <Skeleton variant="rectangular" width={'100%'} height={skeletonHeight} />
+                </Grid>
+              );
+            } else {
+              return <></>;
+            }
+          })}
+        </Grid>
+      )}
     </>
   );
 }

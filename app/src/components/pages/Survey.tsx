@@ -6,14 +6,13 @@ import { Box } from '@mui/system';
 import { LoadingContext } from 'contexts/LoadingContext';
 import { ErrorContext } from 'contexts/ErrorContext';
 import { useQuery } from '@apollo/client';
-import { GET_COURSES, GET_ME } from 'api/Queries';
+import { GET_ME } from 'api/Queries';
 
 function Survey() {
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
   const [submitted, setSubmitted] = useState<boolean>(false);
 
-  const { data: courseData, loading: courseLoading, error: courseError } = useQuery(GET_COURSES);
   const { loading: meLoading, error: meError, data: meData } = useQuery(GET_ME);
 
   useEffect(() => {
@@ -33,17 +32,6 @@ function Survey() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [meData, meLoading, meError]);
-
-  useEffect(() => {
-    loadingContext.setLoading(courseLoading);
-    if (courseError) {
-      errorContext.setErrorDialog(courseError);
-    }
-    if (courseData) {
-      console.log('Got course data!', courseData);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseData, courseLoading, courseError]);
 
   return (
     <Box marginTop={2} display={'flex'} flexDirection={'column'} alignItems={'center'}>

@@ -59,19 +59,7 @@ export const GET_PROFESSORS = gql`
       id
       username
       name
-      password
       role
-      preferences {
-        id {
-          subject
-          title
-          code
-          term
-          year
-        }
-        preference
-      }
-      active
     }
   }
 `;
@@ -96,59 +84,12 @@ export const GET_SURVEY = gql`
 `;
 
 /**
- * Fetch a list of courses for a given term and year
- */
-export const GET_COURSES = gql`
-  query Courses {
-    courses {
-      CourseID {
-        subject
-        title
-        code
-        term
-        year
-      }
-      hoursPerWeek
-      capacity
-      professors {
-        id
-        username
-        name
-        password
-        role
-        preferences {
-          id {
-            subject
-            title
-            code
-            term
-            year
-          }
-          preference
-        }
-        active
-      }
-      startDate
-      endDate
-      meetingTimes {
-        day
-        startTime
-        endTime
-      }
-      sectionNumber
-    }
-  }
-`;
-
-/**
  * Fetch the schedule for a given year.
  */
 export const GET_SCHEDULE = gql`
   query Schedule($year: Int, $term: Term!) {
     schedule(year: $year) {
       id
-      year
-      createdAt
       courses(term: $term) {
         CourseID {
           subject
@@ -165,16 +106,6 @@ export const GET_SCHEDULE = gql`
           name
           password
           role
-          preferences {
-            id {
-              subject
-              title
-              code
-              term
-              year
-            }
-            preference
-          }
           active
         }
         startDate
