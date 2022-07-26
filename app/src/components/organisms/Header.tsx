@@ -50,7 +50,7 @@ function Header(props: { user: UserCookie }) {
               }}
               startIcon={themeContext.themeType ? <Brightness7 /> : <Bedtime />}
             >
-              Toggle Dark Mode
+              {themeContext.themeType ? 'Light Mode' : 'Dark Mode'}
             </Button>
             <HeaderButton key="home" label="Home" url="/" icon={<Home />} />
             {role === Role.User ? <HeaderButton key="survey" label="Survey" url="/survey" icon={<Poll />} /> : null}
