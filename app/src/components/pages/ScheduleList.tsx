@@ -7,6 +7,7 @@ import { ScheduleControl } from 'components/organisms/ScheduleControl';
 import { Role } from 'constants/timetable.constants';
 import Cookie from 'universal-cookie';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
+import { garfield, getLastFriday, getTermMonthIndex } from 'utils/utils';
 interface TableRow {
   courseName: string;
   capacity: number;
@@ -64,6 +65,14 @@ function ScheduleList() {
     });
   }
 
+  function makeStartDateString(year: number, term: Term) { 
+    return year + "-" + String(getTermMonthIndex(term) + 1).padStart(2, '0') + "-" + String(garfield(year, term)).padStart(2, '0');
+  }
+
+  function makeEndDateString(year: number, term: Term) {
+    return year + "-" + String(getTermMonthIndex(term) + 4).padStart(2, '0') + "-" + String(getLastFriday(year, term)).padStart(2, '0');
+  }
+
   const columns: GridColDef[] = [
     {
       field: 'courseName',
@@ -87,7 +96,7 @@ function ScheduleList() {
       headerName: 'Start Date',
       width: 140,
       renderCell: (params) => {
-        return params.value.split('T')[0];
+        return makeStartDateString(year.getFullYear(), term);
       }
     },
     {
@@ -95,7 +104,7 @@ function ScheduleList() {
       headerName: 'End Date',
       width: 140,
       renderCell: (params) => {
-        return params.value.split('T')[0];
+        return makeEndDateString(year.getFullYear(), term);
       }
     },
     { field: 'capacity', headerName: 'Capacity', width: 80 },
@@ -118,7 +127,7 @@ function ScheduleList() {
     {
       field: 'professors',
       headerName: 'Professor',
-      width: 180,
+      width: 150,
       renderCell: (params) => {
         return (
           <Button
@@ -126,7 +135,9 @@ function ScheduleList() {
               navigate('/professors/' + params.value[0].id);
             }}
           >
-            {params.value[0].name}
+            <Typography noWrap variant='inherit'>
+              {params.value[0].name}
+            </Typography>
           </Button>
         );
       }
@@ -171,7 +182,7 @@ function ScheduleList() {
   }
 
   return (
-    <Box sx={{ width: '70%', margin: 'auto' }}>
+    <Box sx={{ width: 'fit-content', margin: 'auto' }}>
       <Typography marginTop={5} marginBottom={2} variant="h4" sx={{ textAlign: 'center' }}>
         Schedule List
       </Typography>
@@ -183,7 +194,7 @@ function ScheduleList() {
           {cookie.get('user').role === Role.Admin ? (
             <Grid item alignContent={'flex-end'}>
               <Button
-                sx={{ height: '56px', marginTop: '62px' }}
+                sx={{ height: '56px', marginTop: '62px', marginLeft: '10px' }}
                 variant="contained"
                 size="large"
                 color="primary"
@@ -197,7 +208,7 @@ function ScheduleList() {
       </Box>
       <DataGrid
         getRowId={(row: TableRow) => {
-          return row.courseName + row.capacity + row.startDate + row.endDate + Math.random();
+          return row.courseName + row.capacity + row.startDate + row.endDate + row.sectionNumber;
         }}
         components={{
           NoRowsOverlay: () => (

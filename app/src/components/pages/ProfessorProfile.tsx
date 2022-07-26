@@ -30,12 +30,14 @@ import { CoursePreference, CourseSection, Role, Term, User } from 'types/api.typ
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { getCoursesForProfessor } from 'utils/utils';
 import Cookie from 'universal-cookie';
+import { TermSelectorContext } from 'contexts/TermSelectorContext';
 
 function ProfessorProfile() {
   const navigate = useNavigate();
   const cookie = new Cookie();
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
+  const { setYear, setTerm } = useContext(TermSelectorContext);
 
   const [doneRequests, setDoneRequests] = useState<boolean>(false);
   const [currentRequest, setCurrentRequest] = useState<Term>(Term.Spring);
@@ -356,6 +358,8 @@ function ProfessorProfile() {
                       >
                         <ButtonBase
                           onClick={() => {
+                            setYear(new Date(course.CourseID.year, 1, 2)); 
+                            setTerm(course.CourseID.term);
                             navigate('/schedule/timetable', {
                               state: {
                                 courseId: course.CourseID.subject + course.CourseID.code

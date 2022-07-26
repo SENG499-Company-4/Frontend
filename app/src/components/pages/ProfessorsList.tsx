@@ -29,8 +29,9 @@ function ProfessorsList() {
   useEffect(() => {
     loadingContext.setLoading(professorsListLoading);
     if (professorsListData) {
-      setProfessorsList(professorsListData.allUsers);
-      setRows(professorsListData.allUsers);
+      const no_tbd = professorsListData.allUsers.filter(user => user.username != "TBD");
+      setProfessorsList(no_tbd);
+      setRows(no_tbd);
     }
     if (professorsListError) {
       errorContext.setErrorDialog(professorsListError);
@@ -84,7 +85,7 @@ function ProfessorsList() {
   function filter(data: User[], search: string) {
     var newData: User[] = [];
     for (const user of data) {
-      if (user?.name?.toLowerCase().includes(search.toLowerCase())) {
+      if (user?.name?.toLowerCase().includes(search.toLowerCase()) || user?.username?.toLowerCase().includes(search.toLowerCase())) {
         newData.push(user);
       }
     }
@@ -104,7 +105,7 @@ function ProfessorsList() {
           <SearchIcon />
         </SearchIconWrapper>
         <StyledInputBase
-          placeholder="Search by username"
+          placeholder="Search by username or name"
           inputProps={{ 'aria-label': 'search' }}
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}

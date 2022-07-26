@@ -4,7 +4,6 @@ import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
 import {
   checkCollision,
-  firstMondayInMonth,
   getCourseStartDate,
   parseCalendarCourse,
   parseCalendarTeacher,
@@ -323,24 +322,6 @@ function ScheduleTimetable() {
         editorOptions: {
           width: '100%',
           type: 'time'
-        }
-      },
-      {
-        label: { text: 'Course Start Date' },
-        dataField: 'startDate',
-        editorType: 'dxDateBox',
-        editorOptions: {
-          width: '100%',
-          type: 'date'
-        }
-      },
-      {
-        label: { text: 'Course End Date' },
-        dataField: 'lastDay',
-        editorType: 'dxDateBox',
-        editorOptions: {
-          width: '100%',
-          type: 'date'
         }
       }
     ]);

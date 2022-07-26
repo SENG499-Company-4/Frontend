@@ -34,16 +34,60 @@ function daytoInt(day: string) {
   return ['SUNDAY', 'MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY'].indexOf(day);
 }
 
-// Reference: https://ianvink.wordpress.com/2021/08/25/typescript-how-to-get-the-first-monday-in-the-month/
-export function firstMondayInMonth(zeroBasedMonth: number, year: number) {
-  let firstMonday = moment().year(year).month(zeroBasedMonth).date(1).day(8);
-  if (firstMonday.date() > 7) {
-    firstMonday.day(-6);
-  }
-  return firstMonday;
+export function garfield(year: number, term: Term): number {
+  const mondays = {
+    2021: {
+      'SPRING': 4,
+      'SUMMER': 3,
+      'FALL': 6
+    },
+    2022: {
+      'SPRING': 3,
+      'SUMMER': 2,
+      'FALL': 5
+    },
+    2023: {
+      'SPRING': 2,
+      'SUMMER': 1,
+      'FALL': 4
+    },
+    2024: {
+      'SPRING': 1,
+      'SUMMER': 6,
+      'FALL': 2
+    }
+  } as any;
+  return mondays[year][term];
 }
 
-export function getCourseStartDate(year: number, term: Term): Date {
+export function getLastFriday(year: number, term: Term): number {
+  // Using first friday of the last month of a term as a rough estimation of the term ending date
+  const fridays = {
+    2021: {
+      'SPRING': 2,
+      'SUMMER': 6,
+      'FALL': 3
+    },
+    2022: {
+      'SPRING': 1,
+      'SUMMER': 5,
+      'FALL': 2
+    },
+    2023: {
+      'SPRING': 7,
+      'SUMMER': 4,
+      'FALL': 1
+    },
+    2024: {
+      'SPRING': 5,
+      'SUMMER': 2,
+      'FALL': 6
+    }
+  } as any;
+  return fridays[year][term];
+}
+
+export function getTermMonthIndex(term: Term): number {
   const month = () => {
     switch (term) {
       case Term.Fall:
@@ -56,7 +100,13 @@ export function getCourseStartDate(year: number, term: Term): Date {
         return 0;
     }
   };
-  return firstMondayInMonth(month(), year).toDate();
+  return month();
+}
+
+export function getCourseStartDate(year: number, term: Term): Date {
+  const firstMonday = garfield(year, term);
+  const termIndex = getTermMonthIndex(term);
+  return new Date(year, termIndex, firstMonday);
 }
 
 export function getCurrentTerm(): Term {
@@ -92,16 +142,16 @@ export function parseCalendarCourse(
         numSections++;
       }
     }
+    const firstMonday = garfield(course.CourseID.year, course.CourseID.term);
     course.meetingTimes.forEach((meetingTime: MeetingTime) => {
       //each meeting maps to a calendar item ex: csc105 has three calendar items: Tus, Wed, Fri.
-      const dayshift = daytoInt(meetingTime.day);
+      const dayshift = daytoInt(meetingTime.day) - 1;
 
       const courseInitDate = getCourseStartDate(course.CourseID.year, course.CourseID.term);
 
       const courseStartDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
       const courseEndDate = new Date(courseInitDate.toISOString().substring(0, 10) + ' 00:00');
 
-      const firstMonday = parseInt(course.startDate.split('-')[2]);
       const newDate = firstMonday + dayshift;
       courseStartDate.setDate(newDate);
       courseEndDate.setDate(newDate);
