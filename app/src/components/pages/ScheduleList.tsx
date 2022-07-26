@@ -52,6 +52,8 @@ function ScheduleList() {
       const endTime = timeString.slice(0, -2) + ':' + timeString.slice(-2);
       if (index === 0) {
         return <Chip sx={{ marginX: '2px' }} key={index} label={`${startTime} - ${endTime}`} />;
+      } else {
+        return <></>;
       }
     });
   }

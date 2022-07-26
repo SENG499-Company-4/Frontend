@@ -3,14 +3,11 @@ import {
   ICalendarItem_Teacher,
   IHourMinute,
   IProfessorCourse,
-  IProfessorIndex,
-  IScheduleListItem
+  IProfessorIndex
 } from 'interfaces/timetable.interfaces';
 import colors from 'data/CourseColor.json';
 import { ability, willing } from 'constants/surveyForm.constants';
 import { CourseSection, MeetingTime, Term, User } from 'types/api.types';
-
-const moment = require('moment');
 
 export function parseCalendarTeacher(data: CourseSection[]): ICalendarItem_Teacher[] {
   const calendarTeacherData: ICalendarItem_Teacher[] = [];

@@ -29,7 +29,7 @@ function ProfessorsList() {
   useEffect(() => {
     loadingContext.setLoading(professorsListLoading);
     if (professorsListData) {
-      const no_tbd = professorsListData.allUsers.filter((user) => user.username != 'TBD');
+      const no_tbd = professorsListData.allUsers.filter((user: User) => user.username !== 'TBD');
       setProfessorsList(no_tbd);
       setRows(no_tbd);
     }
