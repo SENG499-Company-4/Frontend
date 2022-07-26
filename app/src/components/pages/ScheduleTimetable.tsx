@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Scheduler, Editing, Resource } from 'devextreme-react/scheduler';
-import 'devextreme/dist/css/dx.light.css';
+// import 'devextreme/dist/css/dx.light.css';
 import Appointment from 'components/organisms/Appointment';
 import {
   checkCollision,
@@ -374,28 +374,28 @@ function ScheduleTimetable() {
           <DialogContentText id="alert-dialog-slide-description">
             {Object.keys(profErrorIndex).length > 0
               ? Object.values(profErrorIndex).map((prof: IProfessorIndexEntry) => {
-                  return (
-                    <>
-                      <Typography>{prof.username + ' has course overlaps'}</Typography>
-                      {prof.classes.map((course) => {
-                        return (
+                return (
+                  <>
+                    <Typography>{prof.username + ' has course overlaps'}</Typography>
+                    {prof.classes.map((course) => {
+                      return (
+                        <Typography>
+                          {/* this line is and the one below is is purely for adding a new line for readability and it doesnt seem to process a "\n" */}
+                          <Typography>{'-'}</Typography>
+                          {course.courseId + ' Section ' + course.capacity}
                           <Typography>
-                            {/* this line is and the one below is is purely for adding a new line for readability and it doesnt seem to process a "\n" */}
-                            <Typography>{'-'}</Typography>
-                            {course.courseId + ' Section ' + course.capacity}
-                            <Typography>
-                              {course.meetingTime.day +
-                                ' ' +
-                                course.meetingTime.startTime.split('T')[0] +
-                                '-' +
-                                course.meetingTime.endTime.split('T')[0]}
-                            </Typography>
+                            {course.meetingTime.day +
+                              ' ' +
+                              course.meetingTime.startTime.split('T')[0] +
+                              '-' +
+                              course.meetingTime.endTime.split('T')[0]}
                           </Typography>
-                        );
-                      })}
-                    </>
-                  );
-                })
+                        </Typography>
+                      );
+                    })}
+                  </>
+                );
+              })
               : "Your re-generation request was submitted successfully. When the scheduling algorithm checks complete, you'll be able to view the updated schedule here."}
           </DialogContentText>
         </DialogContent>
