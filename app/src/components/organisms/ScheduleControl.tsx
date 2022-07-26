@@ -68,11 +68,11 @@ export function ScheduleControl(props: ScheduleControlProps) {
       if (scheduleData.schedule) {
         setCalendarData(scheduleData.schedule.courses);
         props.courseDataChanged(scheduleData.schedule.courses);
-        setScheduleId(scheduleData.schedule.id);
       } else {
         setCalendarData([]);
         props.courseDataChanged([]);
       }
+      setScheduleId(scheduleData.schedule.id);
     }
     if (scheduleError) {
       errorContext.setErrorDialog(scheduleError);

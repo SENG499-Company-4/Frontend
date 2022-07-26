@@ -89,6 +89,7 @@ export const GET_SURVEY = gql`
 export const GET_SCHEDULE = gql`
   query Schedule($year: Int, $term: Term!) {
     schedule(year: $year) {
+      id
       courses(term: $term) {
         CourseID {
           subject

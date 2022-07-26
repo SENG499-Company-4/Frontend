@@ -238,9 +238,11 @@ function ScheduleTimetable() {
               startTime: startTime
             };
             meetingTimes.push(updatedTime);
-            for (const prof of meeting.professorsReference) {
-              if (!professors.includes(prof.username)) professors.push(prof.username);
-            }
+            const profId = Array.isArray(meeting.teacherId) ? meeting.teacherId[0] : meeting.teacherId;
+            const prof = calendarTeacherData.filter(teacher => {
+              return teacher.id === profId;
+            })[0];
+            if (!professors.includes(prof.teacherName)) professors.push(prof.teacherName);
           }
           const updateInput: CourseUpdateInput = {
             code: course_split[1],
