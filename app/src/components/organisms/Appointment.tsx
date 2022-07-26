@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { formatDate } from 'devextreme/localization';
-import { CircularProgress, Grid } from '@mui/material';
+import { Grid, Skeleton, Typography } from '@mui/material';
 import { Container } from '@mui/system';
 import { useQuery } from '@apollo/client';
 import { gql } from '@apollo/client';
@@ -10,6 +10,7 @@ import { gql } from '@apollo/client';
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
+  console.log('TargetedAppointmentData: ', targetedAppointmentData);
   const GET_USER_BY_ID_LEAN = gql`
     query FindUserById($findUserByIdId: Int!) {
       findUserById(id: $findUserByIdId) {
@@ -38,18 +39,34 @@ function Appointment(model: any) {
   }, [getUserError]);
 
   return (
-    <Container sx={{ height: '100%' }}>
+    <Container
+      sx={{ height: '100%' }}
+      id={'appointment-' + targetedAppointmentData.courseId + '-' + targetedAppointmentData.section}
+    >
       <Grid container className="showtime-preview" direction="column">
         {getUserLoading ? (
-          <CircularProgress />
+          <>
+            <Skeleton variant="text" width={'100%'} sx={{ marginTop: '5px' }} />
+            <Skeleton variant="text" width={'100%'} height={'100%'} />
+          </>
         ) : (
           <>
-            <Grid item> {targetedAppointmentData.courseId} </Grid>
-            <Grid item> {getUserData.findUserById.name}</Grid>
             <Grid item>
-              {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
-              {' - '}
-              {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
+              <Typography variant="body1" color={'white'}>
+                {targetedAppointmentData.courseId}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body1" color={'white'}>
+                {getUserData.findUserById.name}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography variant="body1" color={'white'}>
+                {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
+                {' - '}
+                {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
+              </Typography>
             </Grid>
           </>
         )}
