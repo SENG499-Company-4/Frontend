@@ -10,25 +10,23 @@ import lightModeColors from 'data/LightColors.json';
 import { ability, willing } from 'constants/surveyForm.constants';
 import { CourseSection, MeetingTime, Term, User } from 'types/api.types';
 
-export function parseCalendarTeacher(data: CourseSection[], darkMode: boolean): ICalendarItem_Teacher[] {
+export function parseCalendarTeacher(professors: User[], darkMode: boolean): ICalendarItem_Teacher[] {
   console.log('DARK MODE? ', darkMode);
   const calendarTeacherData: ICalendarItem_Teacher[] = [];
-  data.forEach((course: CourseSection) => {
-    if (course.professors && course.professors.length > 0) {
-      const appointmentColor = darkMode
-        ? darkModeColors[course.professors[0].id % darkModeColors.length]
-        : lightModeColors[course.professors[0].id % lightModeColors.length];
+  professors.forEach((professor: User) => {
+    const appointmentColor = darkMode
+        ? darkModeColors[professor.id % darkModeColors.length]
+        : lightModeColors[professor.id % lightModeColors.length];
       const calendarItem: ICalendarItem_Teacher = {
-        id: course.professors[0].id,
-        teacherName: course.professors[0].username,
-        courseId: course.CourseID.subject + course.CourseID.code,
-        term: course.CourseID.term,
+        id: professor.id,
+        teacherName: professor.username,
+        courseId: "",
+        term: "",
         color: appointmentColor,
-        link: '/professors/' + course.professors[0].id
+        link: '/professors/' + professor.id
       };
       calendarTeacherData.push(calendarItem);
-    }
-  });
+  })
   return calendarTeacherData;
 }
 

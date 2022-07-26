@@ -17,9 +17,10 @@ import {
 } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
-import { useMutation } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { UPDATE_SCHEDULE } from 'api/Mutations';
-import { CourseSection, CourseSectionInput, CourseUpdateInput, Day, MeetingTime, Role } from 'types/api.types';
+import { GET_PROFESSORS } from 'api/Queries';
+import { CourseSection, CourseSectionInput, CourseUpdateInput, Day, MeetingTime, Role, User } from 'types/api.types';
 import 'components/styles/scheduler.css';
 
 import { ScheduleControl } from 'components/organisms/ScheduleControl';
@@ -34,6 +35,7 @@ import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import Cookie from 'universal-cookie';
 import { ThemeContext } from 'contexts/DynamicThemeProvider';
+import { LoadingContext } from 'contexts/LoadingContext';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 interface IStateProps {
@@ -44,6 +46,7 @@ interface IStateProps {
 function ScheduleTimetable() {
   const cookie = new Cookie();
   const location: Location = useLocation();
+  const loadingContext = useContext(LoadingContext);
   const state: IStateProps = location.state as IStateProps;
   const [courseId, setCourseId] = useState(state?.courseId ? state.courseId : undefined);
   const [professorId, setProfessorId] = useState(state?.professorId ? state.professorId : undefined);
@@ -62,8 +65,28 @@ function ScheduleTimetable() {
   const [errors, setErrors] = useState<ICalendarError[]>([]);
   const [profErrorIndex, setProfErrorIndex] = useState<IProfessorIndex>({});
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+  const [professorsList, setProfessorsList] = useState<User[]>([]);
 
   const [updateSchedule, { updateData, updateLoading, updateError }] = useMutation(UPDATE_SCHEDULE);
+
+  const {
+    data: professorsListData,
+    loading: professorsListLoading,
+    error: professorsListError
+  } = useQuery(GET_PROFESSORS);
+
+  useEffect(() => {
+    loadingContext.setLoading(professorsListLoading);
+    if (professorsListData) {
+      const no_tbd = professorsListData.allUsers.filter((user: User) => user.username !== 'TBD');
+      setProfessorsList(no_tbd);
+      setCalendarTeacherData(parseCalendarTeacher(no_tbd, themeContext.themeType));
+    }
+    if (professorsListError) {
+      console.log(professorsListError);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [professorsListData, professorsListLoading, professorsListError]);
 
   const [containerHeight, setContainerHeight] = useState<number>(() => {
     return courseId || professorId ? window.innerHeight - 256 : window.innerHeight - 224;
@@ -76,7 +99,7 @@ function ScheduleTimetable() {
   function onCourseDataChange(courseData: CourseSection[]) {
     setScheduleLoading(true);
     setCalendarCourseData(parseCalendarCourse(courseData, courseId, professorId));
-    setCalendarTeacherData(parseCalendarTeacher(courseData, themeContext.themeType));
+    setCalendarTeacherData(parseCalendarTeacher(professorsList, themeContext.themeType));
   }
 
   useEffect(() => {
@@ -143,9 +166,6 @@ function ScheduleTimetable() {
   }
 
   function exportState(id: String) {
-    console.log(calendarTeacherData);
-    console.log(calendarCourseData);
-
     console.log('errors');
     console.log(errors);
 
