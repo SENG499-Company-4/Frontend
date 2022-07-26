@@ -43,9 +43,9 @@ function ScheduleTimetable() {
   const cookie = new Cookie();
   const location: Location = useLocation();
   const state: IStateProps = location.state as IStateProps;
-  const courseId = state?.courseId ? state.courseId : undefined;
-  const professorId = state?.professorId ? state.professorId : undefined;
-  const { year, term, firstMondayOfTerm } = useContext(TermSelectorContext);
+  const [courseId, setCourseId] = useState(state?.courseId ? state.courseId : undefined);
+  const [professorId, setProfessorId] = useState(state?.professorId ? state.professorId : undefined);
+  const { year, setYear, term, firstMondayOfTerm } = useContext(TermSelectorContext);
 
   const [scheduleLoading, setScheduleLoading] = useState(false);
 
@@ -92,20 +92,6 @@ function ScheduleTimetable() {
 
   function onLoadingChange(loading: boolean) {
     setScheduleLoading(loading);
-  }
-
-  function validateAdd(appointment: AppointmentAddingEvent) {
-    if (!checkPermissions()) {
-      appointment.cancel = true;
-    }
-    return;
-  }
-
-  function validateDelete(appointment: AppointmentDeletingEvent) {
-    if (!checkPermissions()) {
-      appointment.cancel = true;
-    }
-    return;
   }
 
   function validateAppointment(appointment: AppointmentUpdatingEvent) {
@@ -164,7 +150,7 @@ function ScheduleTimetable() {
     console.log('profIndex');
     console.log(profIndex);
 
-    Object.keys(profIndex).map((key) => {
+    Object.keys(profIndex).forEach((key) => {
       const prof = profIndex[parseInt(key)];
       const added: number[] = [];
       console.log('Prof: ', prof);
@@ -331,6 +317,7 @@ function ScheduleTimetable() {
       setCurrentDate(getCourseStartDate(year.getFullYear(), term));
       console.log('Current date set to: ', currentDate);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year, term]);
 
   return (
@@ -394,8 +381,26 @@ function ScheduleTimetable() {
             exportState={exportState}
           />
           <Grid item marginBottom={'10px'}>
-            {professorId && <Chip color="primary" label={'Filtered by Professor ID: ' + professorId} />}
-            {courseId && <Chip color="primary" label={'Filtered by Course: ' + courseId} />}
+            {professorId && (
+              <Chip
+                color="primary"
+                label={'Filtered by Professor ID: ' + professorId}
+                onDelete={() => {
+                  setProfessorId(undefined);
+                  setYear(year);
+                }}
+              />
+            )}
+            {courseId && (
+              <Chip
+                color="primary"
+                label={'Filtered by Course: ' + courseId}
+                onDelete={() => {
+                  setCourseId(undefined);
+                  setYear(year);
+                }}
+              />
+            )}
           </Grid>
         </Grid>
       </Box>
