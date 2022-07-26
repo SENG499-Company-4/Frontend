@@ -239,7 +239,7 @@ function ScheduleTimetable() {
             };
             meetingTimes.push(updatedTime);
             const profId = Array.isArray(meeting.teacherId) ? meeting.teacherId[0] : meeting.teacherId;
-            const prof = calendarTeacherData.filter(teacher => {
+            const prof = calendarTeacherData.filter((teacher) => {
               return teacher.id === profId;
             })[0];
             if (!professors.includes(prof.teacherName)) professors.push(prof.teacherName);
