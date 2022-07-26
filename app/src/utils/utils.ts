@@ -5,20 +5,25 @@ import {
   IProfessorCourse,
   IProfessorIndex
 } from 'interfaces/timetable.interfaces';
-import colors from 'data/CourseColor.json';
+import darkModeColors from 'data/DarkColors.json';
+import lightModeColors from 'data/LightColors.json';
 import { ability, willing } from 'constants/surveyForm.constants';
 import { CourseSection, MeetingTime, Term, User } from 'types/api.types';
 
-export function parseCalendarTeacher(data: CourseSection[]): ICalendarItem_Teacher[] {
+export function parseCalendarTeacher(data: CourseSection[], darkMode: boolean): ICalendarItem_Teacher[] {
+  console.log('DARK MODE? ', darkMode);
   const calendarTeacherData: ICalendarItem_Teacher[] = [];
   data.forEach((course: CourseSection) => {
     if (course.professors && course.professors.length > 0) {
+      const appointmentColor = darkMode
+        ? darkModeColors[course.professors[0].id % darkModeColors.length]
+        : lightModeColors[course.professors[0].id % lightModeColors.length];
       const calendarItem: ICalendarItem_Teacher = {
         id: course.professors[0].id,
         teacherName: course.professors[0].username,
         courseId: course.CourseID.subject + course.CourseID.code,
         term: course.CourseID.term,
-        color: colors[course.professors[0].id % colors.length],
+        color: appointmentColor,
         link: '/professors/' + course.professors[0].id
       };
       calendarTeacherData.push(calendarItem);
@@ -130,12 +135,9 @@ export function parseCalendarCourse(
   data.forEach((course: CourseSection) => {
     // Get number of course sections for course
     const courseId = course.CourseID.subject + course.CourseID.code;
-    console.log('Course ID: ', courseId);
     let numSections = 0;
     for (const courseSection of data) {
-      console.log('Checking against course ID: ', courseSection.CourseID.subject + courseSection.CourseID.code);
       if (courseSection.CourseID.subject + courseSection.CourseID.code === courseId) {
-        console.log('Found matching course');
         numSections++;
       }
     }

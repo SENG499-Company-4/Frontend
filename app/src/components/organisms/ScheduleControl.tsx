@@ -11,6 +11,7 @@ import { Role } from 'constants/timetable.constants';
 import Cookie from 'universal-cookie';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import { getCurrentTerm } from 'utils/utils';
+import { ThemeContext } from 'contexts/DynamicThemeProvider';
 interface ScheduleControlProps {
   courseDataChanged: (courseData: CourseSection[]) => void;
   exportState?: (id: String) => void;
@@ -28,10 +29,17 @@ export function ScheduleControl(props: ScheduleControlProps) {
 
   const loadingContext = useContext(LoadingContext);
   const errorContext = useContext(ErrorContext);
+  const themeContext = useContext(ThemeContext);
 
   function onFilterChange(filteredCourses: CourseSection[]) {
     props.courseDataChanged(filteredCourses);
   }
+
+  useEffect(() => {
+    // Update teacher data on theme change
+    props.courseDataChanged(calendarData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [themeContext.themeType]);
 
   useEffect(() => {
     if (term && year) {

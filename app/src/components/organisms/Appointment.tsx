@@ -10,7 +10,6 @@ import { gql } from '@apollo/client';
  */
 function Appointment(model: any) {
   const { targetedAppointmentData } = model.data;
-  console.log('TargetedAppointmentData: ', targetedAppointmentData);
   const GET_USER_BY_ID_LEAN = gql`
     query FindUserById($findUserByIdId: Int!) {
       findUserById(id: $findUserByIdId) {
@@ -51,22 +50,12 @@ function Appointment(model: any) {
           </>
         ) : (
           <>
+            <Grid item>{targetedAppointmentData.courseId}</Grid>
+            <Grid item>{getUserData.findUserById.name}</Grid>
             <Grid item>
-              <Typography variant="body1" color={'white'}>
-                {targetedAppointmentData.courseId}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body1" color={'white'}>
-                {getUserData.findUserById.name}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Typography variant="body1" color={'white'}>
-                {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
-                {' - '}
-                {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
-              </Typography>
+              {formatDate(targetedAppointmentData.displayStartDate, 'shortTime')}
+              {' - '}
+              {formatDate(targetedAppointmentData.displayEndDate, 'shortTime')}
             </Grid>
           </>
         )}

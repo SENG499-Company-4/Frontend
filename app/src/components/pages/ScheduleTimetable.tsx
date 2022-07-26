@@ -12,7 +12,8 @@ import {
   DialogTitle,
   Grid,
   Typography,
-  Button
+  Button,
+  Skeleton
 } from '@mui/material';
 import { Location, useLocation } from 'react-router-dom';
 import { Chip } from '@mui/material';
@@ -29,9 +30,10 @@ import {
   IProfessorIndex,
   IProfessorIndexEntry
 } from 'interfaces/timetable.interfaces';
-import { AppointmentAddingEvent, AppointmentDeletingEvent, AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
+import { AppointmentUpdatingEvent } from 'devextreme/ui/scheduler';
 import { TermSelectorContext } from 'contexts/TermSelectorContext';
 import Cookie from 'universal-cookie';
+import { ThemeContext } from 'contexts/DynamicThemeProvider';
 
 //The current date will be +1 month in the UI, ex: 2021/Dec/10 -> 2022/Jan/10
 interface IStateProps {
@@ -46,9 +48,12 @@ function ScheduleTimetable() {
   const [courseId, setCourseId] = useState(state?.courseId ? state.courseId : undefined);
   const [professorId, setProfessorId] = useState(state?.professorId ? state.professorId : undefined);
   const { year, setYear, term, firstMondayOfTerm } = useContext(TermSelectorContext);
-
+  const themeContext = useContext(ThemeContext);
+  const skeletonHeights = [40, 60, 40, 80, 340, 80, 40, 60, 40, 50, 40, 100, 80, 120];
   const [scheduleLoading, setScheduleLoading] = useState(false);
-
+  useEffect(() => {
+    console.log('Schedule loading: ', scheduleLoading);
+  }, [scheduleLoading]);
   const [currentDate, setCurrentDate] = useState<Date>(firstMondayOfTerm);
 
   const [calendarTeacherData, setCalendarTeacherData] = useState<ICalendarItem_Teacher[]>([]);
@@ -69,13 +74,12 @@ function ScheduleTimetable() {
   };
 
   function onCourseDataChange(courseData: CourseSection[]) {
-    console.log('Course data changed!: ', courseData);
+    setScheduleLoading(true);
     setCalendarCourseData(parseCalendarCourse(courseData, courseId, professorId));
-    setCalendarTeacherData(parseCalendarTeacher(courseData));
+    setCalendarTeacherData(parseCalendarTeacher(courseData, themeContext.themeType));
   }
 
   useEffect(() => {
-    //loadingContext.setLoading(loading);
     if (updateData) {
       console.log(updateData);
     }
@@ -88,6 +92,7 @@ function ScheduleTimetable() {
   useEffect(() => {
     console.log('Calendar course data: ', calendarCourseData);
     console.log('Calendar teacher data: ', calendarTeacherData);
+    setScheduleLoading(false);
   }, [calendarCourseData, calendarTeacherData]);
 
   function onLoadingChange(loading: boolean) {
@@ -404,50 +409,72 @@ function ScheduleTimetable() {
           </Grid>
         </Grid>
       </Box>
-
       {/*@ts-ignore*/}
-      <Scheduler
-        timeZone="Canada/Pacific"
-        dataSource={calendarCourseData}
-        textExpr="courseId"
-        views={[
-          {
-            type: 'week',
-            name: 'Week',
-            maxAppointmentsPerCell: 1
-          }
-        ]}
-        defaultCurrentView="week"
-        defaultCurrentDate={currentDate}
-        currentDate={currentDate}
-        startDayHour={8}
-        endDayHour={22}
-        onContentReady={() => {
-          console.log('content ready');
-        }}
-        onInitialized={() => {
-          console.log('initialized');
-        }}
-        onAppointmentAdded={() => {
-          console.log('appointment added');
-        }}
-        height={containerHeight}
-        width={'100%'}
-        appointmentComponent={Appointment}
-        showAllDayPanel={false}
-        onAppointmentFormOpening={onAppointmentFormOpening}
-        onAppointmentUpdating={(e) => validateAppointment(e)}
-      >
-        <Editing allowAdding={false} allowDeleting={false} allowResizing={false} allowDragging={checkPermissions()} />
-        <Resource
-          dataSource={calendarTeacherData}
-          fieldExpr="teacherId"
-          displayExpr="teacherName"
-          label="Professor"
-          allowMultiple={true}
-          useColorAsDefault={true}
-        />
-      </Scheduler>
+      {!scheduleLoading ? (
+        <Scheduler
+          timeZone="Canada/Pacific"
+          dataSource={calendarCourseData}
+          textExpr="courseId"
+          views={[
+            {
+              type: 'week',
+              name: 'Week',
+              maxAppointmentsPerCell: 1
+            }
+          ]}
+          defaultCurrentView="week"
+          defaultCurrentDate={currentDate}
+          currentDate={currentDate}
+          startDayHour={8}
+          endDayHour={22}
+          onContentReady={() => {
+            console.log('content ready');
+          }}
+          onInitialized={() => {
+            console.log('initialized');
+          }}
+          onAppointmentAdded={() => {
+            console.log('appointment added');
+          }}
+          height={containerHeight}
+          width={'100%'}
+          appointmentComponent={Appointment}
+          showAllDayPanel={false}
+          onAppointmentFormOpening={onAppointmentFormOpening}
+          onAppointmentUpdating={(e) => validateAppointment(e)}
+        >
+          <Editing allowAdding={false} allowDeleting={false} allowResizing={false} allowDragging={checkPermissions()} />
+          <Resource
+            dataSource={calendarTeacherData}
+            fieldExpr="teacherId"
+            displayExpr="teacherName"
+            label="Professor"
+            allowMultiple={true}
+            useColorAsDefault={true}
+          />
+        </Scheduler>
+      ) : (
+        <Grid
+          container
+          height={containerHeight}
+          display={'flex'}
+          justifyContent={'center'}
+          alignContent={'flex-start'}
+          spacing={2}
+        >
+          {skeletonHeights.map((skeletonHeight, index) => {
+            if (skeletonHeights.slice(index).reduce((a, b) => a + b, 0) < containerHeight + skeletonHeights[index]) {
+              return (
+                <Grid item width="100%" mx={2}>
+                  <Skeleton variant="rectangular" width={'100%'} height={skeletonHeight} />
+                </Grid>
+              );
+            } else {
+              return <></>;
+            }
+          })}
+        </Grid>
+      )}
     </>
   );
 }
